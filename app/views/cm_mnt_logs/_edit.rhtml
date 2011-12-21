@@ -1,0 +1,36 @@
+<% labelled_tabular_form_for :cm_mnt_log, @cm_mnt_log,
+                             :url => {:action => 'edit', :id => @cm_mnt_log},
+                             :html => {:id => 'cm_mnt_log-form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+    <%= error_messages_for 'cm_mnt_log' %>
+
+    <div class="box">
+       <fieldset class="tabular"><legend>Change Properties</legend>
+   	<div id="attributes" class="attributes">
+		<%= render :partial => 'attributes', :locals => {:f => f} %>
+	</div>
+       </fieldset>
+
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_mnt_log, :cm_object_type => "CmMntLog",
+    :cm_object_cont => "cm_mnt_logs", :export => "N" } %>
+
+<br /><hr />
+
+    <fieldset><legend>Notes</legend>
+    <%= text_area_tag 'notes', @notes, :cols => 60, :rows => 10, :class => 'wiki-edit' %>
+    <%= wikitoolbar_for 'notes' %>
+    <%= call_hook(:view_cm_mnt_log_edit_notes_bottom, { :cm_mnt_log => @cm_mnt_log, :notes => @notes, :form => f }) %>
+
+    <p><%=l(:label_attachment_plural)%><br /><%= render :partial => 'attachments/form' %></p>
+    </fieldset>
+
+    <%= submit_tag l(:button_submit) %>
+    </div>
+
+<% end %>

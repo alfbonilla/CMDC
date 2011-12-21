@@ -1,0 +1,23 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="codegens">New Code to Generate</h2>
+
+<% labelled_tabular_form_for :cm_doc_counter, @cm_doc_counter,
+                             :html => {:id => 'cm_doc_counter-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_doc_counter' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Code Properties</legend>
+      <div id="attributes" class="attributes">
+       <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <%= submit_tag l(:button_create) %>
+											 
+<% end %>
+
+<% html_title "CM - New Code" %>

@@ -1,0 +1,65 @@
+Information changed in <%= @project.name %> project
+
+<% case @caller_cont
+  when "cm_qrs", "cm_purchase_orders" %>
+  <%= "#{@cmdc_object.code} ##{@cmdc_object.id}" %>
+  <%= @cmdc_object_url %>
+
+  Comments:
+  <%= @cmdc_object.comments %>
+
+<% when "cm_rids" %>
+  <%= "#{@cmdc_object.code} ##{@cmdc_object.id}" %>
+  <%= @cmdc_object_url %>
+
+  Discrepancy:
+  <%= @cmdc_object.discrepancy %>
+
+<% when "cm_boards" %>
+
+  <%= "#{@cmdc_object.cm_board_code} ##{@cmdc_object.id}" %>
+  <%= @cmdc_object_url %>
+
+<% when "cm_docs_versions" %>
+  <%= "#{@cmdc_object.cm_doc.code} ##{@cmdc_object.cm_doc.id}" %>
+  <%= @cmdc_object_url %>
+  Version: <%= @cmdc_object.version %>
+  Physical Location: <%= @cmdc_object.physical_location %>
+
+<% when "cm_tests" %>
+
+  <%= "#{@cmdc_object.code} ##{@cmdc_object.id}" %>
+  <%= @cmdc_object_url %>
+
+  Objective:
+  <%= @cmdc_object.objective %>
+
+<% else %>
+  <%= "#{@cmdc_object.code} ##{@cmdc_object.id}: #{@cmdc_object.name}" %>
+  <%= @cmdc_object_url %>
+
+  Description:
+  <%= @cmdc_object.description %>
+<% end %>
+
+  <% if @caller_cont == "cm_docs_versions" %>
+    <% journal = @cmdc_object.cm_doc.current_journal %>
+  <% else %>
+    <% journal = @cmdc_object.current_journal %>
+  <% end %>
+
+  <% unless journal.nil? %>
+  <% for detail in journal.details %>
+  * Field: <%=detail.prop_key %> From: <%=detail.old_value %> To: <%=detail.value %>
+  <% end %>
+  <%= journal.notes %>
+<% else %>
+  <% if @caller_cont == "cm_boards" %>
+    You have been convened to the meeting about <%=@cmdc_object.subject %>
+    that will be hold at <%=@cmdc_object.meeting_date.strftime("%Y-%m-%d") %>.
+
+    Meeting convened by <%=@cmdc_object.author.name %>.
+  <% else %>
+    New Record
+  <% end %>
+<% end %>

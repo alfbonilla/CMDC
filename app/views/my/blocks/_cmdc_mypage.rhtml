@@ -1,0 +1,124 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h3>My CM/DC "Browns"<%= link_to "(hide/show)", {},
+        :onclick => 'Effect.toggle("cmdc_browns", "appear", {duration:0.3}); return false;' %>
+</h3>
+
+<br/>
+
+<% @cmdc_objs = []
+   cmdc = []
+   c_count = 0
+   user=User.current.id %>
+
+<%  objs=CmDocsVersion.open.my_docs(user)
+    objs.each do |obj|
+      cmdc = [obj.cm_doc.id.to_s, obj.cm_doc.code, obj.status.name, "cm_docs",
+            obj.cm_doc.project.name, obj.cm_doc.name + ". Version:" + obj.version]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<%  objs=CmMntLog.open.my_mnts(user)
+    objs.each do |obj|
+      cmdc = [obj.id.to_s, obj.code, obj.status.name, "cm_mnt_logs", obj.project.name, obj.name]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<%  objs=CmNc.open.my_ncs(user)
+    objs.each do |obj|
+      cmdc = [obj.id.to_s, obj.code, obj.status.name, "cm_ncs", obj.project.name, obj.name]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<%  objs=CmReq.changed.my_reqs(user)
+    objs.each do |obj|
+      cmdc = [obj.id.to_s, obj.code, "Proposed", "cm_reqs", obj.project.name, obj.name]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<%  objs=CmRid.open.my_rids(user)
+    objs.each do |obj|
+      status=""
+      case obj.internal_status_id
+      when 1
+        status='Open'
+      when 3
+        status='Deferred'
+      when 4
+        status='Responded'
+      end
+      cmdc = [obj.id.to_s, obj.code, status, "cm_rids", obj.project.name, "N/A"]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<%  objs=CmRisk.open.my_risks(user)
+    objs.each do |obj|
+      cmdc = [obj.id.to_s, obj.code, obj.status.name, "cm_risks", obj.project.name, obj.name]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<%  objs=CmDelivery.open.my_deliveries(user)
+    objs.each do |obj|
+      cmdc = [obj.id.to_s, obj.code, obj.status.name, "cm_deliveries", obj.project.name, obj.name]
+      @cmdc_objs[c_count]=cmdc
+      c_count += 1
+    end %>
+
+<div id="cmdc_browns">
+
+<div id="table" class="autoscroll">
+  <% if @cmdc_objs.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>CMDC Object</b></th>
+      <th><b>Project</b></th>
+      <th><b>Id</b></th>
+      <th><b>Code</b></th>
+      <th><b>Name</b></th>
+      <th><b>Status</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cmdc_objs.each do |rev| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <% case rev[3]
+         when "cm_docs" %>
+        <td align="center"><%= image_tag 'cmdocuments.png', :plugin => "redmine_cm", :alt => "Document" %></td>
+      <% when "cm_mnt_logs" %>
+        <td align="center"><%= image_tag 'maintenanceLogs.png', :plugin => "redmine_cm", :alt => "Maintenance" %></td>
+      <% when "cm_ncs" %>
+        <td align="center"><%= image_tag 'ncrs.png', :plugin => "redmine_cm", :alt => "No-Conformance" %></td>
+      <% when "cm_reqs" %>
+        <td align="center"><%= image_tag 'reqs.png', :plugin => "redmine_cm", :alt => "Traceability Element" %></td>
+      <% when "cm_rids" %>
+        <td align="center"><%= image_tag 'rids.png', :plugin => "redmine_cm", :alt => "RID" %></td>
+      <% when "cm_risks" %>
+        <td align="center"><%= image_tag 'Warning.png', :plugin => "redmine_cm", :alt => "Risk" %></td>
+      <% when "cm_deliveries" %>
+        <td align="center"><%= image_tag 'icon-delivery.png', :plugin => "redmine_cm", :alt => "Delivery" %></td>
+      <% end %>
+      <td align="center"><%= h(rev[4]) %></td>
+      <td align="center"><%=link_to rev[0], :controller => rev[3], :action => "show", :id => rev[0] %></td>
+      <td><%= link_to rev[1], :controller => rev[3], :action => "show", :id => rev[0] %></td>
+      <td><%= h(rev[5]) %></td>
+      <td align="center"><%= h(rev[2]) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <% end %>
+</div>
+
+</div>

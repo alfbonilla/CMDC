@@ -1,0 +1,53 @@
+<title>Index of Meetings </title>
+<div id="table" class="autoscroll">
+  <% if @cm_boards.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+
+    <p>Number of meetings found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Id</b></th>
+      <th><b>Code</b></th>
+      <th><b>Subject</b></th>
+      <th><b>Meeting Date</b></th>
+      <th><b>Type</b></th>
+      <th><b>Company</b></th>
+      <th><b>Actions Closed</b></th>
+      <th><b>Minutes Closed</b></th>
+      <th><b>Participants</b></th>
+      <th><b>Body</b></th>
+      <th><b>Conclusions</b></th>
+      <th><b>Distribution List</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_boards.each do |board| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td><%= h(board.id) %></td>
+        <td><%= h(board.cm_board_code) %></td>
+        <td><%= h(board.subject) %></td>
+        <td><%= h(board.meeting_date.strftime("%Y-%m-%d")) %></td>
+        <td><%= h(board.type.name) %></td>
+        <% if board.company_id == 0 %>
+          <td>No Company Selected</td>
+        <% else %>
+          <td><%= h(board.company.name) %></td>
+        <% end %>
+        <td><%= h(board.actions_completed) %></td>
+        <td><%= h(board.minutes_closed) %></td>
+        <td><%= h(board.participants) %></td>
+        <td><%= textilizable board.board_body %></td>
+        <td><%= textilizable board.conclusions %></td>
+        <td><%= textilizable board.distribution_list %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <% end %>
+</div>
+
+<% html_title "CM - Meetings List" %>

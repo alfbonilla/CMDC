@@ -1,0 +1,49 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">Copy Test</h2>
+
+<% labelled_tabular_form_for :cm_copy_test, @cm_copy_test,
+                             :html => {:id => 'cm_copy_test-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_copy_test' %>
+
+  <% fields_for :cm_test, @cm_test, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :required => true %>
+    <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'cm_copy_test-form'} %></p>
+  <p><%= f.text_field :name, :required => true %></p>
+  <p><%= f.select :type_id, (@cm_test_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+
+  <% end %>
+
+  <ul>
+    <li>Get the code for th new Test. </li>
+    <li>This action will create a new test exactly equals to the selected test but: </li>
+    <ul>
+      <li>With new generated code</li>
+      <li>With new given name</li>
+    </ul>
+    <li>All the <strong>children</strong> tests related to the selected test
+      will be related to the new test. </li>
+  </ul>
+
+  <p>
+    <%= submit_tag l(:button_copy), :method => :post %>
+    <a href="javascript:history.back()">Back</a>
+  </p>
+
+  <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+    <p><%= g.hidden_field :caller_cont, :value => "cm_tests" %></p>
+    <p><%= g.hidden_field :copy_id, :value => @copy_id %></p>
+  <% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_test_code')).value=new_code;}
+</script>
+
+<% end %>
+
+<% html_title "CM - Tests - Copy Test" %>

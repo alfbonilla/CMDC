@@ -1,0 +1,14 @@
+<h2>CM/DC Settings</h2>
+
+<p>
+  Select the way how the non-conformances will be managed in the project.
+</p>
+<li>(A) CM DC Non Conformances</li>
+<li>(B) Redmine Issues</li>
+<li>(C) Both</li>
+
+
+<p>
+  <label>Non-Conformances Management</label><%= text_field_tag 'settings[non_conformances_or_issues]',
+      @settings['non_conformances_or_issues'] %>
+</p>

@@ -1,0 +1,25 @@
+<% labelled_tabular_form_for :cm_test_campaign, @cm_test_campaign,
+                             :url => {:action => 'edit', :id => @cm_test_campaign},
+                             :html => {:id => 'edit-cm_test_campaign-form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_test_campaign' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Change Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+
+    <fieldset><legend>Notes</legend>
+    <%= text_area_tag 'notes', @notes, :cols => 60, :rows => 10, :class => 'wiki-edit' %>
+    <%= wikitoolbar_for 'notes' %>
+    <%= call_hook(:view_cm_test_campaigns_edit_notes_bottom, { :cm_test_campaign => @cm_test_campaign, :notes => @notes, :form => f }) %>
+    </fieldset>
+
+    <%= submit_tag l(:button_submit) %>
+  </div>
+
+<% end %>

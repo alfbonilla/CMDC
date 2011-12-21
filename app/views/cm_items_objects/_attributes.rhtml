@@ -1,0 +1,21 @@
+<b>Relationship between </b><%= @object_name %><b> and:</b>
+<br />
+<br />
+
+<% fields_for :cm_items_object, @cm_items_object, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :x_type, :value => @cm_items_object.x_type %></p>
+  <p><%= f.hidden_field :x_id, :value => @cm_items_object.x_id %></p>
+  <% if @items.nil? %>
+    <p><%= f.text_field :cm_item_id, :value => @code, :disabled => true %></p>
+  <% else %>
+    <p><%= f.select :cm_item_id, (@items.collect {|p| [p.code, p.id]}), :required => true %></p>
+  <% end %>
+  <p><%= f.text_field :rel_string, :size => 30 %></p>
+  <p><%= f.text_field :rel_date, :size => 20 %><%= calendar_for('cm_items_object_rel_date') %></p>
+  <p><%= f.text_field :rel_string_2, :size => 100 %><i>(Comments)</i></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+  <p><%= g.hidden_field :item_code, :value => @code %></p>
+  <p><%= g.hidden_field :caller_cont, :value => @caller_cont %></p>
+<% end %>

@@ -1,0 +1,18 @@
+<% labelled_tabular_form_for :cm_doc_counter, @cm_doc_counter,
+                             :url => {:action => 'edit', :id => @cm_doc_counter},
+                             :html => {:id => 'doc-counter-form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_doc_counter' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Code Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <%= submit_tag l(:button_submit) %>
+
+<% end %>

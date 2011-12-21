@@ -1,0 +1,128 @@
+<br /><hr />
+
+<div title="Versions">
+<h3>Document Versions</h3>
+
+<% if @cm_doc.cm_docs_versions.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+  <td align="center"><b>Version</b></td>
+  <td align="center"><b>Status</b></td>
+  <td align="center"><b>Applicable</b></td>
+  <td align="center"><b>Physical Location</b></td>
+  <td align="center"><b>Assignee</b></td>
+  <td align="center"><b>Comments</b></td>
+  <td align="center"><b>Edit</b></td>
+  <td align="center"><b>Delete</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_doc.cm_docs_versions.each do |docv| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= h(docv.version) %></td>
+  <td align="center"><%= h(docv.status.name) %></td>
+  <td align="center"><%= image_tag 'true.png' if docv.applicable? %></td>
+  <td><%= textilizable h(docv.physical_location) %></td>
+  <td align="center"><%= h(docv.assignee.name) unless docv.assignee.blank? %></td>
+  <td><%= h(docv.comments) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_docs_versions',
+      :action => 'edit', :id => docv, :project_id => @project.id}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_docs_versions',
+      :action => 'destroy', :id => docv, :project_id => @project.id, :cm_doc_id => @cm_doc.id},
+      :confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_doc.cm_docs_versions.size %> Versions created</small></p>
+<% else %>
+<p style="text-align:right;"><small>No versions related</small></p>
+<% end %>
+<%= link_to "Add New Version", {:controller => "cm_docs_versions",
+  :action => 'new', :id => @project, :doc_id => @cm_doc.id}, :class => 'icon icon-add' %>
+</div>
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_doc, :cm_object_type => "CmDoc",
+    :cm_object_cont => "cm_docs", :export => "N" } %>
+
+<br /><hr />
+
+<h3>Related RIDs<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("rids_table", "appear", {duration:0.3}); return false;' %></small></h3>
+
+<div id="rids_list">
+<% if @cm_doc.rids.any? %>
+  <div id="rids_table"  <%= 'style="display:none"' %> >
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>RID Code</b></td>
+    <td align="center"><b>Affected Version</b></td>
+    <td align="center"><b>Status</b></td>
+    <td align="center"><b>Close Out</b></td>
+    <td align="center"><b>Implemented</b></td>
+    <td align="center"><b>Reviewed</b></td>
+    <td align="center"><b>Originator</b></td>
+    <td align="center"><b>Assignee</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_doc.rids.each do |rid| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= link_to h(rid.code), :controller => "cm_rids",
+                          :action => "show", :id => rid.id %></td>
+  <td align="center"><%= h(rid.affected_doc_version) %></td>
+  <td align="center"><%= h(change_internal_status_to_s(rid.internal_status_id)) %></td>
+  <td align="center"><%= h(rid.close_out.name) %></td>
+  <td align="center"><%= image_tag 'true.png' if rid.implementation_location != "" %></td>
+  <td align="center"><%= image_tag 'true.png' if rid.reviewed? %></td>
+  <td><%= h(rid.originator) %></td>
+  <td align="center"><%= h(rid.assignee.name) unless rid.assignee.nil? %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+  </div>
+<p style="text-align:right;"><small><%=@cm_doc.rids.size %> RIDs related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No RIDs related to this document</small></p>
+<% end %>
+</div>
+
+<div title="RelatedItems">
+<br /><hr />
+
+<%= render :partial => 'cm_items_objects/items_related',
+  :locals => { :cm_object => @cm_doc, :cm_object_type => "CmDoc",
+  :caller_cont => "cm_docs", :export => "N"} %>
+</div>
+
+<div title="RelatedNCs">
+
+<%= render :partial => 'cm_ncs_objects/ncs_related',
+  :locals => { :cm_object => @cm_doc, :cm_object_type => "CmDoc", 
+  :caller_cont => "cm_docs", :export => "N", :add_new => "N"} %>
+</div>
+
+<br /><hr />
+<div title="Deliveries">
+<h3>Delivered in</h3>
+
+<% if @deliveries.any? %>
+  <%= render :partial => 'cm_deliveries/delivery_info' %>
+<p style="text-align:right;"><small><%=@deliveries.size %> Deliveries included</small></p>
+<% else %>
+<p style="text-align:right;"><small>Document not delivered</small></p>
+<% end %>
+</div>
+
+<br /><hr />
+<div title="RelatedQRs">
+<h3>Related Quality Records</h3>
+<%= render :partial => 'cm_qrs/qrs_in_object.rhtml', :locals => {:cm_qrs => @cm_qrs} %>
+</div>
+

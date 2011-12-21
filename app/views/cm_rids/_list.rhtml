@@ -1,0 +1,44 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of rids found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <th><b>Originator</b></th>
+      <th><b>Discrepancy</b></th>
+      <th><b>Affected doc</b></th>
+      <th><b>Location</b></th>
+      <th><b>Status</b></th>
+      <th><b>Category</b></th>
+      <th><b>Due Date</b></th>
+      <th><b>Implemented</b></th>
+      <th><b>Reviewed</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_rids.each do |rid| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to rid.id, :controller => "cm_rids", :action => "show", :id => rid %></td>
+        <td align="center"><%= link_to rid.code, :controller => "cm_rids", :action => "show", :id => rid %></td>
+        <td align="center"><%= h(rid.originator) %></td>
+        <td><%= h(rid.discrepancy[0..100]) %></td>
+        <td><%= h(rid.affected_doc.code) unless rid.affected_doc.nil? %> </td>
+        <td><%= h(rid.problem_location) %></td>
+        <td align="center"><%= h(change_internal_status_to_s(rid.internal_status_id)) %></td>
+        <td align="center"><%= h(change_category_to_s(rid.category)) %></td>
+        <td align="center"><%= h(rid.doc_due_date.strftime("%Y-%m-%d")) if not rid.doc_due_date.nil? %></td>
+        <td align="center"><%= image_tag 'true.png' unless rid.implementation_location.blank? %></td>
+        <td align="center"><%= image_tag 'true.png' if rid.reviewed? %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_rids', :action => 'edit', :id => rid}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_rids', :action => 'destroy', :id => rid},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_rid_pages, @total %></p>

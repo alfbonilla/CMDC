@@ -1,0 +1,26 @@
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Delivery Code</b></td>
+<td align="center"><b>Delivery Date</b></td>
+<td align="center"><b>Relevant Data</b></td>
+</tr>
+</thead>
+<tbody>
+<% @deliveries.each do |deliv| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<td align="center"><%= link_to h(deliv.delivery.code), :controller => 'cm_deliveries', :action => 'show', :id => deliv.delivery.id %></td>
+<td align="center"><%= h(deliv.delivery.delivery_date.strftime("%Y/%m/%d")) unless deliv.delivery.delivery_date.nil? %></td>
+
+<% case  deliv.x_type
+   when "CmChange", "CmDoc" %>
+<td>Delivered Version: <%= h(deliv.rel_string) unless deliv.rel_string.nil? %></td>
+  <% when "CmNc" %>
+<td>Status at Delivery: <%= h(deliv.rel_string) %></td>
+  <% when "CmNcClosed" %>
+<td>Delivered Closed. Closing Date: <%= h(deliv.rel_string) unless deliv.rel_string.nil? %></td>
+<% end %>
+</tr>
+<% end %>
+</tbody>
+</table>

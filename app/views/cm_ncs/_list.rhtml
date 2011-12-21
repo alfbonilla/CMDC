@@ -1,0 +1,45 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Non-Conformances found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <th><b>Name</b></th>
+      <%= sort_header_tag('created_on', :caption => 'Creation Date') %>
+      <%= sort_header_tag('assigned_to_id', :caption => 'Owner') %>
+      <th><b>Status</b></th>
+      <th><b>Expected/Closed Version</b></th>
+      <th><b>Classification</b></th>
+      <th><b>Company From</b></th>
+      <th><b>Copy</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+<tbody>
+<% @cm_ncs.each do |nc| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= link_to nc.code, :controller => "cm_ncs", :action => "show", :id => nc %></td>
+    <td><%= h(nc.name) %></td>
+    <td align="center"><%= h(nc.created_on.strftime("%Y-%m-%d")) %></td>
+    <td align="center"><%= h(nc.assignee.name) unless nc.assignee.nil? %></td>
+    <td align="center"><%= h(nc.status.name) %></td>
+    <% if nc.closed? %>
+    <td align="center">[clo]<%= h(nc.rlse_solved.name) unless nc.rlse_solved.nil? %></td>
+    <% else %>
+    <td align="center">[exp]<%= h(nc.rlse_expected.name) unless nc.rlse_expected.nil? %></td>
+    <% end %>
+    <td align="center"><%= h(nc.classification.name) %></td>
+    <td align="center"><%= h(nc.company.name) if not nc.company.nil? %></td>
+    <td align="center"><%= link_to(image_tag('copy.png'), {:controller => 'cm_ncs', :action => 'new', :copy_nc_id => nc, :id => @project}) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_ncs', :action => 'edit', :id => nc}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs', :action => 'destroy', :id => nc},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_nc_pages, @total %></p>
+

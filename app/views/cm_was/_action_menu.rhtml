@@ -1,0 +1,5 @@
+<div class="contextual">
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_was', :action => 'index', :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_was', :action => 'edit', :id => @cm_wa }, :onclick => 'showAndScrollTo("update", "notes"); return false;', :class => 'icon icon-edit', :accesskey => accesskey(:edit)) %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_was', :action => 'destroy', :id => @cm_wa}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

@@ -1,0 +1,80 @@
+<% fields_for :cm_rid, @cm_rid, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :required => true %>
+  <% if @cm_rid.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+         :caller_cont => 'cm_rids', :cmdc_object => change_cmdc_object_to_i('Rid')  }} )%></small>
+  <% else %>
+    <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+  <% end %>
+  </p>
+<div class="splitcontentleft">
+  <p><%= f.select :internal_status_id, [['Open', 1], ['Closed', 2], ['Withdrawn', 3], ['Responded', 4]] %></p>
+  <p><%= f.select :close_out_id, (@cm_rid_close_outs.collect {|p| [p.name, p.id]}) %></p>
+  <p><%= f.text_field :generation_date, :size => 10 %><%= calendar_for('cm_rid_generation_date') %></p>
+</div>
+
+<div class="splitcontentright">
+  <p><%= f.text_field :doc_due_date, :size => 10 %><%= calendar_for('cm_rid_doc_due_date') %></p>
+  <p><%= f.select :assigned_to_id, (@cm_rid_assignees.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+  <p><%= f.select :category, [['Minor', 1], ['Major', 2], ['Question', 3], ['Comment', 4]] %></p>
+</div>
+
+<div style="clear:both;"> </div>
+
+<fieldset><legend>Affected Document</legend>
+  <div class="splitcontentleft">
+    <p><%= f.select :affected_doc_id, (@cm_docs.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.text_field :problem_location %></p>
+  </div>
+  <div class="splitcontentright">
+    <p><%= f.text_field :affected_doc_version, :size => 25 %></p>
+    <p><%= f.select :open_release_id, (@releases.collect {|p| [p.name, p.id]}) %></p>
+  </div>
+</fieldset>
+
+<div id="detection_details" <%= 'style="display:none"' unless @cm_rid.new_record? or
+                                  @cm_rid.internal_status_id == 1 %>>
+<fieldset><legend>Originator Data</legend>
+  <div class="splitcontentleft">
+    <p><%= f.text_field :originator %></p>
+    <p><%= f.text_area :discrepancy, :cols => 50, :rows => 8, :class => 'wiki-edit' %></p>
+  </div>
+  <div class="splitcontentright">
+    <p><%= f.select :originator_company_id, (@cm_companies.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.text_area :recommendation, :cols => 50, :rows => 3, :class => 'wiki-edit' %></p>
+    <p><%= f.text_area :violated_reqs, :cols => 50, :rows => 3, :class => 'wiki-edit' %></p>
+  </div>
+</fieldset>
+</div>
+
+<div id="solution_details" <%= 'style="display:none"' unless @cm_rid.internal_status_id == 4 or
+                                                      @cm_rid.internal_status_id == 1%>>
+<fieldset><legend>Solution</legend>
+  <div class="splitcontentleft">
+    <p><%= f.text_area :author_response, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+    <p><%= f.text_field :implementation_location %></p>
+  </div>
+  <div class="splitcontentright">
+    <p><%= f.text_area :disposition, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    <p><%= f.select :implementation_release_id, (@releases.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.check_box :reviewed %> <small>(To complete by document reviewer)</small></p>
+  </div>
+</fieldset>
+</div>
+
+<p><%= f.text_area :comments, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+
+<fieldset><legend>Association to Meetings</legend>
+  <p><%= f.select :board_to_relate, (@cm_boards.collect {|p| [p.cm_board_code, p.id]}),
+                  :include_blank => true %></p>
+</fieldset>
+
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_rid_code')).value=new_code;}
+</script>

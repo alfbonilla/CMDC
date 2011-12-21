@@ -1,0 +1,23 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="qrs">New Quality Record Type</h2>
+
+<% labelled_tabular_form_for :cm_qr_type, @cm_qr_type,
+                             :html => {:id => 'cm_qr_type-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_qr_type' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Quality Record Type Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New QR Type" %>

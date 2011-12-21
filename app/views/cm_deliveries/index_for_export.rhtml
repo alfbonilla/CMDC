@@ -1,0 +1,40 @@
+<h2 class="deliveries">Deliveries Index</h2>
+<title>Index of Deliveries</title>
+
+
+<% if @cm_deliveries.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+<p>Number of deliveries found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Id</b></th>
+      <th><b>Code</b></th>
+      <th><b>Description</b></th>
+      <th><b>Status</b></th>
+      <th><b>Delivery Date</b></th>
+      <th><b>From Company</b></th>
+      <th><b>To Company</b></th>
+      <th><b>Release</b></th>
+      <th><b>Approved By</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_deliveries.each do |delivery| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td><%= delivery.id %></td>
+        <td><%= delivery.code %></td>
+        <td><%= h(delivery.description) %></td>
+        <td><%= h(delivery.status.name) %></td>
+        <td><%= h(delivery.delivery_date.strftime("%Y-%m-%d")) unless delivery.delivery_date.blank? %></td>
+        <td><%= h(delivery.source_company.name) %></td>
+        <td><%= h(delivery.target_company.name) %></td>
+        <td><%= h(delivery.release.name) unless delivery.release.nil? %></td>
+        <td><%= h(delivery.approver.login) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+  <% end %>

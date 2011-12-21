@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/cmplugin/!svn/ver/5/trunk/redmine_cm/test/fixtures
+END
+doc_counters.yml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/cmplugin/!svn/ver/5/trunk/redmine_cm/test/fixtures/doc_counters.yml
+END
+inventory_items_issues.yml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/cmplugin/!svn/ver/5/trunk/redmine_cm/test/fixtures/inventory_items_issues.yml
+END
+inventory_items.yml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/cmplugin/!svn/ver/5/trunk/redmine_cm/test/fixtures/inventory_items.yml
+END

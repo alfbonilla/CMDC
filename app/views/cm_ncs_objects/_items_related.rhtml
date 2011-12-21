@@ -1,0 +1,58 @@
+<h3>Related Items</h3>
+<% if @cm_nc.items.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Item Code</b></td>
+    <td align="center"><b>Name</b></td>
+    <td align="center"><b>Status</b></td>
+    <td align="center"><b>Relation details</b></td>
+    <% if export == "N" %>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+<% @cm_nc.cm_ncs_objects.each do |cno| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% if cno.x_type == "CmItem" %>
+    <% if cno.item.code.nil? %>
+      <% item_ref = "Unknown. Id:"+cno.x_id.to_s %>
+      <% item_name = "Unknown" %>
+      <% item_status = "Unknown" %>
+      <% creation_text = "Unknown" %>
+    <% else %>
+      <% item_ref = cno.item.code %>
+      <% item_name = cno.item.name %>
+      <% item_status = cno.item.status.name %>
+      <% creation_text = "Created by " + cno.author.login + " on " + cno.created_on.strftime("%Y/%m/%d") %>
+    <% end %>
+    <td align="center"><%= link_to h(item_ref), {:controller => 'cm_items',
+                :action => 'show', :id => cno.item.id}, :title => creation_text %></td>
+    <td><%= h(item_name) %></td>
+    <td><%= h(item_status) %></td>
+    <td><%= h(cno.rel_string) %></td>
+    <% if export == "N" %>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_ncs_objects', :action => 'edit',
+      :id => cno.id, :caller_cont => caller_cont, :code => item_ref}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_objects', :action => 'destroy',
+        :relation_id => cno.id, :x_id => cno.cm_nc_id, :x_type => 'CmNc',
+        :code => item_ref, :caller_cont =>  caller_cont},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    <% end %>
+  <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_nc.items.size %> Items related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Items related</small></p>
+<% end %>
+
+<% if export == "N" %>
+<%= link_to "Add Existing Item", {:controller => "cm_ncs_objects", :action => 'new',
+    :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont}, :class => 'icon icon-add' %>
+<% end %>
+
+  

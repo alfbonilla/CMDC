@@ -1,0 +1,59 @@
+<% fields_for :cm_qr, @cm_qr, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+  <p><%= f.text_field :code, :size => 30, :required => true %>
+    <% if @cm_qr.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+         :caller_cont => 'cm_qrs', :cmdc_object => change_cmdc_object_to_i('Quality Record')  }} )%></small>
+  <% end %>
+  </p>
+  <fieldset><legend>"Reviewed Object Info"</legend>
+    <p><i>Type: <%= @cm_qr.x_type %></i></p>
+    <p><i>Name: <%= @cm_qr.x_name %></i></p>
+    <p><i>Id  : <%= @cm_qr.x_id %></i></p>
+  </fieldset>
+</div>
+
+<div class="splitcontentright">
+  <p><%= f.select :type_id, (@cm_qr_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+  <p><%= f.select :status, CmQr::QR_STATUSES.collect %></p>
+  <p><%= f.select :assigned_to_id, (@cm_qr_assignees.collect {|p| [p.login, p.id]}), :required => true %></p>
+  <p><%= f.text_field :check_used %></p>
+</div>
+
+<p><%= f.text_area :ref_docs, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+<p><%= f.text_area :comments, :cols => 60, :rows => 6, :class => 'wiki-edit' %></p>
+
+<p><%= f.hidden_field :x_type %></p>
+<p><%= f.hidden_field :x_name %></p>
+<p><%= f.hidden_field :x_id %></p>
+
+<% end %>
+
+<% if not @cm_qr.new_record? %>
+  <% if @ncs.blank? %>
+    <p><i>There are no NCs that can be related</i></p>
+  <% else %>
+    <p><%= render :partial => 'cm_ncs/relate_to_qr' , :locals => { :ncs => @ncs } %></p>
+  <% end %>
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_qrs" %></p>
+<% end %>
+
+<% if @cm_qr.new_record? && User.current.allowed_to?(:add_cm_qr_watchers, @project) -%>
+<p><label><%= l(:label_issue_watchers) %></label>
+<% @cm_qr.project.users.sort.each do |user| -%>
+<label class="floating"><%= check_box_tag 'cm_qr[watcher_user_ids][]', user.id,
+  @cm_qr.watched_by?(user) %> <%=h user %></label>
+<% end -%>
+</p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_qr_code')).value=new_code;}
+</script>

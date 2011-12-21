@@ -1,0 +1,64 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">Test Record Execution History for Test <%= @cm_test.code %> </h2>
+
+<% labelled_tabular_form_for :cm_tr_history, @cm_tr_history,
+                             :html => {:id => 'cm_tr_history-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_test' %>
+
+  <p>
+    <a href="javascript:history.back()">Back</a>
+  </p>
+
+  <div id="table" class="autoscroll">
+    <% if @cm_tr_history.empty? %>
+      <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+      <table class="list">
+        <thead>
+          <tr>
+            <th><b>Test Record Code</b></th>
+            <th><b>Execution Date</b></th>
+            <th><b>Test Campaign Code</b></th>
+            <th><b>Test Campaign Name</b></th>
+            <th><b>Result</b></th>
+            <th><b>Non-conformances Related</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cm_tr_history.each do |tr| %>
+            <tr valign="top" class="<%= cycle('odd', 'even') %>">
+              <td><%= link_to tr.cm_test_record.code, :controller => "cm_test_records",
+                  :action => "show", :id => tr.cm_test_record.id %></td>
+              <td><%= h(tr.cm_test_record.execution_date) %></td>
+              <td><%= h(tr.cm_test_campaign.code) %></td>
+              <td><%= h(tr.cm_test_campaign.name) %></td>
+              <% if (tr.cm_test_record.result == 1)%>
+                <td align="center"><%= image_tag('false.png')%></td>
+              <%else%>
+                <% if tr.cm_test_record.result == 2  %>
+                  <td align="center"><%= image_tag('true.png')%></td>
+                <%else%>
+                  <td align="center"><%= image_tag('time.png')%></td>
+                <%end%>
+              <%end%>
+              <td>
+              <% nclist ="" %>
+              <% tr.cm_test_record.cm_ncs_objects.each do |nc| %>
+                <% nclist = nclist + nc.cm_nc.code + " " %>
+              <% end %>
+              <%= nclist %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+</div>
+
+<% end %>
+
+
+<% html_title "CM - Tets - Execution History" %>

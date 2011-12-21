@@ -1,0 +1,70 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<h2 class="deliveries"><%= @cm_delivery.code %> #<%= @cm_delivery.id %></h2>
+
+<div>
+  <%= avatar(@cm_delivery.author, :size => "50") %>
+  <h3><%=h @cm_delivery.name %></h3>
+  <p class="author">
+    <%= authoring @cm_delivery.created_on, @cm_delivery.author %>.
+    <% if @cm_delivery.created_on != @cm_delivery.updated_on %>
+      <%= l(:label_updated_time, time_tag(@cm_delivery.updated_on)) %>.
+    <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_delivery.status.name %></td>
+  <th><b>Delivery Date:</b></th><td><%= @cm_delivery.delivery_date.strftime("%Y-%m-%d") unless @cm_delivery.delivery_date.blank? %></td>
+  <th><b>Release:</b></th><td><%= @cm_delivery.release.name unless @cm_delivery.release.nil? %></td>
+</tr>
+<tr>
+  <th><b>From Company:</b></th><td><%= @cm_delivery.source_company.name %></td>
+  <th><b>To Company:</b></th><td><%= @cm_delivery.target_company.name %></td>
+  <th><b>Approved By:</b></th><td><%= @cm_delivery.approver.name %></td>
+</tr>
+</table>
+
+<p><strong>Description</strong></p>
+<div class="wiki">
+<p><%= textilizable @cm_delivery, :description %></p>
+</div>
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+        :locals => { :issue => @cm_delivery, :journals => @journals, :caller_cont => 'cm_deliveries' } %>
+
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_deliveries', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_delivery %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Delivery Note (PDF)', {:action => 'show', :id => @cm_delivery, :format => 'pdf' }) %>
+  ,
+  <%= link_to('Export to HTML', {:action => 'show', :id => @cm_delivery, :format => 'cmdc' }) %>
+</p>
+
+<% html_title "#{@cm_delivery.code} ##{@cm_delivery.id}" %>

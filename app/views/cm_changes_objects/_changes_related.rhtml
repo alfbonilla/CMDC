@@ -1,0 +1,52 @@
+<h3>Related Changes</h3>
+<% if cm_object.cm_changes_objects.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Change Code</b></td>
+    <td align="center"><b>Owner</b></td>
+    <td align="center"><b>Status</b></td>
+    <% if export == "N" %>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+<% cm_object.cm_changes_objects.each do |cco| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% if cco.cm_change.nil? %>
+    <% change_ref = "Unknown. Id:"+cco.cm_change_id.to_s %>
+    <% change_author = "Unknown" %>
+    <% change_status = "Unknown" %>
+    <% creation_text = "Unknown" %>
+  <% else %>
+    <% change_ref = cco.cm_change.code %>
+    <% change_author = cco.cm_change.author.name %>
+    <% change_status = cco.cm_change.status.name %>
+    <% creation_text = "Created by " + cco.author.login + " on " + cco.created_on.strftime("%Y/%m/%d") %>
+  <% end %>
+  <td align="center"><%= link_to h(change_ref), {:controller => 'cm_changes',
+              :action => 'show', :id => cco.cm_change_id}, :title => creation_text %></td>
+  <td align="center"><%= h(change_author) %></td>
+  <td align="center"><%= h(change_status) %></td>
+  <% if export == "N" %>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_changes_objects', :action => 'edit',
+    :id => cco.id, :caller_cont => caller_cont, :Change_code => change_ref}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_changes_objects', :action => 'destroy',
+      :relation_id => cco.id, :x_id => cco.x_id, :x_type => cm_object_type,
+      :Change_code => change_ref, :caller_cont => caller_cont},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=cm_object.cm_changes_objects.size %> Request for Changes related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Request for Changes related</small></p>
+<% end %>
+<% if export == "N" %>
+<%= link_to "Add Existing Change", {:controller => "cm_changes_objects", :action => 'new',
+    :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont}, :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />

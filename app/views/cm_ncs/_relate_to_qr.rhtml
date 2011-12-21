@@ -1,0 +1,3 @@
+<% fields_for :cm_nc, @cm_nc, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.select :cm_nc, (@ncs.collect {|p| [p.code + " - " + p.name, p.id]}) %></p>
+<% end %>

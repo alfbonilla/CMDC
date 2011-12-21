@@ -1,0 +1,28 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="boards">New Meeting</h2>
+
+<% labelled_tabular_form_for :cm_board, @cm_board,
+                             :html => {:id => 'cm_board-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_board' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Meeting Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+
+    <% if @cm_board.new_record? %>
+      <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+    <% end %>
+  </div>
+  <br />
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New Meeting" %>

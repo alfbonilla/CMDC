@@ -1,0 +1,16 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="deliveries">Delivery Statuses Index</h2>
+
+<title>Index of Delivery Statuses</title>
+
+<% if @cm_delivery_statuses.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'cm_delivery_statuses/list' %>
+<% end %>
+
+<%= link_to "Add new delivery status", {:controller => "cm_delivery_statuses",
+              :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - Delivery Statuses List" %>

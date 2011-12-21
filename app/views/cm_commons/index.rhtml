@@ -1,0 +1,183 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<title>Configuration Management/Data Centre Menu</title>
+
+<div id="imagen1" class="floting_center" style="display:none;">
+      <td><%= image_tag('/plugin_assets/redmine_cm/images/golden_rules/dt_cm_grs.jpg') %></td>
+</div>
+
+<div id="imagen2" class="floting_center" style="display:none;">
+      <%= image_tag('/plugin_assets/redmine_cm/images/golden_rules/nc_grs.png') %>
+</div>
+
+<div id="imagen3" class="floting_center" style="display:none;">
+      <%= image_tag('/plugin_assets/redmine_cm/images/golden_rules/dt_dm_grs.jpg') %>
+</div>
+
+<div id="imagen4" class="floting_center" style="display:none;">
+      <%= image_tag('/plugin_assets/redmine_cm/images/golden_rules/dt_ut_grs.jpg') %>
+</div>
+
+<div class="splitcontentleft">
+
+<script type="text/javascript">
+
+var menuids=["sidebarmenu1"] //Enter id(s) of each Side Bar Menu's main UL, separated by commas
+
+function initsidebarmenu(){
+for (var i=0; i<menuids.length; i++){
+  var ultags=document.getElementById(menuids[i]).getElementsByTagName("ul")
+    for (var t=0; t<ultags.length; t++){
+    ultags[t].parentNode.getElementsByTagName("a")[0].className+=" subfolderstyle"
+  if (ultags[t].parentNode.parentNode.id==menuids[i]) //if this is a first level submenu
+   ultags[t].style.left=ultags[t].parentNode.offsetWidth+"px" //dynamically position first level submenus to be width of main menu item
+  else //else if this is a sub level submenu (ul)
+    ultags[t].style.left=ultags[t-1].getElementsByTagName("a")[0].offsetWidth+"px" //position menu to the right of menu item that activated it
+    ultags[t].parentNode.onmouseover=function(){
+    this.getElementsByTagName("ul")[0].style.display="block"
+    }
+    ultags[t].parentNode.onmouseout=function(){
+    this.getElementsByTagName("ul")[0].style.display="none"
+    }
+    }
+  for (var t=ultags.length-1; t>-1; t--){ //loop through all sub menus again, and use "display:none" to hide menus (to prevent possible page scrollbars
+  ultags[t].style.visibility="visible"
+  ultags[t].style.display="none"
+  }
+  }
+}
+
+if (window.addEventListener)
+window.addEventListener("load", initsidebarmenu, false)
+else if (window.attachEvent)
+window.attachEvent("onload", initsidebarmenu)
+
+</script>
+
+
+<div class="sidebarmenu">
+<ul id="sidebarmenu1">
+<li><a href="#">Reference Tables</a>
+<ul>
+  <li><%= link_to "Delivery Statuses", {:controller => 'cm_delivery_statuses', :action => 'index', :id => @project}, :class => 'deliveries' %></li>
+  <li><a href="#">Inventory Items</a>
+  <ul>
+    <li><%=link_to "Item Statuses", {:controller => 'cm_item_statuses', :action => 'index', :id => @project}, :class => 'iitems' %></li>
+    <li><%=link_to "Item Classifications", {:controller => 'cm_item_classifications', :action => 'index', :id => @project}, :class => 'iitems' %></li>
+    <li><%=link_to "Item Groups", {:controller => 'cm_item_groups', :action => 'index', :id => @project}, :class => 'iitems' %></li>
+    <li><%=link_to "Item Categories", {:controller => 'cm_item_categories', :action => 'index', :id => @project}, :class => 'iitems' %></li>
+    <li><%=link_to "Item Types", {:controller => 'cm_item_types', :action => 'index', :id => @project}, :class => 'iitems' %></li>
+  </ul>
+  </li>
+  <li><a href="#">Maintenance Logs</a>
+  <ul>
+    <li><%=link_to "Maintenance Log Statuses", {:controller => 'cm_mnt_log_statuses', :action => 'index', :id => @project}, :class => 'mlogs' %></li>
+    <li><%=link_to "Maintenance Log Types", {:controller => 'cm_mnt_log_types', :action => 'index', :id => @project}, :class => 'mlogs' %></li>
+  </ul>
+  </li>
+  <li><a href="#">Traceability Elements</a>
+  <ul>
+    <li><%=link_to "TE Classifications", {:controller => 'cm_reqs_classifications', :action => 'index', :id => @project}, :class => 'reqs' %></li>
+    <li><%=link_to "TE Types", {:controller => 'cm_reqs_types', :action => 'index', :id => @project}, :class => 'reqs' %></li>
+  </ul>
+  </li>
+   <li><a href="#">Tests</a>
+  <ul>
+    <li><%=link_to "Test Classifications", {:controller => 'cm_test_classifications', :action => 'index', :id => @project}, :class => 'tests' %></li>
+    <li><%=link_to "Test Types", {:controller => 'cm_test_types', :action => 'index', :id => @project}, :class => 'tests' %></li>
+  </ul>
+  </li>
+  <li><a href="#">Changes</a>
+  <ul>
+    <li><%=link_to "Change Statuses", {:controller => 'cm_change_statuses', :action => 'index', :id => @project}, :class => 'changes' %></li>
+    <li><%=link_to "Change Types", {:controller => 'cm_change_types', :action => 'index', :id => @project}, :class => 'changes' %></li>
+  </ul>
+  </li>
+  <li><a href="#">Documents</a>
+  <ul>
+    <li><%=link_to "Document Statuses", {:controller => 'cm_doc_statuses', :action => 'index', :id => @project}, :class => 'cmdocs' %></li>
+    <li><%=link_to "Document Types", {:controller => 'cm_doc_types', :action => 'index', :id => @project}, :class => 'cmdocs' %></li>
+  </ul>
+  </li>
+  <li><%=link_to "Meeting Types", {:controller => 'cm_board_types', :action => 'index', :id => @project}, :class => 'boards' %></li>
+<li><a href="#">Risks</a>
+  <ul>
+    <li><%=link_to "Risk Statuses", {:controller => 'cm_risk_statuses', :action => 'index', :id => @project}, :class => 'risks' %></li>
+    <li><%=link_to "Risk Types", {:controller => 'cm_risk_types', :action => 'index', :id => @project}, :class => 'risks' %></li>
+  </ul>
+</li>
+  <li><%=link_to "RID Close Out Values", {:controller => 'cm_rid_close_outs', :action => 'index', :id => @project}, :class => 'rids' %></li>
+  <li><a href="#">Non-Conformances</a>
+  <ul>
+    <li><%=link_to "Non-Conformances Statuses", {:controller => 'cm_ncs_statuses', :action => 'index', :id => @project}, :class => 'ncrs' %></li>
+    <li><%=link_to "Non-Conformances Phases", {:controller => 'cm_ncs_phases', :action => 'index', :id => @project}, :class => 'ncrs' %></li>
+    <li><%=link_to "Non-Conformances Types", {:controller => 'cm_ncs_types', :action => 'index', :id => @project}, :class => 'ncrs' %></li>
+    <li><%=link_to "Non-Conformances Classifications", {:controller => 'cm_ncs_classifications', :action => 'index', :id => @project}, :class => 'ncrs' %></li>
+  </ul>
+  </li>
+  <li><%=link_to "Quality Record Types", {:controller => 'cm_qr_types', :action => 'index', :id => @project}, :class => 'qrs' %></li>
+  <li><%=link_to "Companies", {:controller => 'cm_companies', :action => 'index', :id => @project}, :class => 'companies' %></li>
+  <li><%=link_to "Subsystems", {:controller => 'cm_subsystems', :action => 'index', :id => @project}, :class => 'subsystems' %></li>
+  <li><%=link_to "Source Files", {:controller => 'cm_source_files', :action => 'index', :id => @project}, :class => 'sfiles' %></li>
+</ul>
+</li>
+<li><%= link_to "Deliveries", {:controller => 'cm_deliveries', :action => 'index', :id => @project}, :class => 'deliveries' %></li>
+<li><a href="#">Inventory Items</a>
+  <ul>
+    <li><%= link_to "Inventory Items", {:controller => 'cm_items', :action => 'index', :id => @project}, :class => 'iitems' %></li>
+    <li><%= link_to "Purchase Orders", {:controller => 'cm_purchase_orders', :action => 'index', :id => @project}, :class => 'porders' %></li>
+    <li><%= link_to "Maintenance Logs", {:controller => 'cm_mnt_logs', :action => 'index', :id => @project}, :class => 'mlogs' %></li>
+  </ul>
+</li>
+
+<li><%= link_to "Traceability Elements", {:controller => 'cm_reqs', :action => 'index', :id => @project}, :class => 'reqs' %></li>
+
+<li><a href="#">Tests</a>
+  <ul>
+    <li><%= link_to "Test Campaigns", {:controller => 'cm_test_campaigns', :action => 'index', :id => @project}, :class => 'tests' %></li>
+    <li><%= link_to "Test (Cases/Procedures)", {:controller => 'cm_tests', :action => 'index', :id => @project}, :class => 'tests' %></li>
+    <li><%= link_to "Test Scenarios", {:controller => 'cm_test_scenarios', :action => 'index', :id => @project}, :class => 'tests' %></li>
+    <li><%= link_to "Test Records", {:controller => 'cm_test_records', :action => 'index', :id => @project}, :class => 'tests' %></li>
+  </ul>
+</li>
+
+<li><%= link_to "Request for Changes", {:controller => 'cm_changes', :action => 'index', :id => @project}, :class => 'changes' %></li>
+<li><%= link_to "Documents", {:controller => 'cm_docs', :action => 'index', :id => @project}, :class => 'cmdocs' %></li>
+<li><%= link_to "Meetings", {:controller => 'cm_boards', :action => 'index', :id => @project}, :class => 'boards' %></li>
+<li><a href="#">Non-Conformances</a>
+  <ul>
+    <li><%= link_to "Non-Conformances", {:controller => 'cm_ncs', :action => 'index', :id => @project}, :class => 'ncrs' %></li>
+    <li><%= link_to "Work Arounds", {:controller => 'cm_was', :action => 'index', :id => @project}, :class => 'ncrs' %></li>
+  </ul>
+</li>
+<li><%= link_to "RIDs", {:controller => 'cm_rids', :action => 'index', :id => @project}, :class => 'rids' %></li>
+<li><%= link_to "Risks", {:controller => 'cm_risks', :action => 'index', :id => @project}, :class => 'risks' %></li>
+<li><%= link_to "Software Modification Records", {:controller => 'cm_smrs', :action => 'index', :id => @project}, :class => 'smrs' %></li>
+<li><%= link_to "Quality Records", {:controller => 'cm_qrs', :action => 'index', :id => @project}, :class => 'qrs' %></li>
+<li><%= link_to "Code Generator", {:controller => 'cm_doc_counters', :action => 'index', :id => @project}, :class => 'codegens' %></li>
+<li><%= link_to "CM/DC Search", {:controller => 'cm_commons', :action => 'search_cmdc', :id => @project}, :class => 'searchcmdc' %></li>
+</ul>
+</div>
+<br/>
+<a href="http://ganimedes/projects/red-adm/wiki/Functionality_Supported"><small>Functionality Covered by CM/DC</small></a>
+</div>
+
+<% html_title "Configuration Management/Data Centre Menu" %>
+
+<script type="text/javascript">
+
+
+function hide_show_image(event,my_div_name){
+
+    div_id = my_div_name
+    if(document.getElementById(div_id).style.display == "none")
+      {
+        document.getElementById(div_id).style.display = ""
+      }
+    else
+      {
+       document.getElementById(div_id).style.display = "none"
+      }
+  }
+
+</script>

@@ -1,0 +1,28 @@
+<h3>Related SMRs</h3>
+
+<% if cm_object.cm_smrs.any? %>
+  <table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>SMR Code</b></td>
+      <td align="center"><b>Failed Tests</b></td>
+      <td align="center"><b>Delete Relationship</b></td>
+    </tr>
+  </thead>
+  <tbody>
+  <% cm_object.cm_smrs.each do |cmSmr| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= link_to h(cmSmr.smr_code), :controller => 'cm_smrs', :action => 'show', :id => cmSmr.id %></td>
+  <td align="center"><%= h(cmSmr.specific_tests) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_smrs', :action => 'remove_relation',
+    :id => @project, :smr_id => cmSmr.id, :removed_id => cm_object.id, :removed_type => cm_object_type,
+    :caller_cont => caller_cont },:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+  <% end %>
+  </tbody>
+  </table>
+<% else %>
+  <p><small>No SMRs related</small></p>
+<% end %>
+
+<br /><hr />

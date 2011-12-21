@@ -1,0 +1,21 @@
+<h2 class="tests_object">Edit Test <%= @cm_tests_test.parent_test.code %> Relation </h2>
+
+<% labelled_tabular_form_for :cm_tests_test, @cm_tests_test,
+     :html => {:id => 'cm_tests_test-form',
+     :class => nil,
+     :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_tests_test' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Related Test Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - Edit test relation - #{@cm_tests_test.parent_test.code} Relation" %>

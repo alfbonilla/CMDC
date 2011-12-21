@@ -1,0 +1,13 @@
+<div class="contextual">
+<%= watcher_tag(@cm_delivery, User.current) %>
+
+<%= link_to("Delivery Review", {:controller => 'cm_deliveries', :action => 'meetings_review',
+    :id => @cm_delivery }, :class => 'icon icon-details') %>
+<%= link_to("CSAR", {:controller => 'cm_deliveries', :action => 'generate_csar',
+    :id => @cm_delivery }, :class => 'icon icon-stats') %>
+<%= link_to_if_authorized("Create QR", {:controller => 'cm_qrs', :action => 'new', :id => @project, :x_id => @cm_delivery.id,
+    :x_type => "Delivery", :x_name => @cm_delivery.name }, :class => 'icon icon-report') %>
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_deliveries', :action => 'index', :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_deliveries', :action => 'edit', :id => @cm_delivery }, :onclick => 'showAndScrollTo("update", "notes"); return false;', :class => 'icon icon-edit', :accesskey => accesskey(:edit)) %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_deliveries', :action => 'destroy', :id => @cm_delivery}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

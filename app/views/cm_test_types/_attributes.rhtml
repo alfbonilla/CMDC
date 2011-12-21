@@ -1,0 +1,21 @@
+<% fields_for :cm_test_type, @cm_test_type, :builder => TabularFormBuilder do |f| %>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :acronym, :size => 10  %></p>
+    <p><%= f.text_field :name, :size => 30, :required => true %></p>
+    <p><%= f.text_field :level, :size => 10, :required => true %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><label for="type_is_default"><%=l(:field_is_default)%></label>
+    <%= f.check_box :is_default %></p>
+    <p><label for="type_test_design"><%=l(:field_test_design)%></label>
+    <%= f.check_box :test_design %></p>
+    <p><label for="type_test_case"><%=l(:field_test_case)%></label>
+    <%= f.check_box :test_case %></p>
+    <p><label for="type_test_procedure"><%=l(:field_test_procedure)%></label>
+    <%= f.check_box :test_procedure %></p>
+  </div>
+
+  <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+<% end %>

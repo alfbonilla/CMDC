@@ -1,0 +1,41 @@
+<br /><hr />
+<h3>Affected Files</h3>
+
+<% if @cm_smr.cm_smrs_affected_files.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>File Name</b></td>
+    <td align="center"><b>Source Revision</b></td>
+    <td align="center"><b>Final Revision</b></td>
+    <td align="center"><b>Comments</b></td>
+    <td align="center"><b>Approved</b></td>
+    <td align="center"><b>Author</b></td>
+    <td align="center"><b>Edit Relationship</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+  <% @cm_smr.cm_smrs_affected_files.each do |cmAffectedFile| %>
+    <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= h(cmAffectedFile.file_name) %></td>
+    <td align="center"><%= h(cmAffectedFile.source_revision) %></td>
+    <td align="center"><%= h(cmAffectedFile.final_revision) %></td>
+    <td align="center"><%= h(cmAffectedFile.comments_on_smr) %></td>
+    <td align="center"><%= image_tag 'true.png' if cmAffectedFile.approved? %></td>
+    <td align="center"><%= h(cmAffectedFile.author.login) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_smrs_affected_files', :action => 'edit',
+      :id => cmAffectedFile.id}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_smrs_affected_files', :action => 'destroy',
+      :id => cmAffectedFile.id},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_smr.cm_smrs_affected_files.size %> Affected Files</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Affected Files</small></p>
+<% end %>
+<br />
+<%= link_to "Add Existing Affected File", {:controller => "cm_smrs_affected_files",
+    :action => 'new', :id => @project, :cm_smr_id => @cm_smr.id}, :class => 'icon icon-add' %>

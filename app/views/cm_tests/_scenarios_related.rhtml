@@ -1,0 +1,39 @@
+<p><h3>Related Scenarios</h3></p>
+
+<% if @cm_test.cm_test_scenarios.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Code</b></td>
+    <td align="center"><b>Name</b></td>
+    <td></td>
+    <td></td> 
+  </tr>
+</thead>
+<tbody>
+<% @cm_test.cm_tests_objects.each do |te| %>
+  <% if te.x_type=="CmTestScenario" %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% creation_text = "Created by " + te.author.login + " on " + te.created_on.strftime("%Y/%m/%d") +
+     ". " + te.rel_string %>
+  <td align="center"><%= link_to h(te.cm_test_scenario.code ), {:controller => 'cm_test_scenarios',
+              :action => 'show', :id => te.cm_test_scenario.id}, :title => creation_text %></td>
+  <td><%= h(te.cm_test_scenario.name) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_tests_objects',
+      :action => 'edit', :id => te.id, :caller => 'cm_tests_scenarios'}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_tests_objects', 
+      :action => 'destroy', :id => te.id,:project => te.cm_test.project_id,:test_id => te.cm_test
+      },:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+  <% end %>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_test.cm_test_scenarios.size %> Scenarios related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Scenarios related</small></p>
+<% end %>
+<%= link_to "Add Existing Test Scenario", {:controller => "cm_tests_objects", :action => 'new',
+    :id => @cm_test, :caller => 'cm_tests_scenarios',:project => @project}, :class => 'icon icon-add' %>
+
+<br /><hr />

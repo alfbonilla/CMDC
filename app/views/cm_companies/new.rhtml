@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="companies">New Company</h2>
+
+<% labelled_tabular_form_for :cm_company, @cm_company,
+                             :html => {:id => 'cm_company-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_company' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Company Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New Company" %>

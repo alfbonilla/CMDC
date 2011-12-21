@@ -1,0 +1,65 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  code: 
+  productTreeCode: 
+  quantity: 
+  itemName: 
+  itemDescription: 
+  categoryId: 
+  platformId: 
+  statusId: 
+  typeId: 
+  classClassificationId: 
+  version: 
+  serialNumber: 
+  modelNumber: 
+  physicalLocation: 
+  installedOnHost: 
+  availability: 
+  licenseExpiration: 
+  MTBF: 
+  comments: 
+  markings: 
+  purchaseOrderId: 
+  cost: 
+  totalCost: 
+  paymentMethod: 
+  procurementLevel: 
+  frameContract: 
+  actualEstimated: 
+  itemOwner: 
+  disposalMethod: 
+  projectId: 1
+two:
+  id: 2
+  code: 
+  productTreeCode: 
+  quantity: 
+  itemName: 
+  itemDescription: 
+  categoryId: 
+  platformId: 
+  statusId: 
+  typeId: 
+  classClassificationId: 
+  version: 
+  serialNumber: 
+  modelNumber: 
+  physicalLocation: 
+  installedOnHost: 
+  availability: 
+  licenseExpiration: 
+  MTBF: 
+  comments: 
+  markings: 
+  purchaseOrderId: 
+  cost: 
+  totalCost: 
+  paymentMethod: 
+  procurementLevel: 
+  frameContract: 
+  actualEstimated: 
+  itemOwner: 
+  disposalMethod: 
+  projectId: 1

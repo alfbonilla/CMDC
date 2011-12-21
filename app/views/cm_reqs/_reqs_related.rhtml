@@ -1,0 +1,29 @@
+<br /><hr />
+<h3>Related Traceability Elements</h3>
+<% if cm_object.reqs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Code</b></td>
+    <td align="center"><b>Owner</b></td>
+    <td align="center"><b>Type</b></td>
+    <td align="center"><b>Classification</b></td>
+  </tr>
+</thead>
+<tbody>
+<% cm_object.reqs.each do |cmreqs| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= link_to h(cmreqs.code), :controller => 'cm_reqs',
+                :action => 'show', :id => cmreqs.id   %></td>
+    <td align="center"><%= h(cmreqs.author.name) %></td>
+    <td align="center"><%= h(cmreqs.type.name) %></td>
+    <td align="center"><%= h(cmreqs.classification.name) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=cm_object.reqs.size %> Traceability Elements related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Traceability Elements related to this object</small></p>
+<% end %>
+

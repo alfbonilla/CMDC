@@ -1,0 +1,43 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+  <table class="list">
+  <thead>
+    <%= sort_header_tag('id', :caption => 'Id') %>
+    <%= sort_header_tag('code', :caption => 'Code') %>
+    <th><b>Result</b></th>
+    <th><b>Execution Date</b></th>
+    <th><b>Witnessed by</b></th>
+    <th><b>Edit</b></th>
+    <th><b>Delete</b></th>
+  </thead>
+  <tbody>
+    <% @cm_test_records.each do |cm_test_record| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to (h(cm_test_record.id)), :controller => "cm_test_records",
+            :action => "show", :id => cm_test_record %></td>
+        <td align="center"><%= link_to (h(cm_test_record.code)), :controller => "cm_test_records",
+            :action => "show", :id => cm_test_record %></td>
+        <% if (cm_test_record.result == 1)%>
+              <td align="center"><%= image_tag('false.png')%></td>
+          <%else%>
+              <% if cm_test_record.result == 2  %>
+                <td align="center"><%= image_tag('true.png')%></td>
+              <%else%>
+                <td align="center"><%= image_tag('time.png')%></td>
+              <%end%>
+          <%end%>
+        <td align="center"><%= h(cm_test_record.execution_date.strftime("%Y-%m-%d")) unless cm_test_record.execution_date.nil?  %></td>
+        <td align="center"><%= h(cm_test_record.witnessed_by) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'),
+          {:controller => 'cm_test_records', :action => 'edit', :id => cm_test_record}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'),
+          {:controller => 'cm_test_records', :action => 'destroy', :id => cm_test_record},
+          :confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  </table>
+</div>
+<% end %>
+
+<p class="pagination"><%= pagination_links_full @cm_test_record_pages, @total %></p>

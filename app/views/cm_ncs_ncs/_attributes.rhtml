@@ -1,0 +1,12 @@
+<b>Create Relationship between NC  </b><%=  @intro_nc.code %><b>  and:  </b>
+<br />
+<br />
+<% fields_for :cm_ncs_nc, @cm_ncs_nc, :builder => TabularFormBuilder do |f| %>
+	<p><%= f.hidden_field :cm_nc_id, :value => @intro_nc.id %></p>
+        <p><%= f.select :child_nc_id, (@ncs_next_level.collect {|p| [p.code, p.id]}) %></p>
+	<p><%= f.text_field :description %></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+        <p><%= g.hidden_field :ncs_next_level, :value => @ncs_next_level %>
+           <%= g.hidden_field :project_id, :value => @project_id %></p>
+<% end %>

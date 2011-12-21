@@ -1,0 +1,34 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="porders">Purchase Orders Index</h2>
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="code">Code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <label for="title">Title: </label>
+    <%= text_field_tag("query1", params['query1'], :size => 20 ) %>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<div id="table" class="autoscroll">
+  <% if @cm_purchase_orders.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_purchase_orders/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new purchase order", {:controller => "cm_purchase_orders",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - Purchase Orders List" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export Data', {:controller => "cm_exports", :action => 'export_data',
+      :object_to_export => 'CmPurchaseOrder', :id => @project, :format => 'csv'}) %>
+</p>

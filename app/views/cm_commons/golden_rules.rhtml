@@ -1,0 +1,10 @@
+<h1><% params[:locals][:topic] %></h1>
+
+<h2><% params[:locals][:header_2] %></h2>
+<br/>
+<% this_image="golden_rules/" + params[:locals][:img] %>
+
+<p>
+<%= image_tag this_image, :plugin => "redmine_cm",
+        :alt => params[:locals][:header_2] %>
+</p>

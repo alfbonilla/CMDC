@@ -1,0 +1,25 @@
+<% fields_for :cm_smrs_affected_file, @cm_smrs_affected_file, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+  <p><%= f.text_field :cm_smr_id, :disabled => true %></p>
+  <p><%= f.select :file_name, (@cm_source_files.collect {|p| [p.file_name]}), :required => true %></p>
+  <p><%= f.text_field :created_on, :disabled => true %></p>
+  <p><%= f.text_field :updated_on, :disabled => true %></p>
+</div>
+
+<div class="splitcontentright">
+  <p><%= f.text_field :source_revision, :required => true %></p>
+  <p><%= f.text_field :final_revision, :required => true %></p>
+  <p><%= f.check_box :approved %></p>
+</div>
+
+<div style="clear:both;"> </div>
+
+  <p><%= f.text_area :comments_on_smr, :cols => 100, :rows => 5 %></p>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.text_field :file_name, :size => 100%><i>This value prevails over the selected in the list</i></p>
+  <p><%= g.hidden_field :cm_smr_id, :value => @cm_smr_id %></p>
+<% end %>

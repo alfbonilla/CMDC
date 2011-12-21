@@ -1,0 +1,31 @@
+<% fields_for :cm_deliveries_object, @cm_deliveries_object, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :x_type, :value => @cm_deliveries_object.x_type %></p>
+  <p><%= f.hidden_field :x_id, :value => @cm_deliveries_object.x_id %></p>
+  <p><%= f.text_field :cm_delivery_id, :value => @cm_deliveries_object.delivery.code, :disabled => true %></p>
+  <p><%= f.text_field :rel_string, :size => 50 %>
+    <% case @cm_deliveries_object.x_type 
+       when "CmNc" %>
+    <i>(Status)</i>
+    <% when "CmNcClosed" %>
+    <i>(Closing Date)</i>
+    <% else %>
+    <i>(Version)</i>
+    <% end %></p>
+  <p><%= f.text_field :rel_string_2, :size => 100 %>
+    <% case @cm_deliveries_object.x_type 
+       when "CmNc", "CmNcClosed", "CmChange" %>
+    <i>(Owner)</i>
+    <% else %>
+    <i>(Location)</i>
+    <% end %></p>
+  <p><%= f.text_field :rel_date, :size => 10 %><%= calendar_for('cm_deliveries_object_rel_date') %></p>
+  <p><%= f.check_box :rel_bool %><i>(Reviewed)</i></p>
+<% end %>
+
+  <p><i>Relation created by: <%= @cm_deliveries_object.author.login %></i></p>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+  <p><%= g.hidden_field :caller_cont, :value => @caller_cont %></p>
+  <p><%= g.hidden_field :cm_code, :value => @cm_code %></p>
+<% end %>

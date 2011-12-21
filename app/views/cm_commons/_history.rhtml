@@ -1,0 +1,22 @@
+<% reply_links = authorize_for(caller_cont, 'edit') -%>
+<% for journal in journals %>
+  <div id="change-<%= journal.id %>" class="journal">
+    <h4><div style="float:right;"><%= link_to "##{journal.indice}", :anchor => "note-#{journal.indice}" %></div>
+    <%= avatar(journal.user, :size => "24") %>
+    <%= content_tag('a', '', :name => "note-#{journal.indice}")%>
+		<%= authoring journal.created_on, journal.user, :label => :label_updated_time_by %></h4>   
+    <ul>
+
+     <!--<p><b>journalized_type:</b> <=h journal.journalized_type %></p>-->
+    <% for detail in journal.details %>
+      <li>
+      <p><b>Field:</b> <%=h detail.prop_key %> <b>From:</b> <%=h translate_journal_fields(journal.journalized_type,detail.prop_key,detail.old_value) %>
+      <b>To:</b> <%=h translate_journal_fields(journal.journalized_type,detail.prop_key,detail.value) %> </p>
+     
+     </li>
+     <% end %> 
+    </ul>
+    <%= render_notes_093(journal, :reply_links => reply_links) unless journal.notes.blank? %>
+  </div>
+  <%= call_hook(:view_issues_history_journal_bottom, { :journal => journal }) %>
+<% end %>

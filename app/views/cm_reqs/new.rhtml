@@ -1,0 +1,28 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="reqs">New Traceability Element</h2>
+
+<% labelled_tabular_form_for :cm_req, @cm_req,
+                             :html => {:id => 'new-cm_req-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_req' %>
+    
+  <div class="box">
+    <fieldset class="tabular"><legend>Define Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+
+    <% if @cm_req.new_record? %>
+      <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+    <% end %>
+  </div>
+  <br />
+  <%= submit_tag l(:button_create) %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>
+<% end %>
+
+<% html_title "CM - New TE" %>

@@ -1,0 +1,68 @@
+<% if CmSubsystem.find(:all).empty? %>
+<% @subsys=false %>
+<% else %>
+<% @subsys=true %>
+<% end %>
+
+<h2 class="reqs">Traceability Elements Index</h2>
+<title>Index of Traceability Elements</title>
+
+<div id="table" class="autoscroll">
+  <% if @cm_reqs.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Traceability Elements found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Type</b></th>
+      <th><b>Code</b></th>
+      <th><b>Name</b></th>
+      <th><b>Description</b></th>
+      <th><b>Assignee</b></th>
+      <th><b>Status</b></th>
+      <th><b>Version</b></th>
+      <th><b>Classification</b></th>
+      <% if @subsys %>
+      <th><b>Subsystem</b></th>
+      <% end %>
+      <th><b>Verification Method</b></th>
+      <th><b>Display Order</b></th>
+      <th><b>Place in Doc</b></th>
+      <th><b>Optional</b></th>
+      <th><b>No Descendants</b></th>
+      <th><b>No Ancestors</b></th>
+      <th><b>Comments</b></th>
+    </tr>
+  </thead>
+<tbody>
+<% @cm_reqs.each do |rq| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= h(rq.type.name) %></td>
+    <td><%= h(rq.code) %></td>
+    <td><%= h(rq.name) %></td>
+    <td><%= textilizable rq.description %></td>
+    <td><%= h(rq.assignee.name) unless rq.assignee.nil? %></td>
+    <td><%= h(change_t_status_to_s(rq.status)) %></td>
+    <td><%= h(rq.version) %></td>
+    <td><%= h(rq.classification.name) %></td>
+    <% if @subsys %>
+    <td><%= h(rq.subsystem.name) unless rq.subsystem.nil? %></td>
+    <% end %>
+    <td><%= h(rq.verification_method.name) unless rq.verification_method.nil? %></td>
+    <td><%= h(rq.display_order) %></td>
+    <td><%= h(rq.place_in_doc) %></td>
+    <td><%= h(rq.optional) %></td>
+    <td><%= h(rq.no_descendants) %></td>
+    <td><%= h(rq.no_ascendants) %></td>
+    <td><%= textilizable rq.comments %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<% end %>
+</div>

@@ -1,0 +1,68 @@
+<% if @cm_purchase_order.cm_po_details.any? %>
+<h3>Purchased Items</h3>
+<table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>Identifier</b></td>
+      <td align="center"><b>Name</b></td>
+      <td align="center"><b>Cost</b></td>
+      <td align="center"><b>VAT Included</b></td>
+      <td align="center"><b>Units</b></td>
+      <td align="center"><b>Reception Date</b></td>
+      <td align="center"><b>Edit</b></td>
+      <td align="center"><b>Delete Relationship</b></td>
+    </tr>
+  </thead>
+<tbody>
+  <% @cm_purchase_order.cm_po_details.each do |iitem| %>
+    <% if iitem.item.nil? %>
+      <% related_name = "Unknown. Id:"+iitem.cm_item_id.to_s %>
+      <% related_code = "NA" %>
+    <% else %>
+      <%  related_name = iitem.item.name %>
+      <%  related_code = iitem.item.code %>
+    <% end %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= h(iitem.cm_item_id) %></td>
+    <td align="center"><%= link_to h(related_name), :controller => 'cm_items', :action => 'show', :id => iitem.cm_item_id %></td>
+    <td align="center"><%= h(iitem.cost_per_unit) %></td>
+    <td align="center"><%= image_tag 'true.png' if iitem.VAT_included? %></td>
+    <td align="center"><%= h(iitem.quantity) %></td>
+    <td align="center"><%= h(iitem.reception_date.strftime("%Y/%m/%d")) if iitem.reception_date? %></td>
+    <td align="center" class="list-actions">
+      <%= link_to(image_tag('edit.png'), {:controller => 'cm_po_details', :action => 'edit',
+        :cm_item_code => related_code, :id => iitem.id}) %></td>
+    <td align="center" class="list-actions">
+      <%= link_to(image_tag('delete.png'), {:controller => 'cm_po_details', :action => 'destroy',
+            :relation_id => iitem.id, :cm_item_code => related_code, :po_id => @cm_purchase_order.id},
+            :confirm => l(:text_are_you_sure), :method => :post) %>
+    </td>
+  </tr>
+<p style="text-align:right;"><small><%=@cm_purchase_order.cm_po_details.size %> Items purchased</small></p>
+<% end %>
+  <tr>
+    <td align="center"><b>Total</b></td>
+    <td align="center"> </td>
+    <td align="center"><b><%= @cm_purchase_order.total_payment %></b></td>
+    <td align="center"><b>VAT:<%= @cm_purchase_order.VAT_included %> % </b></td>
+    <td align="center"> </td>
+    <td align="center"> </td>
+    <td align="center"> </td>
+    <td align="center"> </td>
+  </tr>
+</tbody>
+</table>
+<% else %>
+  <p><strong>Total Payment: <%= @cm_purchase_order.total_payment %></strong></p>
+  <p><strong>VAT Included: <%= @cm_purchase_order.VAT_included %></strong></p>
+<% end %>
+<%= link_to "Add New Item", {:controller => "cm_items", :action => 'new', :id => @project,
+  :porder_info_id => @cm_purchase_order.id, :porder_info_code => @cm_purchase_order.code}, :class => 'icon icon-add' %>
+<%= link_to "Add Existing Item", {:controller => "cm_items_items",
+  :action => 'new', :project_id => @project, :porder_info_id => @cm_purchase_order.id},
+  :class => 'icon icon-add' %>
+
+<br /><hr />
+
+<h3>Related Quality Records</h3>
+<%= render :partial => 'cm_qrs/qrs_in_object.rhtml', :locals => {:cm_qrs => @cm_qrs} %>

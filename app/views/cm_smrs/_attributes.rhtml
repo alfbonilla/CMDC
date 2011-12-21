@@ -1,0 +1,40 @@
+<% fields_for :cm_smr, @cm_smr, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+<p><%= f.text_field :smr_code, :size => 30, :required => true %>
+  <% if @cm_smr.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+         :caller_cont => 'cm_smrs', :cmdc_object => change_cmdc_object_to_i('SMR')  }} )%></small>
+  <% end %>
+</p>
+</div>
+
+<div class="splitcontentright">
+  <% if @coming_from_NC == "Y" %>
+    <p><b>Related NC:</b><%= @ext_code %></p>
+  <% else %>
+    <p><%= f.select :cm_nc_id, (@cm_ncs_to_relate.collect {|p| [p.code + " - " + p.name, p.id]}),
+                    :include_blank => true %></p>
+  <%  end %>
+  <p><%= f.select :cm_change_id, (@cm_changes_to_relate.collect {|p| [p.code , p.id]}),
+                  :include_blank => true %></p>
+
+</div>
+
+<p><%= f.text_area :description, :cols => 100, :rows => 5, :class => 'wiki-edit' %></p>
+<p><%= f.text_area :specific_tests, :cols => 100, :rows => 5, :class => 'wiki-edit' %></p>
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+  <p><%= g.hidden_field :coming_from_NC, :value => @coming_from_NC %></p>
+  <p><%= g.hidden_field :ext_code, :value => @ext_code %></p>
+  <p><%= g.hidden_field :ext_nc_id, :value => @ext_nc_id %></p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_smr_smr_code')).value=new_code;}
+</script>

@@ -1,0 +1,23 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs">Edit Non-Conformances Type</h2>
+
+<% labelled_tabular_form_for :cm_ncs_type, @cm_ncs_type,
+                             :html => {:id => 'cm_ncs_type-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_ncs_type' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Non-Conformances Type Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+  <%= submit_tag l(:button_submit) %>
+<% end %>
+
+<% html_title "CM - Edit NC Type #{@cm_ncs_type.name}" %>

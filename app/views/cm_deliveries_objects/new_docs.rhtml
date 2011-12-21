@@ -1,0 +1,79 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="cmdocs">Docs to Deliver Index</h2>
+
+<% labelled_tabular_form_for :cm_deliveries_objects, @cm_deliveries_objects,
+                             :url => {:action => 'new_docs'},
+                             :html => {:id => 'docs_list_form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+
+  <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+    <p><%= g.hidden_field :cm_delivery_id, :value => @cm_delivery_id %></p>
+  <% end %>
+
+  <% if @cm_deliveries_objects.blank? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <div class="autoscroll">
+    <table class="list">
+    <thead>
+    <th><%= link_to image_tag('toggle_check.png'), {},
+      :onclick => 'toggleDocsSelection(Element.up(this, "form")); return false;',
+      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}", :cm_delivery_id => @cm_delivery_id %>
+    </th>
+    <th align="center"><b>Id</b></th>
+    <th align="center"><b>Code</b></th>
+    <th align="center"><b>Title</b></th>
+    <th align="center"><b>Last Version</b></th>
+    <th align="center"><b>Status</b></th>
+    <th align="center"><b>Applicable</b></th>
+    </thead>
+    <tbody>
+    <% @cm_deliveries_objects.each do |cm_delivered_doc| %>
+      <tr id="cm_doc-<%= cm_delivered_doc.id %> <%= cycle('odd', 'even') %>">
+        <td class="checkbox"><%= check_box_tag("ids[]", cm_delivered_doc.id, false, :id => nil) %></td>
+        <td><%= h(cm_delivered_doc.id) %></td>
+        <td align="center"><%= h(cm_delivered_doc.code) %></td>
+        <td><%= h(cm_delivered_doc.name) %></td>
+        <td align="center"><%= cm_delivered_doc.last_version.version %></td>
+        <td align="center"><%= cm_delivered_doc.last_version.status.name %></td>
+        <td align="center"><%= image_tag 'true.png' if cm_delivered_doc.applicable? %></td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+    </div>
+    <br />
+
+  <% end %>
+
+    <p><i>Relations with delivery #<%=
+@cm_delivery_id %> would be created with Last Versions (and location of last version) of the documents.
+Update the documents properties before creating the relationship if they are wrong</i></p>
+
+  <br />
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+  </p>
+<% end %>
+
+<% html_title "CM - Docs to Deliver List" %>
+
+<script type="text/javascript">
+  function toggleDocsSelection(el) {
+	var boxes = el.getElementsBySelector('input[type=checkbox]');
+	var all_checked = true;
+	for (i = 0; i < boxes.length; i++) { if (boxes[i].checked == false) { all_checked = false; } }
+	for (i = 0; i < boxes.length; i++) {
+		if (all_checked) {
+			boxes[i].checked = false;
+			boxes[i].up('tr').removeClassName('context-menu-selection');
+		} else if (boxes[i].checked == false) {
+			boxes[i].checked = true;
+			boxes[i].up('tr').addClassName('context-menu-selection');
+		}
+	}
+}
+</script>

@@ -1,0 +1,7 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="risks"><%= @cm_risk.code %> #<%= @cm_risk.id %></h2>
+
+<%= render :partial => 'edit' %>
+
+<% html_title "CM - Edit Risk #{@cm_risk.code}" %>

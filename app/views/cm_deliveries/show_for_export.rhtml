@@ -1,0 +1,145 @@
+<h2 class="deliveries"><%= @cm_delivery.code %> #<%= @cm_delivery.id %></h2>
+<h3><%=h @cm_delivery.name %></h3>
+
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_delivery.status.name %></td>
+  <th><b>Delivery Date:</b></th><td><%= @cm_delivery.delivery_date.strftime("%Y-%m-%d") unless @cm_delivery.delivery_date.blank? %></td>
+  <th><b>Release:</b></th><td><%= @cm_delivery.release.name unless @cm_delivery.release.nil? %></td>
+</tr>
+<tr>
+  <th><b>From Company:</b></th><td><%= @cm_delivery.source_company.name %></td>
+  <th><b>To Company:</b></th><td><%= @cm_delivery.target_company.name %></td>
+  <th><b>Approved By:</b></th><td><%= @cm_delivery.approver.name %></td>
+</tr>
+</table>
+
+<p><strong>Description</strong></p>
+<div class="wiki">
+<p><%= textilizable @cm_delivery, :description %></p>
+</div>
+
+<% if @cm_delivered_docs.any? %>
+<br /><hr />
+<h3>Delivered Documents</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Document Code</b></td>
+    <td align="center"><b>Document Title</b></td>
+    <td align="center"><b>Version in Delivery</b></td>
+    <td align="center"><b>Relation created on</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_docs.each do |cmDitems| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= cmDitems.code %></td>
+    <td><%= h(cmDitems.name) %></td>
+    <td><%= h(cmDitems.rel_string) %></td>
+    <td><%= h(cmDitems.created_on.strftime("%Y/%m/%d")) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>
+
+<% if @cm_delivered_items.any? %>
+<br /><hr />
+<h3>Delivered Items</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Item Code</b></td>
+    <td align="center"><b>Item Name</b></td>
+    <td align="center"><b>Version in Delivery</b></td>
+    <td align="center"><b>Relation created on</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_items.each do |cmDitems| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= cmDitems.code %></td>
+    <td><%= h(cmDitems.name) %></td>
+    <td><%= h(cmDitems.rel_string) %></td>
+    <td><%= h(cmDitems.created_on.strftime("%Y/%m/%d")) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>
+
+<% if @cm_closed_ncs.any? %>
+<br /><hr />
+<h3>Closed Non-Conformances</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>NC Name</b></td>
+    <td align="center"><b>Closing Date</b></td>
+    <td align="center"><b>Relation created on</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_closed_ncs.each do |cmDncs| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td><%= cmDncs.code %></td>
+  <td><%= h(cmDncs.name) %></td>
+  <td><%= h(cmDncs.rel_string) %></td>
+  <td><%= h(cmDncs.created_on.strftime("%Y/%m/%d")) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>
+
+<% if @cm_delivered_ncs.any? %>
+<br /><hr />
+<h3>Delivered Alive Non-Conformances</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>NC Name</b></td>
+    <td align="center"><b>Status</b><small><i>(when this relation was created)</i></small></td>
+    <td align="center"><b>Relation created on</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_ncs.each do |cmDopenncs| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= cmDopenncs.code %></td>
+    <td><%= h(cmDopenncs.name) %></td>
+    <td><%= h(cmDopenncs.rel_string) %></td>
+    <td><%= h(cmDopenncs.created_on.strftime("%Y/%m/%d")) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>
+
+<% if @cm_delivered_changes.any? %>
+<br /><hr />
+<h3>Delivered Changes</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Change Code</b></td>
+    <td align="center"><b>Change Name</b></td>
+    <td align="center"><b>Version in Delivery</b></td>
+    <td align="center"><b>Relation created on</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_changes.each do |cmDchanges| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= cmDchanges.code %></td>
+    <td><%= h(cmDchanges.name) %></td>
+    <td><%= h(cmDchanges.rel_string) %></td>
+    <td><%= h(cmDchanges.created_on.strftime("%Y/%m/%d")) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>

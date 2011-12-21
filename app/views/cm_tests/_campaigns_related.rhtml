@@ -1,0 +1,31 @@
+<p><h3>Included in Test Campaigns</h3></p>
+
+<% if @cm_test.cm_test_campaigns_object.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Campaign Code</b></td>
+    <td align="center"><b>Execution Order</b></td>
+    <td align="center"><b>Scenario</b></td>
+    <td align="center"><b>Result</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_test.cm_test_campaigns_object.each do |tk| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% creation_text = "Created by " + tk.author.login + " on " + tk.created_on.strftime("%Y/%m/%d") %>
+  <td align="center"><%= link_to h(tk.cm_test_campaign.code ), {:controller => 'cm_test_campaigns',
+                :action => 'show', :id => tk.cm_test_campaign.id}, :title => creation_text %></td>
+  <td align="center"><%= h(tk.execution_order) %></td>
+  <td align="center"><%= h(tk.cm_test_scenario.code) %></td>
+  <td align="center"><%= h(change_result_to_s(tk.cm_test_record.result)) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_test.cm_test_campaigns_object.size %> Campaigns included</small></p>
+<% else %>
+<p style="text-align:right;"><small>No included in any Campaign</small></p>
+<% end %>
+
+<br /><hr />

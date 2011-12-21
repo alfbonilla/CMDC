@@ -1,0 +1,21 @@
+<%= render :partial => 'list_action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="sfiles">Source Files Index</h2>
+
+<p>The source files included in this model are used exclusively for the <b>SMRs register</b>.
+They are used as a reference, explaining at the moment when the SMR was created which files were
+affected. If the name of the file changes or if the file is deleted, the SMR has to keep the
+references to the file at the moment of the SMR creation.</p>
+
+<% if @cm_source_files.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'cm_source_files/list' %>
+<% end %>
+
+<%= link_to "Add new source file", {:controller => "cm_source_files",
+      :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - Source Files List" %>

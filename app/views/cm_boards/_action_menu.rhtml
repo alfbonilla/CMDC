@@ -1,0 +1,14 @@
+<div class="contextual">
+<%= watcher_tag(@cm_board, User.current) %>
+
+<% if @cm_board.minutes_closed %>
+  <%= link_to("Re-open Minutes", {:controller => 'cm_boards', :action => 'reopen', :id => @cm_board }, 
+    :class => 'icon icon-unlock', :method => :post) %>
+<% end %>
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_boards', :action => 'index',
+    :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_boards', :action => 'edit',
+    :id => @cm_board }, :class => 'icon icon-edit') %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_boards', :action => 'destroy',
+    :id => @cm_board}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

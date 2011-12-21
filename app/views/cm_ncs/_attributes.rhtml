@@ -1,0 +1,138 @@
+<% fields_for :cm_nc, @cm_nc, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :required => true %>
+    <% if @cm_nc.new_record? %>
+      <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'new-cm_nc-form'} %>
+    <% else %>
+      <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+    <% end %>
+  </p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :name, :required => true %></p>
+    <p><%= f.select :classification_id, (@cm_nc_classifications.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.select :assigned_to_id, (@cm_nc_assignees.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :supplier_id, (@suppliers.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.select :subsystem_id, (@cm_subsystems.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.select :rlse_expected_id, (@releases.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.select :type_id, (@cm_nc_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :status_id, (@cm_nc_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.text_field :nc_issue, :size => 10 %></p>
+    <p><%= f.text_field :created_on, :size => 10, :disabled => true %></p>
+    <p><%= f.text_field :closing_date, :size => 10, :disabled => true %></p>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div id="fields_full_window">
+    <p><%= f.text_area :description, :cols => 60, :rows => 7, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_nc_description' %>
+    <%= call_hook(:new_cm_nc_edit_description_bottom, { :cm_nc => @cm_nc, :form => f }) %>
+  </div>
+
+  <div id="detection_details" <%= 'style="display:none"' unless @cm_nc.errors.any? or @cm_nc.new_record? %>>
+
+    <p><%= f.text_area :violated_reqs, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_nc_violated_reqs' %>
+    <%= call_hook(:new_cm_nc_edit_violated_reqs_bottom, { :cm_nc => @cm_nc, :form => f }) %>
+
+    <p><%= f.text_area :failed_tests, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_nc_failed_tests' %>
+    <%= call_hook(:new_cm_nc_edit_failed_tests_bottom, { :cm_nc => @cm_nc, :form => f }) %>
+
+    <div class="splitcontentleft">
+      <p><%= f.select :rlse_detected_id, (@releases.collect {|p| [p.name, p.id]}), :required => true %></p>
+      <p><%= f.text_field :detected_on, :size => 35 %><i>(Section/Page for docs)</i></p>
+      <p><%= f.text_field :rlse_detected_info, :size => 35 %></p>
+      <p><%= f.select :priority, CmNc::NC_PRIORITIES.collect %></p>
+    </div>
+    <div class="splitcontentright">
+      <p><%= f.text_field :originator, :size => 30, :value => @originator %></p>
+      <% if @cm_companies.nil? %>
+      <p><b>Company</b><small> There are no companies defined in the CM model</small></p>
+      <% else %>
+      <p><%= f.select :company_id, (@cm_companies.collect {|p| [p.name, p.id]}) %></p>
+      <% end %>
+      <p><%= f.select :phase_id, (@cm_nc_phases.collect {|p| [p.name, p.id]}) %></p>
+      <p><%= f.check_box :reproducibility %></p>
+    </div>
+    <div style="clear:both;"> </div>
+    <p><%= f.text_area :steps_to_reproduce, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div id="impact_details" <%= 'style="display:none"' unless @cm_nc.errors.any? %>>
+
+    <p><%= f.text_area :impacted_items, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_nc_impacted_items' %>
+    <%= call_hook(:new_cm_nc_edit_impacted_items_bottom, { :cm_nc => @cm_nc, :form => f }) %>
+
+    <p><%= f.text_area :impact_notes, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_nc_impact_notes' %>
+    <%= call_hook(:new_cm_nc_edit_impact_notes_bottom, { :cm_nc => @cm_nc, :form => f }) %>
+
+    <p><%= f.text_area :reference_docs, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_nc_reference_docs' %>
+    <%= call_hook(:new_cm_nc_edit_reference_docs_bottom, { :cm_nc => @cm_nc, :form => f }) %>
+
+    <div class="splitcontentleft">
+      <p><%= f.check_box :documentation_problem %></p>
+      <p><%= f.check_box :design_changes_done %></p>
+    </div>
+    <div class="splitcontentright">
+      <p><%= f.check_box :critical_item %></p>
+      <p><%= f.check_box :safety_item %></p>
+      </div>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div id="solution_details" <%= 'style="display:none"' unless @cm_nc.errors.any? %>>
+
+    <fieldset><legend>Solution Information</legend>
+      <p><%= f.text_area :analysis, :cols => 60, :rows => 6, :class => 'wiki-edit' %></p>
+      <div class="splitcontentleft">
+        <fieldset><legend>Implementation Details</legend>
+          <p><%= f.select :rlse_solved_id, (@releases.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+          <p><%= f.text_field :rlse_solved_info, :size => 35 %></p>
+        </fieldset>
+      </div>
+      <div class="splitcontentright">
+        <fieldset><legend>Verification Details</legend>
+          <p><%= f.select :rlse_verified_id, (@releases.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+          <p><%= f.text_field :rlse_verified_info, :size => 35 %></p>
+        </fieldset>
+      </div>
+      <p><%= f.text_field :analyzed_on, :size => 10 %><%= calendar_for('cm_nc_analyzed_on') %></p>
+      <p><%= f.check_box :rfw_reference %></p>
+      <p><%= f.text_area :preventive_action, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+    </fieldset>
+
+  </div>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_ncs" %></p>
+  <p><%= g.hidden_field :father_id, :value => @father_id %></p>
+  <p><%= g.hidden_field :x_id, :value => @x_id %></p>
+  <p><%= g.hidden_field :x_type, :value => @x_type %></p>
+<% end %>
+
+<% if @cm_nc.new_record? && User.current.allowed_to?(:add_cm_nc_watchers, @project) -%>
+  <p><label><%= l(:label_issue_watchers) %></label>
+  <% @cm_nc.project.users.sort.each do |user| -%>
+    <label class="floating"><%= check_box_tag 'cm_nc[watcher_user_ids][]', user.id,
+    @cm_nc.watched_by?(user) %> <%=h user %></label>
+  <% end -%>
+  </p>
+<% end %>  
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_nc_code')).value=new_code;}
+</script>

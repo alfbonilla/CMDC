@@ -1,0 +1,49 @@
+<% fields_for :cm_change, @cm_change, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :required => true %>
+  <% if @cm_change.new_record? %>
+    <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'new-cm_change-form'} %>
+  <% else %>
+    <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+  <% end %>
+  </p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :name, :required => true %></p>
+    <p><%= f.select :status_id, (@cm_change_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.text_field :recep_deliv_date, :size => 10 %><%= calendar_for('cm_change_recep_deliv_date') %></p>
+    <p><%= f.text_field :due_date, :size => 10 %><%= calendar_for('cm_change_due_date') %></p>
+    <p><%= f.select :cm_doc_id, (@cm_docs.collect {|p| [p.name, p.id]}) ,:include_blank => true %><small>Doc describing the change</small></p>
+    <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+    <p><%= f.text_area :reason, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.select :type_id, (@cm_change_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :from_company, (@cm_companies.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :to_company, (@cm_companies.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :release_id, (@releases.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.select :implementation, [['Implemented', 1], ['No Implemented', 2], ['Partially Implemented', 3], ['Validated and Verified', 4]] %></p>
+    <p><%= f.select :classification, [['No Impact', 1], ['Implemented with Cost', 2], ['Implemented without Cost', 3]] %></p>
+    <p><%= f.select :compliance, [['Compliant', 1], ['Compliant with Assumptions', 2], ['Partially Compliant', 3], ['No Compliant', 4]] %></p>
+    <fieldset><legend>Affected Document/Item</legend>
+      <p><%= f.select :affected_doc_id, (@cm_docs.collect {|p| [p.name, p.id]}) ,:include_blank => true  %></p>
+      <p><%= f.select :affected_item_id, (@cm_items.collect {|p| [p.name, p.id]}) ,:include_blank => true  %></p>
+      <p><%= f.text_field :affected_version %></p>
+      <p><%= f.text_field :affected_integrated_version, :size => 10 %></p>
+    </fieldset>
+  </div>
+
+  <p><i><small>Applicable Version field is set when an applicable version is related to the Change</small></i></p>
+  <div style="clear:both;"> </div>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_changes" %></p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_change_code')).value=new_code;}
+</script>

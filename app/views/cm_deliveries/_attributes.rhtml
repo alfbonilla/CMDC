@@ -1,0 +1,51 @@
+<% fields_for :cm_delivery, @cm_delivery, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :size => 30, :required => true %>
+  <% if @cm_delivery.new_record? %>
+    <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'cm_delivery-form'} %>
+  <% end %></p>
+
+<div class="splitcontentleft">
+  <p><%= f.text_field :name, :size => 30, :required => true %></p>
+  <p><%= f.select :release_id, (@releases.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+  <p><%= f.select :approved_by, (@cm_delivery_approvers.collect {|p| [p.name, p.id]}), :required => true %></p>
+</div>
+
+<div class="splitcontentright">
+  <p><%= f.select :status_id, (@cm_delivery_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
+  <p><%= f.text_field :delivery_date, :size => 10 %><%= calendar_for('cm_delivery_delivery_date') %></p>
+  <% if @cm_companies.nil? %>
+    <p><b>Companies!!</b><small> There are no companies defined in the CM model</small></p>
+  <% else %>
+    <p><%= f.select :from_company, (@cm_companies.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.select :to_company, (@cm_companies.collect {|p| [p.name, p.id]}) %></p>
+  <% end %>
+</div>
+
+<div style="clear:both;"> </div>
+
+<div id="fields_full_window">
+  <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  <%= wikitoolbar_for 'cm_delivery_description' %>
+  <%= call_hook(:new_cm_delivery_edit_description_bottom, { :cm_delivery => @cm_delivery, :form => f }) %>
+</div>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_deliveries" %></p>
+<% end %>
+
+<% if @cm_delivery.new_record? && User.current.allowed_to?(:add_cm_delivery_watchers, @project) -%>
+<p><label><%= l(:label_issue_watchers) %></label>
+<% @cm_delivery.project.users.sort.each do |user| -%>
+<label class="floating"><%= check_box_tag 'cm_delivery[watcher_user_ids][]', user.id,
+  @cm_delivery.watched_by?(user) %> <%=h user %></label>
+<% end -%>
+</p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_delivery_code')).value=new_code;}
+</script>

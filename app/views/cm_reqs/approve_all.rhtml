@@ -1,0 +1,40 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="reqs">Massive Traceability Elements Approval</h2>
+
+<% labelled_tabular_form_for :cm_approve_filter, @cm_approve_filter,
+                             :html => {:id => 'cm_approve_filter-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_approve_filter' %>
+
+<label for="code">Code: </label>
+<%= text_field_tag 'codes_to_approve', @codes_to_approve, :required => true %>
+
+<ul>
+  <li>Specify the code of the Traceability Elements to be approved. </li>
+  <li>Use the "%" symbol as mask for searching Traceability Elements LIKE the value included. </li>
+  <li>Just those Traceability Elements in status PROPOSED or without status will be APPROVED (passing to STABLE or DISMISS). </li>
+  <li>(Any backup information for those Traceability Elements modified from STABLE will be deleted, as the approval process rules)</li>
+</ul>
+
+<fieldset><legend>Version Control</legend>
+  <p>
+    <label for="code">Version for new Requirements: </label>
+    <%= text_field_tag 'version_new', @version_new %>
+  </p>
+  <p>
+    <label for="code">Version for modified Requirements: </label>
+    <%= text_field_tag 'version_modified', @version_modified %>
+  </p>
+  <ul>
+    <li>If the version field value is empty, no modifications are performed over the TE version field. </li>
+  </ul>
+</fieldset>
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+  </p>
+<% end %>
+
+<% html_title "CM - TEs - Approve All Filter" %>

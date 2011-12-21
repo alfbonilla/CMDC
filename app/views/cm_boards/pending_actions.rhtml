@@ -1,0 +1,40 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="boards">List of Pending Actions per Meeting</h2>
+
+<div id="table" class="autoscroll">
+  <% if @cm_pending_actions.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Meeting Code</b></th>
+      <th><b>Issue Subject</b></th>
+      <th><b>Issue Status</b></th>
+      <th><b>Meeting Date</b></th>
+      <th><b>Issue Due Date</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_pending_actions.each do |board| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to board.cm_board_code, :controller => "cm_boards",
+                :action => "show", :id => board.cm_object_id %></td>
+        <td><%= link_to board.subject, :controller => "issues",
+                :action => "show", :id => board.issue_id %></td>
+        <td align="center"><%= h(board.name) %></td>
+        <td align="center"><%= h(board.meeting_date) unless board.meeting_date.nil? %></td>
+        <td align="center"><%= h(board.due_date) unless board.due_date.nil? %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <% end %>
+</div>
+
+<p><a href="javascript:history.back()">Back</a></p>
+
+<% html_title "CM - Pending Actions List" %>

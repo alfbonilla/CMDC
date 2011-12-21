@@ -1,0 +1,117 @@
+
+<h2>Reference Documentation</h2>
+<h3>Technical Directorate</h3>
+  <table class="list">
+  <thead>
+    <tr>
+      <th>Topic</th>
+      <th>Document</th>
+      <th>DT Golden Rules</th>
+    </tr>
+  </thead>
+  <tbody>
+
+       <tr>
+    <td><strong>Configuration Management</strong></td>
+    <td align="center"><a href="http://kaidun:8080/alfresco/d/d/workspace/SpacesStore/8986c753-9846-4741-942c-501a584e9550/DT-DMS-TEC-STA01-10-E_CM_In_AD_Dept.pdf">
+      <%= image_tag('files/pdf.png') %></a></td>
+    <td align="center"  onmouseover="hide_show_image(this,'imagen1')" onmouseout="hide_show_image(this,'imagen1')"><small><%= link_to(image_tag('lightning.png'),
+      { :controller => 'cm_commons', :action => "golden_rules", :id => @project,
+        :locals => { :topic => "Configuration Management", :img => "dt_cm_grs.jpg", :header_2 => "Golden Rules"} },
+        :popup => ['golden_rules','height=500,width=800,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes']) %></small></td>
+    </tr>
+    <tr>
+    <td><strong>Non-Conformances</strong></td>
+    <td align="center"><a href="http://kaidun:8080/alfresco/d/d/workspace/SpacesStore/32c1c58f-8819-47e2-a7a5-dfb508ce0b18/DT-DMS-TEC-STA02-10-E_PR_Mgmt_In_AD_Dept.pdf">
+      <%= image_tag('files/pdf.png') %></a></td>
+    <td align="center" onmouseover="hide_show_image(this,'imagen2')" onmouseout="hide_show_image(this,'imagen2')" "><small><%= link_to(image_tag('lightning.png'),
+      { :controller => 'cm_commons', :action => "golden_rules", :id => @project,
+        :locals => { :topic => "Non-Conformances", :img => "nc_grs.png", :header_2 => "Golden Rules"} },
+        :popup => ['golden_rules','height=500,width=800,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes']) %></small></td>
+    </tr>
+    <tr>
+    <td><strong>Documentation Management</strong></td>
+    <td align="center"><a href="http://kaidun:8080/alfresco/d/d/workspace/SpacesStore/7d76840c-5a04-4067-9141-e768311563ee/DT-DMS-TEC-STA03-10-E_Doc_Mgmt_In_AD_Dept.pdf">
+      <%= image_tag('files/pdf.png') %></a></td>
+    <td align="center" onmouseover="hide_show_image(this,'imagen3')" onmouseout="hide_show_image(this,'imagen3')"><small><%= link_to(image_tag('lightning.png'),
+      { :controller => 'cm_commons', :action => "golden_rules", :id => @project,
+        :locals => { :topic => "Documentation Management", :img => "dt_dm_grs.jpg", :header_2 => "Golden Rules"} },
+        :popup => ['golden_rules','height=500,width=800,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes']) %></small></td>
+    </tr>
+    <tr>
+    <td><strong>Unit Tests</strong></td>
+    <td align="center" ><a href="http://kaidun:8080/alfresco/d/d/workspace/SpacesStore/b7f873b5-9a3c-4781-97cf-be01ac72666b/DT-DMS-TEC-STA04-10-E_UT_In_AD_Dept.pdf">
+      <%= image_tag('files/pdf.png') %></a></td>
+    <td align="center" onmouseover="hide_show_image(this,'imagen4')" onmouseout="hide_show_image(this,'imagen4')"><small><%= link_to(image_tag('lightning.png'),
+      { :controller => 'cm_commons', :action => "golden_rules", :id => @project,
+        :locals => { :topic => "Unit Tests", :img => "dt_ut_grs.jpg", :header_2 => "Golden Rules"} },
+        :popup => ['golden_rules','height=500,width=800,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes']) %></small></td>
+    </tr>
+  </tbody>
+  </table>  
+  
+  <br/>
+
+  <h3>  <img src="/plugin_assets/redmine_cm/images/cmdc_logo.png"
+     alt="Configuration Management/Data Centre Menu" width="100px" height="50px" ></img></h3>
+  <table class="list">
+    <thead>
+      <tr>
+        <th>Presentations</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Introduction to CMDC</strong></td>
+        <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/708/CM-DC-Description.pps">
+      <%= image_tag('files/pdf.png') %></a></td>
+      </tr>
+      <tr>
+        <td><strong>Code Generator</strong></td>
+        <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/706/CM-DC.CodeGenerator.pps">
+      <%= image_tag('files/pdf.png') %></a></td>
+      </tr>
+    </tbody>
+  </table>
+    
+  <table class="list">
+    <thead>
+      <tr>
+        <th>CMDC Object</th>
+        <th>User Manual</th>
+        <th>Quick Reference</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      <td><strong>Traceability Elements</strong></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/735/DTCM-DMS-TEC-SUM01-0C.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/737/DTCM-DMS-TEC-QRF01-0C.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      </tr>
+      <tr>
+      <td><strong>Meetings</strong></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/736/DTCM-DMS-TEC-SUM02-0B.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/738/DTCM-DMS-TEC-QRF02-0A.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      </tr>
+      <tr>
+      <td><strong>Documents</strong></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/740/DTCM-DMS-TEC-SUM04-1A.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/741/DTCM-DMS-TEC-QRF04-1A.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      </tr>
+      <tr>
+      <td><strong>RIDs</strong></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/734/DTCM-DMS-TEC-SUM03-1A.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      <td align="center"><a href="http://ganimedes-redmine.deimos-space.com/attachments/739/DTCM-DMS-TEC-QRF03-1A.doc">
+        <%= image_tag('files/pdf.png') %></a></td>
+      </tr>
+    </tbody>
+  </table>
+

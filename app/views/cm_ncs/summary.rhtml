@@ -1,0 +1,11 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs"><%= @cm_nc.code %> #<%= @cm_nc.name %></h2>
+
+<% if @cm_ncs_boards.blank? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'boards_list' %>
+<% end %>
+
+<% html_title "CM - Boards Summary for #{@cm_nc.code}" %>

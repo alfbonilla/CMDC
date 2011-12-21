@@ -1,0 +1,37 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs">New Non-Conformance</h2>
+
+<% labelled_tabular_form_for :cm_nc, @cm_nc,
+                             :html => {:id => 'new-cm_nc-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_nc' %>
+    
+  <div class="box">
+    <fieldset class="tabular"><legend>Define Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+      <small>(<%= link_to "Detection Details", {},
+        :onclick => 'Effect.toggle("detection_details", "appear", {duration:0.3}); return false;' %>)
+      </small>
+      <small>(<%= link_to "Impact Details", {},
+        :onclick => 'Effect.toggle("impact_details", "appear", {duration:0.3}); return false;' %>)
+      </small>
+      <small>(<%= link_to "Solution Details", {},
+        :onclick => 'Effect.toggle("solution_details", "appear", {duration:0.3}); return false;' %>)
+      </small>
+    </fieldset>
+
+    <% if @cm_nc.new_record? %>
+      <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+    <% end %>
+  </div>
+  <br />
+  <%= submit_tag l(:button_create) %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>
+<% end %>
+
+<% html_title "CM - New NC" %>

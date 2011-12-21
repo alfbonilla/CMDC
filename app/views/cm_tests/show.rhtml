@@ -1,0 +1,97 @@
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests"><%= @cm_test.code %> #<%= @cm_test.id %></h2>
+
+<div>
+  <%= avatar(@cm_test.author, :size => "50") %>
+  <h3><%=h @cm_test.name %></h3>
+  <p class="author">
+    <%= authoring @cm_test.created_on, @cm_test.author %>.
+    <% if @cm_test.created_on != @cm_test.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_test.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<p><strong>Objective</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test, :objective %>
+</div>
+
+<table class="attributes">
+  <tr>
+    <th><b>Status:</b></th><td><%= change_t_status_to_s(@cm_test.status) %></td>
+    <th><b>Type:</b></th><td><%= @cm_test.type.name unless @cm_test.type.nil? %></td>
+  </tr>
+  <tr>
+    <th><b>Classification:</b></th><td><%= @cm_test.classification.name unless @cm_test.classification.nil?%></td>
+    <th><b>Version:</b></th><td><%= @cm_test.version %></td>
+  </tr>
+</table>
+
+<% if @cm_test.type.test_case? %>
+  <fieldset><legend>Test Case Details</legend>
+    <p><strong>Input Data</strong></p>
+    <div class="wiki">
+    <%= textilizable @cm_test, :input_data %>
+    </div>
+    <p><strong>Output Data</strong></p>
+    <div class="wiki">
+    <%= textilizable @cm_test, :output_data %>
+    </div>
+    <p><strong>Pass/Fail Criteria</strong></p>
+    <div class="wiki">
+    <%= textilizable @cm_test, :pass_fail_criteria %>
+    </div>
+  </fieldset>
+<% end %>
+
+<% if @cm_test.type.test_procedure? %>
+  <fieldset><legend>Test Procedure Details</legend>
+    <p><strong>Steps</strong></p>
+    <div class="wiki">
+    <%= textilizable @cm_test, :steps %>
+    </div>
+    <p><strong>Checkpoints</strong></p>
+    <div class="wiki">
+    <%= textilizable @cm_test, :checkpoints %>
+    </div>
+  </fieldset>
+<% end %>
+
+<div id="relations">
+<%= render :partial => 'relations' %>
+</div>
+
+<% if @journals.any? %>
+<br />
+<div id="history">
+<h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_tests' } %>
+</div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_tests', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object = @cm_test %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_test.code} ##{@cm_test.id}: #{@cm_test.name}" %>
+
+<p class="other-formats">
+  Also available in
+  <%= link_to('PDF', {:action => 'show', :id => @cm_test, :format => 'pdf', :history => 'Y' }) %>
+  ,
+  <%= link_to('PDF (no history)', {:action => 'show', :id => @cm_test, :format => 'pdf', :history => 'N' }) %>
+</p>

@@ -1,0 +1,6 @@
+<% fields_for :cm_source_file, @cm_source_file, :builder => TabularFormBuilder do |f| %>
+
+<p><%= f.text_field :file_name, :size => 100, :required => true %></p>
+<p><%= f.text_field :revision_at_load, :size => 10 %></p>
+ 
+<% end %>

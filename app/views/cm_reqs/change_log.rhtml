@@ -1,0 +1,121 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="reqs">Change Log for Traceability Element <%=@cm_req.code %></h2>
+<title>Change Log for Traceability Element</title>
+
+<% if @temp_record.nil? %>
+<p>Traceability Element has not been modified in its attributes.</p>
+<% else %>
+<p><h3>Change proposed over Traceability Element: <%= @temp_record.action %> </h3></p>
+<div id="attributes">
+<fieldset class="tabular"><legend>Traceability Element Modified Properties</legend>
+<table class="attributes">
+<tr>
+  <th><b>Code:</b></th><td><%= @cm_req.code %>
+<% if @cm_req.code != @temp_record.code %>**<small><%= @temp_record.code %></small><% end %></td>
+  <th><b>Name:</b></th><td><%= @cm_req.name %>
+<% if @cm_req.name != @temp_record.name %>**<small><%= @temp_record.name %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Classification:</b></th><td><%= @cm_req.classification.name %>
+    <% if @cm_req.classification_id != @temp_record.classification_id %>
+     **<small><%= @temp_record.classification.name%></small><% end %></td>
+  <th><b>Status:</b></th><td><%= change_t_status_to_s(@cm_req.status) %>
+    <% if @cm_req.status != @temp_record.status %>
+    **<small><%= change_t_status_to_s(@temp_record.status) %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Assigned To:</b></th><td><%= @cm_req.assignee.name unless @cm_req.assignee.nil? %>
+    <% if @cm_req.assigned_to_id != @temp_record.assigned_to_id %>
+    **<small><%= @temp_record.assignee.name unless @temp_record.assignee.nil? %></small><% end %></td>
+  <th><b>Type:</b></th><td><%= @cm_req.type.name %><% if @cm_req.type_id != @temp_record.type_id %>
+    **<small><%= @temp_record.type.name %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Version:</b></th><td><%= @cm_req.version %><% if @cm_req.version != @temp_record.version %>
+    **<small><%= @temp_record.version %></small><% end %></td>
+  <th><b>Optional:</b></th><td><%= @cm_req.optional %><% if @cm_req.optional != @temp_record.optional %>
+    **<small><%= @temp_record.optional %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Verification Method:</b></th><td><%= @cm_req.verification_method.name unless @cm_req.verification_method.nil? %>
+    <% if @cm_req.verification_method_id != @temp_record.verification_method_id %>
+    **<small><%= @temp_record.verification_method.name unless @temp_record.verification_method.nil?%></small><% end %></td>
+  <th><b>Subsystem:</b></th><td><%= @cm_req.subsystem.name unless @cm_req.subsystem.nil? %>
+    <% if @cm_req.subsystem_id != @temp_record.subsystem_id %>
+    **<small><%= @temp_record.subsystem.name unless @temp_record.subsystem.nil? %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>No Ancestors:</b></th><td><%= @cm_req.no_ascendants %>
+    <% if @cm_req.no_ascendants != @temp_record.no_ascendants %>
+    **<small><%= @temp_record.no_ascendants %></small><% end %></td>
+  <th><b>No Descendants:</b></th><td><%= @cm_req.no_descendants %>
+    <% if @cm_req.no_descendants != @temp_record.no_descendants %>
+    **<small><%= @temp_record.no_descendants %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Order:</b></th><td><%= @cm_req.display_order %>
+    <% if @cm_req.display_order != @temp_record.display_order %>
+    **<small><%= @temp_record.display_order %></small><% end %></td>
+  <th><b>Place in Doc:</b></th><td><%= @cm_req.place_in_doc %>
+    <% if @cm_req.place_in_doc != @temp_record.place_in_doc %>
+    **<small><%= @temp_record.place_in_doc %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Description:</b></th><td><%= textilizable @cm_req, :description %>
+    <% if @cm_req.description != @temp_record.description %>
+    **<small><%= @temp_record.description %></small><% end %></td>
+</tr>
+<tr>
+  <th><b>Comments:</b></th><td><%= textilizable @cm_req, :comments %>
+    <% if @cm_req.comments != @temp_record.comments %>
+    **<small><%= @temp_record.comments %></small><% end %></td>
+</tr>
+</table>
+
+</fieldset>
+
+  <p><small>** Attribute modified. Previous (STABLE) value after asteriks</small></p>
+  <p><small>(Notice than status is automtically modified)</small></p>
+</div>
+<% end %>
+
+<fieldset class="tabular"><legend>Traceability Element Modified Relationships</legend>
+<div id="table" class="autoscroll">
+  <% if @temp_records.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <p style="text-align:right;">Number of Relations with Traceability Elements modified: <b><%= @temp_records.size %></b></p>
+    <table class="list">
+    <thead>
+      <tr>
+        <th><b>Action</b></th>
+        <th><b>Low Level Traceability Element</b></th>
+        <th><b>High Level Traceability Element</b></th>
+        <th><b>Relation Type</b></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @temp_records.each do |rq| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= rq.action %></td>
+        <td align="center"><%= link_to rq.parent_req.code, :controller => "cm_reqs",
+                          :action => "show", :id => rq.cm_req_id %></td>
+        <td align="center"><%= link_to rq.child_req.code, :controller => "cm_reqs",
+                          :action => "show", :id => rq.child_req_id %></td>
+        <% case rq.relation_type
+          when 1 %>
+        <td align="center"><%= h(change_relation_type_to_s(2)) %></td>
+        <% when 2 %>
+          <td align="center"><%= h(change_relation_type_to_s(1)) %></td>
+        <% else %>
+          <td align="center"><%= h(change_relation_type_to_s(3)) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <% end %>
+</div>
+</fieldset>
+<p><a href="javascript:history.back()">Back</a></p>

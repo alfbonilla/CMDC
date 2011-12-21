@@ -1,0 +1,120 @@
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq",
+    :cm_object_cont => "cm_reqs", :export => "N" } %>
+
+<br /><hr />
+
+<h3>Related Traceability Elements</h3>
+
+<% if @cm_req.cm_reqs_reqs.any? or @parent_reqs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Relation Type</b></td>
+    <td align="center"><b>Code</b></td>
+    <td align="center"><b>Relation Details</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Created By</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_req.cm_reqs_reqs.each do |reqReq| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% reqReq.child_req.nil? ? req_ref = "Unknown. Id:" + reqReq.child_req_id.to_s : req_ref = reqReq.child_req.code %>
+<td align="center"><%= h(change_relation_type_to_s(reqReq.relation_type)) %></td>
+<td align="center"><%= link_to h(req_ref), :controller => 'cm_reqs', :action => 'show', :id => reqReq.child_req.id %></td>
+<td align="center"><%= h(reqReq.description) %></td>
+<td align="center"><%= h(reqReq.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(reqReq.author.login) %></td>
+<td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_reqs_reqs', :action => 'destroy',
+  :id => @project, :relation_id => reqReq.id, :req_id => @cm_req.id, :child_id => req_ref, :new_type => 'no-father'},
+  :confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+<% @parent_reqs.each do |reqReq| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% reqReq.parent_req.nil? ? req_ref = "Unknown. Id:" + reqReq.cm_req_id.to_s : req_ref = reqReq.parent_req.code %>
+<% case reqReq.relation_type
+  when 1 %>
+  <td align="center"><%= h(change_relation_type_to_s(2)) %></td>
+<% when 2 %>
+  <td align="center"><%= h(change_relation_type_to_s(1)) %></td>
+<% else %>
+  <td align="center"><%= h(change_relation_type_to_s(3)) %></td>
+<% end %>
+<td align="center"><%= link_to h(req_ref), :controller => 'cm_reqs', :action => 'show', :id => reqReq.parent_req.id %></td>
+<td align="center"><%= h(reqReq.description) %></td>
+<td align="center"><%= h(reqReq.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(reqReq.author.login) %></td>
+<td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_reqs_reqs', :action => 'destroy',
+  :id => @project, :relation_id => reqReq.id, :req_id => @cm_req.id, :child_id => req_ref, :new_type => 'father'},
+  :confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_req.cm_reqs_reqs.size+@parent_reqs.size %> Traceability Elements related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Traceability Elements related</small></p>
+<% end %>
+<br />
+<% if @allow_relate_parent %>
+<p>
+  <%= link_to "Add Existing Prev level TE", {:controller => "cm_reqs_reqs", :action => 'new',
+    :project_id => @project, :id => @cm_req.id, :req_level => @cm_req.type.level - 1,
+    :new_type => 'father'}, :class => 'icon icon-add' %>
+<% else %>
+<p style="text-align:right;"><small>(There are no TEs of previous hierachical level type)</small></p>
+</p>
+<% end %>
+<% if @allow_relate_brother %>
+<p><%= link_to "Add Existing Same level TE", {:controller => "cm_reqs_reqs", :action => 'new',
+    :project_id => @project, :id => @cm_req.id, :req_level => @cm_req.type.level,
+    :new_type => 'brother'}, :class => 'icon icon-add' %>
+<% else %>
+<p style="text-align:right;"><small>(There are no TEs to relate for same level)</small></p>
+</p>
+<% end %>
+<p>
+<% if @allow_relate_children %>
+  <%= link_to "Add Existing Next level TE", {:controller => "cm_reqs_reqs", :action => 'new',
+    :project_id => @project, :id => @cm_req.id, :req_level => @cm_req.type.level + 1,
+    :new_type => 'child'}, :class => 'icon icon-add' %>
+  <%= link_to "Add New Next level TE", {:controller => "cm_reqs", :action => 'new',
+    :id => @project, :req_id => @cm_req.id, :req_level => @cm_req.type.level + 1}, :class => 'icon icon-add' %>
+<% else %>
+<p style="text-align:right;"><small>(There are no TEs of next hierachical level type)</small></p>
+</p>
+<% end %>
+
+<br /><hr />
+
+<div class="splitcontentleft">
+  <%= render :partial => 'tests_related' %>
+</div>
+
+<div class="splitcontentright">
+  <%= render :partial => 'cm_changes_objects/changes_related',
+    :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq",
+    :caller_cont => "cm_reqs", :export => "N"} %>
+</div>
+
+<br /><hr />
+
+<div class="splitcontentleft">
+  <%= render :partial => 'cm_ncs_objects/ncs_related',
+    :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq",
+    :caller_cont => "cm_reqs", :export => "N", :add_new => "N"} %>
+</div>
+
+<div class="splitcontentright">
+  <%= render :partial => 'cm_rids_objects/rids_related',
+    :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq",
+    :caller_cont => "cm_reqs", :export => "N"} %>
+</div>
+
+<div style="clear: both;"></div>

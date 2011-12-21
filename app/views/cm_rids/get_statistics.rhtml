@@ -1,0 +1,90 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="rids">Get Statistics</h2>
+
+<% labelled_tabular_form_for :cm_get_filter, @cm_get_filter,
+                             :html => {:id => 'cm_get_filter-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_get_filter' %>
+
+  <label for="code">Code: </label>
+  <%= text_field_tag 'codes_to_approve', @codes_to_approve, :required => true %>
+
+  <ul>
+    <li>Specify the code (or part of the code) of the RIDS to be included in the statistic. </li>
+  </ul>
+
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+    <a href="javascript:history.back()">Back</a>
+  </p>
+
+  <% if @tot_rids %>
+    <% if @tot_rids > 0 %>
+      <br /><hr />
+      <h3>Distribution by Status</h3>
+      <table>
+        <tr>
+          <th><b>Total Number of RIDS selected</b></th>
+          <td><%= @tot_rids.to_s %></td>
+          <td></td>
+        </tr>
+        <% @rids_status.each do |rid| %>
+        <% perc=rid.count_by_status.to_i * 100 / @tot_rids %>
+        <tr>
+          <th><%= change_internal_status_to_s(rid.internal_status_id) %></th>
+          <td><%= rid.count_by_status %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Distribution by Close Out</h3>
+      <table>
+        <% @rids_close_out.each do |rid| %>
+        <% perc=rid.count_by_close_out.to_i * 100 / @tot_rids %>
+        <tr>
+          <th><%= rid.close_out.name %></th>
+          <td><%= rid.count_by_close_out %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Number of Implemented RIDS</h3>
+      <table>
+        <% perc=@rids_implemented[0].count_by_implementation.to_i * 100 / @tot_rids %>
+        <tr>
+          <th>Implemented RIDS:</th>
+          <td><%= @rids_implemented[0].count_by_implementation %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+      </table>
+      <p><small>(To this number, substract those RIDS that do not need to be implemented,
+      based on the close-out value selected in the project)</small></p>
+
+      <br /><hr />
+
+      <h3>Number of Reviewed RIDS</h3>
+      <table>
+        <% perc=@rids_reviewed[0].count_by_reviewed.to_i * 100 / @tot_rids %>
+        <tr>
+          <th>Reviewed RIDS:</th>
+          <td><%= @rids_reviewed[0].count_by_reviewed %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+      </table>
+    <% else %>
+      <p>No RIDS found with selected code</p>
+    <% end %>
+  <% end %>
+
+<% end %>
+
+<% html_title "CM - RIDs - Get Statistics" %>

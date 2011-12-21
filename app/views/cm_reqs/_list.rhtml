@@ -1,0 +1,50 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Traceability Elements found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <th><b>Description</b></th>
+      <%= sort_header_tag('assigned_to_id', :caption => 'Owner') %>
+      <th><b>Status</b></th>
+      <%= sort_header_tag('type_id', :caption => 'Type') %>
+      <th><b>Classification</b></th>
+      <% if @subsys %>
+      <th><b>Subsystem</b></th>
+      <% end %>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+<tbody>
+<% @cm_reqs.each do |rq| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <% if @date_created and rq.created_on > @date_created %>
+      <% code_to_show = rq.code + "[New]" %>
+    <% else %>
+      <% code_to_show = rq.code %>
+    <% end %>
+    <td align="center"><%= link_to code_to_show, :controller => "cm_reqs", :action => "show", :id => rq %></td>
+    <td><%= h(rq.name) unless rq.name == rq.code %></td>
+    <td><%= h(rq.description) %></td>
+    <td align="center"><%= h(rq.assignee.name) unless rq.assignee.nil? %></td>
+    <td align="center"><%= h(change_t_status_to_s(rq.status)) %></td>
+    <td align="center"><%= h(rq.type.name) %></td>
+    <td align="center"><%= h(rq.classification.name) %></td>
+    <% if @subsys %>
+    <td align="center"><%= h(rq.subsystem.name) unless rq.subsystem.nil? %></td>
+    <% end %>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_reqs',
+        :action => 'edit', :id => rq}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_reqs',
+        :action => 'destroy', :id => rq},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_req_pages, @total %></p>
+

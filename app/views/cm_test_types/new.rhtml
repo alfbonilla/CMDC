@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">New Test Type</h2>
+
+<% labelled_tabular_form_for :cm_test_type, @cm_test_type,
+                             :html => {:id => 'cm_test_type-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_test_type' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Test Type Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+<%#= debug @cm_test_type %>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New Test Type" %>

@@ -1,0 +1,38 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of deliveries found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <th><b>Name</b></th>
+      <th><b>Status</b></th>
+      <%= sort_header_tag('delivery_date', :caption => 'Delivery Date') %>
+      <%= sort_header_tag('from_company', :caption => 'From Company') %>
+      <%= sort_header_tag('to_company', :caption => 'To Company') %>
+      <th><b>Approved By</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_deliveries.each do |delivery| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to delivery.id, :controller => "cm_deliveries", :action => "show", :id => delivery %></td>
+        <td align="center"><%= link_to delivery.code, :controller => "cm_deliveries", :action => "show", :id => delivery %></td>
+        <td><%= h(delivery.name) %></td>
+        <td align="center"><%= h(delivery.status.name) %></td>
+        <td align="center"><%= h(delivery.delivery_date.strftime("%Y-%m-%d")) unless delivery.delivery_date.blank? %></td>
+        <td><%= h(delivery.source_company.name) %></td>
+        <td><%= h(delivery.target_company.name) %></td>
+        <td align="center"><%= h(delivery.approver.login) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_deliveries', :action => 'edit', :id => delivery}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_deliveries', :action => 'destroy', :id => delivery},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_delivery_pages, @total %></p>

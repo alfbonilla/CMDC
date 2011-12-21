@@ -1,0 +1,26 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="changes"><%= @change_to_relate.code %> - <%= @cm_changes_version.version %></h2>
+
+<% labelled_tabular_form_for :cm_changes_version, @cm_changes_version,
+                             :url => {:action => 'edit', :id => @cm_changes_version},
+                             :html => {:id => 'edit-cm_changes_version-form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_changes_version' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Change Version Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+
+    <%= submit_tag l(:button_submit) %>
+  </div>
+
+<% end %>
+
+<% html_title "CM - Edit Change Version #{@change_to_relate.code}" %>
+

@@ -1,0 +1,29 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="iitems">New Child Item Relation</h2>
+
+<% labelled_tabular_form_for :cm_items_item, @cm_items_item,
+                             :html => {:id => 'cm_items_item-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+ 
+  <%= error_messages_for 'cm_items_item' %>
+
+  <% unless @rest_of_items.blank? %>
+
+    <div class="box">
+      <fieldset class="tabular"><legend>Item Relation Properties</legend>
+        <div id="attributes" class="attributes">
+          <%= render :partial => 'attributes', :locals => {:f => f} %>
+        </div>
+      </fieldset>
+    </div>
+
+    <%= submit_tag l(:button_create) %>
+  <% else %>
+    <p><small>No items to relate!!</small></p>
+  <% end %>
+
+<% end %>
+
+<% html_title "CM - New Item-Item Relation" %>

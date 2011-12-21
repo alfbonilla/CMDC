@@ -1,0 +1,68 @@
+<% fields_for :cm_doc, @cm_doc, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :size => 40, :required => true %>
+    <% if @cm_doc.new_record? %>
+      <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'cm_doc-form'} %>
+    <% else %>
+      <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+    <% end %></p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :name, :size => 30, :required => true %></p>
+    <p><%= f.select :type_id, (@cm_doc_types.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.check_box :deliverable %></p>
+    <p><%= f.check_box :referable %></p>
+    <% if @cm_doc.new_record? %>
+      <p><%= f.check_box :l_applicable %></p>
+      <p><%= f.select :l_assigned_to_id, (@cm_doc_assignees.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <% else %>
+      <p><%= f.text_field :applicable_version, :size => 10 %></p>
+    <% end %>
+    <p><%= f.text_field :external_doc_id %></p>
+    <p><%= f.select :originator_company_id, (@cm_companies.collect {|p| [p.name, p.id]}) %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <% if @cm_doc.new_record? %>
+      <p><%= f.text_field :l_version, :size => 10, :required => true %></p>
+    <% end %>
+    <p><%= f.select :category_id, (@cm_doc_categories.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.select :subsystem_id, (@cm_subsystems.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.text_field :approved_date, :size => 15 %><%= calendar_for('cm_doc_approved_date') %></p>
+    <p><%= f.select :baseline, [[change_baseline_to_s(1), 1], [change_baseline_to_s(2), 2],
+      [change_baseline_to_s(3), 3], [change_baseline_to_s(4), 4], [change_baseline_to_s(5), 5]],
+      :include_blank => true %></p>
+    <p><%= f.select :approval_level, [[change_approval_level_to_s('A'), 'A'],
+      [change_approval_level_to_s('R'), 'R'], [change_approval_level_to_s('I'), 'I'],
+      [change_approval_level_to_s('X'), 'X']], :include_blank => true %></p>
+    <% if @cm_doc.new_record? %>
+      <p><%= f.select :l_status_id, (@cm_doc_statuses.collect {|p| [p.name, p.id]}) %></p>
+      <% end %>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <p><%= f.text_area :description, :cols => 100, :rows => 3, :class => 'wiki-edit' %></p>
+  <% if @cm_doc.new_record? %>
+    <p><%= f.text_field :l_physical_location, :size => 100 %> &nbsp; <small><i>(Path to folder, URL...)</i></small></p>
+  <% end %>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_docs" %></p>
+<% end %>
+
+<% if @cm_doc.new_record? && User.current.allowed_to?(:add_cm_doc_watchers, @project) -%>
+  <p><label><%= l(:label_issue_watchers) %></label>
+  <% @cm_doc.project.users.sort.each do |user| -%>
+    <label class="floating"><%= check_box_tag 'cm_doc[watcher_user_ids][]', user.id,
+    @cm_doc.watched_by?(user) %> <%=h user %></label>
+  <% end -%>
+  </p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_doc_code')).value=new_code;}
+</script>

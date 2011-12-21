@@ -1,0 +1,7 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="cmdocs"><%= @cm_doc.name %> #<%= @cm_doc.id %></h2>
+
+<%= render :partial => 'edit' %>
+
+<% html_title "CM - Edit Document #{@cm_doc.name}" %>

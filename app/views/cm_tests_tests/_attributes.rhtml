@@ -1,0 +1,28 @@
+<b>Create Relationship between test </b><%=  @intro_test.code %><b>  and:  </b>
+<br />
+<br />
+<% fields_for :cm_tests_test, @cm_tests_test, :builder => TabularFormBuilder do |f| %>
+  <% if @creating %>
+    <% if @new_type == "father" %>
+      <p><%= f.hidden_field :child_test_id, :value => @cm_tests_test.child_test_id %></p>
+    <% else %>
+      <p><%= f.hidden_field :cm_test_id, :value => @cm_tests_test.cm_test_id %></p>
+    <% end %>
+    <p><%= f.hidden_field :relation_type %></p>
+    <% if @new_type == "father" %>
+    <p><%= f.select :cm_test_id, (@tests_to_add.collect {|p| [p.code, p.id]}) %></p>
+    <% else %>
+    <p><%= f.select :child_test_id, (@tests_to_add.collect {|p| [p.code, p.id]}) %></p>
+    <% end %>
+    <p><%= f.text_field :relation_type,
+      :value => change_relation_type_to_s(@cm_tests_test.relation_type), :disabled => true %></p>
+  <% end %>
+  <p><%= f.text_field :execution_order, :value => @number_of_test_related, :size => 10 %></p>
+  <p><%= f.text_field :description %></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :tests_to_add, :value => @tests_to_add %>
+     <%= g.hidden_field :new_type, :value => @new_type %> 
+     <%= g.hidden_field :back_id, :value => @back_id %>
+  </p>
+<% end %>

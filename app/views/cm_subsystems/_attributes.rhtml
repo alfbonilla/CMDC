@@ -1,0 +1,6 @@
+<% fields_for :cm_subsystem, @cm_subsystem, :builder => TabularFormBuilder do |f| %>
+
+<p><%= f.text_field :code, :size => 10, :required => true %><small><i>Acronym</i></small></p>
+<p><%= f.text_field :name, :size => 30, :required => true %></p>
+<p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+<% end %>

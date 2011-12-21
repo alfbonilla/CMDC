@@ -1,0 +1,26 @@
+en:
+  field_code: Code
+  field_product_tree_code: Product Tree Code
+  field_quantity: Quantity
+  field_category_id: Category
+  field_cm_item_group_id: Group
+  field_type: Type
+  field_classification: Classification
+  field_version: Version
+  field_serial_number: Serial Number
+  field_model_number: Model Number
+  field_physical_location: Physical Location
+  field_installed_on_host: Installed on
+  field_availability: Availability
+  field_license_expiration: License Expiration
+  field_MTBF: Mean Time Between Failure
+  field_comments: Comments
+  field_markings: Markings
+  field_purchase_order_id: Purchase Order
+  field_cost: Cost
+  field_payment_method: Payment Method
+  field_procurement_level: Procurement Level
+  field_frame_contract: Frame Contract
+  field_actual_estimated: Estimated
+  field_item_owner: Owner
+  field_disposal_method: Disposal Method

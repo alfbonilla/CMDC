@@ -1,0 +1,8 @@
+<div class="contextual">
+<%= link_to("Import", {:controller => 'cm_commons',
+    :action => 'import_objects', :id => @project, :cmdc_object => "rids" },
+    :class => 'icon icon-summary') %>
+<%= link_to("Statistics", {:controller => 'cm_rids',
+    :action => 'get_statistics', :id => @project },
+    :class => 'icon icon-stats') %>
+</div>

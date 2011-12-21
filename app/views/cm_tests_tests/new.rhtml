@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">New Test Relation</h2>
+
+<% labelled_tabular_form_for :cm_tests_test, @cm_tests_test,
+                   :html => {:id => 'cm_tests_test-form',
+                   :class => nil,
+                   :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_tests_test' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Test Relation Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+
+<% end %>
+
+<% html_title "CM - New TE-TE Relation" %>

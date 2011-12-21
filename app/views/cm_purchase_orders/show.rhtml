@@ -1,0 +1,89 @@
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="porders"><%= @cm_purchase_order.code %> #<%= @cm_purchase_order.id %></h2>
+
+<div>
+  <%= avatar(@cm_purchase_order.author, :size => "50") %>
+  <h3><%=h @cm_purchase_order.title %></h3>
+  <p class="author">
+    <%= authoring @cm_purchase_order.created_on, @cm_purchase_order.author %>.
+    <% if @cm_purchase_order.created_on != @cm_purchase_order.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_purchase_order.updated_on)) %>.
+    <% end %>
+  </p>
+</div>
+<table class="attributes">
+<tr>
+  <th><b>Purchase Date:</b></th><td><%= @cm_purchase_order.purchase_date %></td>
+  <% if @cm_purchase_order.supplier.nil? %>
+    <th><b>Supplier:</b></th><td></td>
+  <% else %>
+    <th><b>Supplier:</b></th><td><%= @cm_purchase_order.supplier.name %></td>
+  <% end %>
+  <% if @cm_purchase_order.vendor.nil? %>
+    <th><b>Vendor:</b></th><td></td>
+  <% else %>
+    <th><b>Vendor:</b></th><td><%= @cm_purchase_order.vendor.name %></td>
+  <% end %>
+</tr>
+<tr>
+  <th><b>Delivery Note:</b></th><td><%= @cm_purchase_order.delivery_note %></td>
+  <th><b>Leadtime:</b></th><td><%= @cm_purchase_order.leadtime %></td>
+  <th><b>Budget:</b></th><td><%= @cm_purchase_order.budget %></td>
+</tr>
+<tr>
+  <th><b>Payment Period:</b></th><td><%= @cm_purchase_order.payment_period %></td>
+  <th><b>Payment Method:</b></th><td><%= @cm_purchase_order.payment_method %></td>
+</tr>
+</table>
+<hr />
+<fieldset><legend>Requested & Authorized Info</legend>
+<table class="attributes">
+<tr>
+  <th><b>Requested By:</b></th><td><%= @cm_purchase_order.requested_by %></td>
+  <th><b>On:</b></th><td><%= @cm_purchase_order.requested_date %></td>
+  <th><b>Authorized By:</b></th><td><%= @cm_purchase_order.authorized_by %></td>
+  <th><b>On:</b></th><td><%= @cm_purchase_order.authorized_date %></td>
+</tr>
+</table>
+</fieldset>
+<hr />
+<p><strong>Comments</strong></p>
+<div class="wiki">
+  <%= textilizable @cm_purchase_order, :comments %>
+</div>
+<hr />
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+
+<% if @journals.any? %>
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_purchase_orders' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_purchase_orders', 'edit') %>
+  <div id="update" style="display:none;">
+    <h3><%= l(:button_update) %></h3>
+    <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object = @cm_purchase_order %>
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_purchase_order.code} ##{@cm_purchase_order.id}: #{@cm_purchase_order.title}" %>
+
+<p class="other-formats">
+  Also available in
+  <%= link_to('PDF', {:action => 'show', :id => @cm_purchase_order, :format => 'pdf', :history => 'Y' }) %>
+  ,
+  <%= link_to('PDF (no history)', {:action => 'show', :id => @cm_purchase_order, :format => 'pdf', :history => 'N' }) %>
+</p>

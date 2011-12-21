@@ -1,0 +1,48 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <%= sort_header_tag('type_id', :caption => 'Type') %>
+      <th><b>Last Version</b></th>
+      <th><b>Status</b></th>
+      <th><b>Category</b></th>
+      <th><b>Applicable</b></th>
+      <th><b>Deliverable</b></th>
+      <th><b>Referable</b></th>
+      <th><b>Copy</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_docs.each do |doc| %>   
+      <% if @filter_by_status and @last_status != doc.last_version.status.id %>
+        <% @total = @total - 1 %>
+        <% next %>
+      <% end %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to doc.id, :controller => "cm_docs", :action => "show", :id => doc %></td>
+        <td><%= link_to doc.code, :controller => "cm_docs", :action => "show", :id => doc %></td>
+        <td><%= link_to doc.name, :controller => "cm_docs", :action => "show", :id => doc %></td>
+        <td align="center"><%= h(doc.type.name) %></td>
+        <td align="center"><%= doc.last_version.version %></td>
+        <td align="center"><%= doc.last_version.status.name %></td>
+        <td align="center"><%= h(doc.category.name) %></td>
+        <td align="center"><%= image_tag 'true.png' if doc.applicable? %></td>
+        <td align="center"><%= image_tag 'true.png' if doc.deliverable? %></td>
+        <td align="center"><%= image_tag 'true.png' if doc.referable? %></td>
+        <td align="center"><%= link_to(image_tag('copy.png'), {:controller => 'cm_docs', :action => 'new', :copy_doc_id => doc, :id => @project}) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_docs', :action => 'edit', :id => doc}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_docs', :action => 'destroy', :id => doc},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>Number of Documents found: <b><%= @total %></b></p>
+
+<p class="pagination"><%= pagination_links_full @cm_doc_pages, @total %></p>

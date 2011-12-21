@@ -1,0 +1,28 @@
+<b>Create Relationship between Document  </b><%= @doc_to_relate.name %><b>  and:  </b>
+<br />
+<br />
+<% unless @version_editable %>
+  <p><b>Version (already delivered):</b><%= @cm_docs_version.version %></p>
+  <br />
+<% end %>
+
+<% fields_for :cm_docs_version, @cm_docs_version, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :cm_doc_id, :value => @doc_to_relate.id %></p>
+  <% if @version_editable %>
+    <p><%= f.text_field :version, :required => true %></p>
+  <% end %>
+  <p><%= f.select :status_id, (@cm_doc_statuses.collect {|p| [p.name, p.id]}) %></p>
+  <p><%= f.check_box :applicable %></p>
+  <p><%= f.select :assigned_to_id, (@cm_doc_assignees.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+  <p><%= f.text_field :comments %></p>
+  <p><%= f.text_field :physical_location, :size => 100 %> &nbsp; <small><i>(Path to folder, URL...)</i></small></p>
+<% end %>
+
+<br />
+
+<% unless @cm_docs_version.new_record? %>
+  <fieldset><legend>Auditory</legend>
+    <p><b>Updated on:</b><%= @cm_docs_version.updated_on.strftime("%Y-%m-%d %H:%M:%S") %></p>
+    <p><b>Updated by:</b><%= @cm_docs_version.author.name %></p>
+  </fieldset>
+<% end %>

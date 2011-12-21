@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="test_campaign">New Test Campaign</h2>
+
+<% labelled_tabular_form_for :cm_test_campaign, @cm_test_campaign,
+                             :html => {:id => 'new-cm_test_campaign-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_test_campaign' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Define Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+
+  </div>
+  <br />
+  <%= submit_tag l(:button_create) %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>
+<% end %>
+<% html_title "CM - New Test Campaign" %>

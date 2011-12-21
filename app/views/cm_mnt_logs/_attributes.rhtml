@@ -1,0 +1,43 @@
+<% fields_for :cm_mnt_log, @cm_mnt_log, :builder => TabularFormBuilder do |f| %>
+
+<p><%= f.text_field :code, :required => true %>
+     <% if @cm_mnt_log.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+      :caller_cont => 'cm_mnt_logs', :cmdc_object => change_cmdc_object_to_i('Maintenance')  }} ) %></small>
+    <% else %>
+      <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+    <% end %>
+</p>
+<div class="splitcontentleft">
+<p><%= f.text_field :name, :size => 50, :required => true %></p>
+<p><%= f.select :cm_item_id, (@iitems.collect {|p| [p.code + " - " + p.name, p.id]}) %></p>
+<p><%= f.select :maintained_by_id, (@cm_mnt_log_users.collect {|p| [p.name, p.id]}) %></p>
+<p><%= f.text_field :physical_location %></p>
+<p><%= f.text_field :process_used %></p>
+</div>
+
+<div class="splitcontentright">
+<p><%= f.select :type_id, (@cm_mnt_log_types.collect {|p| [p.name, p.id]}) %></p>
+<p><%= f.select :status_id, (@cm_mnt_log_statuses.collect {|p| [p.name, p.id]}) %></p>
+<p><%= f.text_field :maintenance_start_date, :size => 10 %><%= calendar_for('cm_mnt_log_maintenance_start_date') %></p>
+<p><%= f.text_field :maintenance_time, :required => true %> <small>hours (expected for scheduled mnts)</small></p>
+<p><%= f.text_field :nc_ref %></p>
+</div>
+
+<div style="clear:both;"> </div>
+
+<p><%= f.text_area :installation_log, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p>
+<p><%= f.text_area :configuration_comments, :cols => 60, :rows => 15, :class => 'wiki-edit' %></p>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_mnt_logs" %></p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_mnt_log_code')).value=new_code;}
+</script>

@@ -1,0 +1,32 @@
+<h3>Related Tests</h3>
+<% if @cm_req.cm_tests_objects.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Code</b></td>
+    <td><b>Name</b></td>
+    <td align="center"><b>Verification Method</b></td>
+    <td><b>Relation Details</b></td>
+    <td></td>
+    <td></td> 
+  </tr>
+</thead>
+<tbody>
+<% @cm_req.cm_tests_objects.each do |tst| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% creation_text = "Created by " + tst.author.login + " on " + tst.created_on.strftime("%Y/%m/%d") %>
+  <td align="center"><%= link_to h(tst.cm_test.code ), {:controller => 'cm_tests',
+              :action => 'show', :id => tst.cm_test.id}, :title => creation_text %></td>
+  <td align="center"><%= h(tst.cm_test.name) %></td>
+  <td align="center"><%= h(tst.verification_method.name) %></td>
+  <td align="center"><%= h(tst.rel_string) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_req.cm_tests_objects.size %> Tests related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Tests related</small></p>
+<% end %>
+
+<br /><hr />

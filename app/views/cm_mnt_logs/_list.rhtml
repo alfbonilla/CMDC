@@ -1,0 +1,40 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Maintenace Logs found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <%= sort_header_tag('maintenance_start_date', :caption => 'Maintenance Date') %>
+      <%= sort_header_tag('cm_item_id', :caption => 'Item') %>
+      <th><b>NC Ref</b></th>
+      <th><b>Maintained By</b></th>
+      <th><b>Type</b></th>
+      <th><b>Status</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_mnt_logs.each do |mlog| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to mlog.id, :controller => "cm_mnt_logs", :action => "show", :id => mlog %></td>
+        <td align="center"><%= link_to mlog.code, :controller => "cm_mnt_logs", :action => "show", :id => mlog %></td>
+        <td><%= h(mlog.name) %></td>
+        <td align="center"><%= h(mlog.maintenance_start_date.strftime("%Y-%m-%d")) %></td>
+        <td><%= h(mlog.item.name) %></td>
+        <td align="center"><%= h(mlog.nc_ref) %></td>
+        <td align="center"><%= h(mlog.installer.login) %></td>
+        <td align="center"><%= h(mlog.type.name) %></td>
+        <td align="center"><%= h(mlog.status.name) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_mnt_logs', :action => 'edit', :id => mlog}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_mnt_logs', :action => 'destroy', :id => mlog},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_mnt_log_pages, @total %></p>

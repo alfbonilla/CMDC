@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="smrs">New SMR</h2>
+
+<% labelled_tabular_form_for :cm_smr, @cm_smr,
+                             :html => {:id => 'cm_smr-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_smr' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>SMR Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+  <%= submit_tag l(:button_create) %>
+											 
+<% end %>
+
+<% html_title "CM - New SMR" %>

@@ -1,0 +1,32 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+<table class="list">
+<thead>
+<th><b>Id</b></th>
+<th><b>Name</b></th>
+<th><b>Acronym</b></th>
+<th><b>Type</b></th>
+<th><b>Phone</b></th>
+<th><b>Mail</b></th>
+<th><b>Web Site</b></th>
+<th><b>Edit</b></th>
+<th><b>Delete</b></th>
+</thead>
+<tbody>
+<% @cm_companies.each do |cm_company| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= h(cm_company.id) %></td>
+    <td><%= h(cm_company.name) %></td>
+    <td><%= h(cm_company.code) %></td>
+    <td><%= h(cm_company.company_type) %></td>
+    <td><%= h(cm_company.phone) %></td>
+    <td><%= h(cm_company.mail) %></td>
+    <td><%= h(cm_company.web_site) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_companies', :action => 'edit', :id => cm_company}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_companies', :action => 'destroy', :id => cm_company},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<% end %>

@@ -1,0 +1,39 @@
+<b>Relationship between </b><%= @item_name %><b> and:</b>
+<br />
+<br />
+
+<% fields_for :cm_rids_object, @cm_rids_object, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :x_type, :value => @cm_rids_object.x_type %></p>
+  <p><%= f.hidden_field :x_id, :value => @cm_rids_object.x_id %></p>
+  <% if @rids.nil? %>
+    <p><%= f.text_field :cm_rid_id, :value => @rid_code, :disabled => true %></p>
+  <% else %>
+    <p><%= f.select :cm_rid_id, (@rids.collect {|p| [p.code, p.id]}), :required => true %></p>
+  <% end %>
+  <% if @x_type == "CmBoard" %>
+    <p><%= f.select :rel_string, (@close_out_values.collect {|p| [p.name, p.name]}), :required => true %><i>(Decision Taken => Close-out value)</i></p>
+    <p><%= f.select :target_version_id, (@releases.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.text_field :rel_date %><%= calendar_for('cm_rids_object_rel_date') %><i>(Due Date)</i></p>
+    <p><%= f.check_box :rel_bool %><i>(Close RID and set Close-Out value)</i></p>
+  <% else %>
+    <p><%= f.text_field :rel_string, :size => 30 %></p>
+    <p><%= f.text_field :rel_date, :size => 20 %><%= calendar_for('cm_rids_object_rel_date') %></p>
+  <% end %>
+  
+  <p><%= f.text_field :rel_string_2, :size => 100 %><i>(Comments)</i></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <% if @cm_rids_object.new_record? and @cm_rids_object.x_type == "CmBoard" %>
+  <fieldset><legend>Issue Creation</legend>
+    <p><%= g.check_box :create_issue, :size => 100 %></p>
+    <p><%= g.select :issue_project, (@issue_projects.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= g.select :issue_type, (@issue_types.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= g.text_field :issue_subject, :size => 20 %></p>
+  </fieldset>
+  <% end %>
+  <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+  <p><%= g.hidden_field :rid_code, :value => @code %></p>
+  <p><%= g.hidden_field :caller_cont, :value => @caller_cont %></p>
+  <p><%= g.hidden_field :item_name, :value => @item_name %></p>
+  <p><%= g.hidden_field :x_type, :value => @x_type %></p>
+<% end %>

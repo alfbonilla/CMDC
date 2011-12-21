@@ -1,0 +1,39 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Revision</b></th>
+      <th><b>Type</b></th>
+      <th><b>Id</b></th>
+      <th><b>Code</b></th>
+      <th><b>Included in Delivery</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cmdc_objs.each_with_index do |rev, ind| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <% if ind < @ncs_meetings %>
+          <td align="center"><small>Meeting Schedule</small></td>
+        <% else %>
+          <td align="center"><small>NC Solved On Release</small></td>
+        <% end %>
+        <% if rev[2] == "NC" %>
+          <td align="center"><%= image_tag 'ncrs.png', :plugin => "redmine_cm" %></td>
+          <td align="center"><%= link_to rev[0], :controller => "cm_ncs",
+                          :action => "show", :id => rev[0] %></td>
+        <% else %>
+          <td align="center"><%= image_tag 'change.png', :plugin => "redmine_cm" %></td>
+          <td align="center"><%= link_to rev[0], :controller => "cm_changes",
+                          :action => "show", :id => rev[0] %></td>
+        <% end %>
+        <td><%= h(rev[1]) %></td>
+        <% if rev[3] == "YES" %>
+          <td align="center"><%= image_tag 'true.png' %></td>
+        <% else %>
+          <td align="center"><%= image_tag 'false.png' %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

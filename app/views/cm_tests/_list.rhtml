@@ -1,0 +1,42 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Tests found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <%= sort_header_tag('assigned_to_id', :caption => 'Owner') %>
+      <th><b>Status</b></th>
+      <th><b>Type</b></th>
+      <th><b>Classification</b></th>
+      <th><b>Copy</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+<tbody>
+<% @cm_tests.each do |test| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= link_to test.id, :controller => "cm_tests", :action => "show", :id => test %></td>
+    <td align="center"><%= link_to test.code, :controller => "cm_tests", :action => "show", :id => test %></td>
+    <td><%= h(test.name) %></td>
+    <td align="center"><%= h(test.assignee.name) unless test.assignee.nil? %></td>
+    <td align="center"><%= h(change_t_status_to_s(test.status)) %></td>
+    <td align="center"><%= h(test.type.name) unless test.type.nil?%></td>
+    <td align="center"><%= h(test.classification.name) unless test.classification.nil? %></td>
+    <td align="center"><%= link_to(image_tag('copy.png'), {:controller => 'cm_tests',
+        :action => 'copy', :id => @project , :copy_id => test}) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_tests',
+        :action => 'edit', :id => test}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_tests',
+        :action => 'destroy', :id => test},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_test_pages, @total %></p>
+

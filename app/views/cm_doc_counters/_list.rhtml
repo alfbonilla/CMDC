@@ -1,0 +1,37 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of codes found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <th><b>Pattern</b></th>
+      <th><b>CMDC Object</b></th>
+      <th><b>Counter</b></th>
+      <th><b>Increment Counter</b></th>
+      <th><b>Increment Value</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cm_doc_counters.each do |cm_doc_counter| %>
+    <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <td><%= h(cm_doc_counter.id) %></td>
+      <td><%= h(cm_doc_counter.name) %></td>
+      <td><%= h(cm_doc_counter.format) %></td>
+      <td align="center"><%= h(change_cmdc_object_to_s(cm_doc_counter.cmdc_object)) %></td>
+      <td align="center"><%= h(cm_doc_counter.counter) %></td>
+      <td align="center"><%= h(cm_doc_counter.increment_by) %></td>
+      <td align="center"><%= link_to_if_authorized(image_tag('reload.png'), {:controller => 'cm_doc_counters', :action => 'new_doc', :id => cm_doc_counter}, :method => :post) %></td>
+      <td align="center"><%= link_to_if_authorized(image_tag('edit.png'), {:controller => 'cm_doc_counters', :action => 'edit', :id => cm_doc_counter}) %></td>
+      <td align="center"><%= link_to_if_authorized(image_tag('delete.png'), {:controller => 'cm_doc_counters', :action => 'destroy', :id => cm_doc_counter},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_doc_counter_pages, @total %></p>
+

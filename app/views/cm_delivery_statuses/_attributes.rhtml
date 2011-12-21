@@ -1,0 +1,15 @@
+<% fields_for :cm_delivery_status, @cm_delivery_status, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+<p><%= f.text_field :name, :size => 30, :required => true %></p>
+</div>
+
+<div class="splitcontentright">
+<p><label for="type_is_default"><%=l(:field_is_default)%></label>
+<%= f.check_box :is_default %></p>
+<p><label for="type_is_closed"><%=l(:field_is_closed)%></label>
+<%= f.check_box :is_closed %></p>
+</div>
+
+<p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+<% end %>

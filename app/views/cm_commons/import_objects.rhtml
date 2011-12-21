@@ -1,0 +1,112 @@
+<script type="text/javascript">
+//<![CDATA[
+var first=1;
+function modify_mask() {
+    select = $('table_columns');
+    column = select.value
+    if (document.getElementById('translate_namecode').checked)
+    {
+      if (document.getElementById('namecode_code').checked)
+      {
+        t_f='C'
+      }
+      else
+      {
+        t_f='N';
+      }
+    }
+    else
+    {
+      t_f='S';
+    }
+    if (first == 1)
+    {
+    document.getElementById('cm_import_objects_input_mask').value=t_f + column;
+    first=0;
+    }
+    else
+    {
+    document.getElementById('cm_import_objects_input_mask').value=document.getElementById('cm_import_objects_input_mask').value + ";" + t_f + column;
+    }
+}
+//]]>
+</script>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class=<%= @cmdc_object %> >Import <%= @cmdc_object %> from input file</h2>
+
+<p><strong>FEATURES:</strong> </p>
+<li>Import fields including "end of line" character in their content</li>
+<li>Search for id of supplied code or name value</li>
+<li>Auditory data is automatically loaded: *Project, Author, Created and Updated on dates*</li>
+<li>If the <strong>author_id</strong> column is not included in the mask, the user doing the import will be
+  set as the creator of the objects. <strong>Author has to be the login ALWAYS</strong></li>
+
+<p><strong>RESTRICTIONS:</strong> </p>
+<li>The <strong>last column</strong> of the import file can not be a column including the "end of line"
+  character (text fields)</li>
+<li>All the columns of the DB that are <strong>mandatory</strong> have to be included in the import file</li>
+
+<% case @cmdc_object
+  when "rids" %>
+<p><small><strong>RID mandatory fields:</strong> code, name, close_out_id (3 for Open),
+    internal_status_id (1 for Open)</small></p>
+<p><small><strong>RID recommended fields:</strong> generation_date, due_date, assigned_to_id</small></p>
+<p><small>Input Mask Sample:
+  Scode;Sinternal_status_id;Nopen_release_id;Soriginator;Noriginator_company_id;
+  Caffected_doc_id;Saffected_doc_version;Sproblem_location;Sdiscrepancy;Srecommendation;
+  Sviolated_reqs;Sclose_out_id;Nauthor_id;Nassigned_to_id;Ncategory
+  </small></p>
+  <p><small><i>Including always "1" as internal status and "1 or 3" as the Open value for the close-out value</i></small></p>
+
+<% when "tes" %>
+<p><small><strong>TE mandatory fields:</strong> code, name, type, classification </small></p>
+
+<p><strong>If input file includes existing records, please do not include Status as a field to update.
+  Setting the status could affect to the internal change tracking of the TEs</strong></p>
+<p><small><strong>TE Status Values: 1-'Stable', 2-'Proposed', 3-'Dismissed'</strong></small></p>
+<% end %>
+
+<% labelled_tabular_form_for :cm_import_objects, @cm_import_objects,
+                             :html => {:id => 'cm_import_objects-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_import_object' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Properties</legend>
+      <fieldset class="tabular"><legend>Mask Preparation</legend>
+      <p><%= label_tag 'translate_namecode', 'Search for id value' %>
+         <%= check_box "translate", "namecode" %></p>
+      <p><%= label_tag 'namecode_options', 'Name or Code' %>
+         <% [ 'name', 'code' ].each do |namecode| %>
+            <%= radio_button_tag 'namecode', namecode, @namecode == namecode %>
+            <%= namecode.humanize %>
+         <% end %></p>
+      <p><%= label_tag 'table_columns', 'Columns'%>
+         <%= select "table","columns", @cm_export_columns, {:include_blank => true}, {:onchange => "modify_mask();"} %></p>
+      </fieldset>
+      <div id="attributes" class="attributes">
+        <% fields_for :cm_import_objects, @cm_import_objects, :builder => TabularFormBuilder do |f| %>
+          <p><%= f.check_box :review_version %></p>
+          <p><%= f.file_field :file_name, :required => true %></p>
+          <p><%= f.text_field :input_mask, :size => 100, :required => true %></p>
+          <p><small>Column qualified with N for searching id from Name, C for searching id from Code and S for Stay as is (no translation)</small></p>
+          <p><%= f.text_field :separator, :size => 3, :required => true %></p>
+          <p><small>Set TAB for tabs separated files</small></p>
+        <% end %>
+      </div>
+    </fieldset>
+  </div>
+
+  <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+    <p><%= g.hidden_field :cmdc_object, :value => @cmdc_object %></p>
+  <% end %>
+
+  <br />
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - Import " + @cmdc_object + "from Input File" %>

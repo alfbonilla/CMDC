@@ -1,0 +1,87 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Risks found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Risk Code') %>
+      <th><b>Name</b></th>
+      <th><b>Status</b></th>
+      <%= sort_header_tag('risk_exposure', :caption => 'Risk Exposure') %>
+      <%= sort_header_tag('priority_ranking', :caption => 'Priority') %>
+      <th><b>Impact</b></th>
+      <th><b>Probability</b></th>
+      <th><b>Impact Ini Date</b></th>
+      <th><b>Impact End Date</b></th>
+      <th><b>Assigned To</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+<tbody>
+<% @cm_risks.each do |risk| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= link_to risk.id, :controller => "cm_risks", :action => "show", :id => risk %></td>
+    <td align="center"><%= link_to risk.code, :controller => "cm_risks", :action => "show", :id => risk %></td>
+    <td><%= h(risk.name) %></td>
+    <td align="center"><%= h(risk.status.name) %></td>
+    <% if risk.closed? %>
+      <td align="center"><%= image_tag 'close_hl.png'  %></td>
+      <td align="center"><%= image_tag 'close_hl.png' %></td>
+    <% else %>
+      <% case risk.risk_exposure
+         when 5 %>
+      <td align="center"><%= image_tag 'VeryHighRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.risk_exposure)) %></td>
+      <% when 4 %>
+      <td align="center"><%= image_tag 'HighRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.risk_exposure)) %></td>
+      <% when 3 %>
+      <td align="center"><%= image_tag 'ModerateRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.risk_exposure)) %></td>
+      <% when 2 %>
+      <td align="center"><%= image_tag 'LowRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.risk_exposure)) %></td>
+      <% else %>
+      <td align="center"><%= image_tag 'VeryLowRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.risk_exposure)) %></td>
+      <%  end %>
+      <% case risk.priority_ranking
+         when 5 %>
+      <td align="center"><%= image_tag 'VeryHighRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.priority_ranking)) %></td>
+      <% when 4 %>
+      <td align="center"><%= image_tag 'HighRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.priority_ranking)) %></td>
+      <% when 3 %>
+      <td align="center"><%= image_tag 'ModerateRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.priority_ranking)) %></td>
+      <% when 2 %>
+      <td align="center"><%= image_tag 'LowRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.priority_ranking)) %></td>
+      <% when 99 %>
+      <td align="center"><%= image_tag 'Warning.png', :plugin => "redmine_cm" %></td>
+      <% else %>
+      <td align="center"><%= image_tag 'VeryLowRisk.png', :plugin => "redmine_cm",
+                        :alt => h(change_impact_to_s(risk.priority_ranking)) %></td>
+      <%  end %>
+    <% end %>
+    <td align="center"><%= h(change_impact_to_s(risk.impact)) %></td>
+    <td align="center"><%= h(risk.probability) %></td>
+    <td align="center"><%= h(risk.impact_ini_date.strftime("%Y-%m-%d")) %></td>
+    <td align="center"><%= h(risk.impact_end_date.strftime("%Y-%m-%d")) %></td>
+    <td align="center"><%= h(risk.assignee.name) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_risks',
+          :action => 'edit', :id => risk}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_risks',
+          :action => 'destroy', :id => risk},
+          :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_risk_pages, @total %></p>
+

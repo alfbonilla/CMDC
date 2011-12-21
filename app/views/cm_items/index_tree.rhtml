@@ -1,0 +1,13 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="iitems">Items Tree Index</h2>
+
+<div id="table" class="autoscroll">
+  <% if @cm_info_items.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_items/tree_list' %>
+  <% end %>
+</div>
+
+<% html_title "CM - Items Tree List" %>

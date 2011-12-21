@@ -1,0 +1,62 @@
+<h2 class="rids">RIDs Index</h2>
+
+<div id="table" class="autoscroll">
+  <% if @cm_rids.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+
+<p>Number of rids found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Code</b></th>
+      <th><b>Status</b></th>
+      <th><b>Close Out</b></th>
+      <th><b>Due Date</b></th>
+      <th><b>Originator Company</b></th>
+      <th><b>Originator</b></th>
+      <th><b>Open in Release</b></th>
+      <th><b>Affected Doc</b></th>
+      <th><b>Affected Doc Version</b></th>
+      <th><b>Problem Location</b></th>
+      <th><b>Discrepancy</b></th>
+      <th><b>Recommendation</b></th>
+      <th><b>Author Response</b></th>
+      <th><b>Disposition</b></th>
+      <th><b>Comments</b></th>
+      <th><b>Generation Date</b></th>
+      <th><b>Assigned To</b></th>
+      <th><b>Implementation Location</b></th>
+      <th><b>Reviewed</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_rids.each do |rid| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td><%= h(rid.code) %></td>
+        <td><%= h(change_internal_status_to_s(rid.internal_status_id)) %></td>
+        <td><%= h(rid.doc_due_date.strftime("%Y-%m-%d")) if not rid.doc_due_date.nil? %></td>
+        <td><%= h(rid.generation_date.strftime("%Y-%m-%d")) if not rid.generation_date.nil? %></td>
+        <td><%= h(rid.originator_company.name) %></td>
+        <td><%= h(rid.originator) %></td>
+        <td><%= h(rid.open_release.name) unless rid.open_release.nil? %></td>
+        <td><%= h(rid.affected_doc.name) %></td>
+        <td><%= h(rid.affected_doc_version) %></td>
+        <td><%= h(rid.problem_location) %></td>
+        <td><%= h(rid.implementation_release.name) unless rid.implementation_release.nil? %></td>
+        <td><%= textilizable rid.discrepancy %></td>
+        <td><%= textilizable rid.recommendation %></td>
+        <td><%= textilizable rid.author_response %></td>
+        <td><%= textilizable rid.disposition %></td>
+        <td><%= textilizable rid.comments %></td>
+        <td><%= h(rid.close_out.name) %></td>
+        <td><%= h(rid.assignee.name) unless rid.assignee.nil? %></td>
+        <td><%= h(rid.implementation_location) %></td>
+        <td><%= h(rid.reviewed) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+  <% end %>
+</div>

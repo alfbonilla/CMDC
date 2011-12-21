@@ -1,0 +1,9 @@
+<div class="contextual">
+<%= watcher_tag(@cm_risk, User.current) %>
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_risks', :action => 'index',
+    :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_risks', :action => 'edit',
+    :id => @cm_risk }, :class => 'icon icon-edit') %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_risks', :action => 'destroy',
+    :id => @cm_risk}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

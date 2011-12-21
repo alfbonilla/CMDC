@@ -1,0 +1,34 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<table class="list">
+<thead>
+  <tr>
+    <%= sort_header_tag('id', :caption => 'Id') %>
+    <%= sort_header_tag('cm_wa_code', :caption => 'Work Around Code') %>
+    <th><b>NC code</b></th>
+    <th><b>Creation Date</b></th>
+    <th><b>Owner</b></th>
+    <th><b>Status</b></th>
+    <th><b>Edit</b></th>
+    <th><b>Delete</b></th>
+  </tr>
+</thead>
+<tbody>
+<% @cm_was.each do |wa| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= link_to wa.id, :controller => "cm_was", :action => "show", :id => wa %></td>
+    <td align="center"><%= link_to wa.cm_wa_code, :controller => "cm_was", :action => "show", :id => wa %></td>
+    <% wa.nonConformance.nil? ? nc_ref = "Unknown. Id:"+wa.cm_nc_id.to_s : nc_ref = wa.nonConformance.code %>
+    <td align="center"><%= h(nc_ref) %></td>
+    <td align="center"><%= h(wa.created_on.strftime("%Y-%m-%d")) %></td>
+    <td align="center"><%= h(wa.author.name) %></td>
+    <td align="center"><%= h(wa.status) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_was', :action => 'edit', :id => wa}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_was', :action => 'destroy', :id => wa},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_wa_pages, @total %></p>
+

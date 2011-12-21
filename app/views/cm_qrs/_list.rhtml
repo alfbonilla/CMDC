@@ -1,0 +1,37 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of quality records found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'QR Code') %>
+      <%= sort_header_tag('type_id', :caption => 'Type') %>
+      <th><b>Status</b></th>
+      <th><b>Reviewed Name</b></th>
+      <th><b>Reviewed Type</b></th>
+      <th><b>Assigned To</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_qrs.each do |qr| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to qr.id, :controller => "cm_qrs", :action => "show", :id => qr %></td>
+        <td align="center"><%= link_to qr.code, :controller => "cm_qrs", :action => "show", :id => qr %></td>
+        <td><%= h(qr.type.name) %></td>
+        <td align="center"><%= h(qr.status) %></td>
+        <td align="center"><%= h(qr.x_name) %></td>
+        <td align="center"><%= h(qr.x_type) %></td>
+        <td align="center"><%= h(qr.assignee.name) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_qrs', :action => 'edit', :id => qr}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_qrs', :action => 'destroy', :id => qr},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_qr_pages, @total %></p>
+

@@ -1,0 +1,25 @@
+<%#* This form receives a list of cm_items_objects in items %>
+<% if items %>
+  <table class="list">
+    <thead>
+      <tr>
+        <th><b>Code</b></th>
+        <th><b>Name</b></th>
+        <th><b>Version (at relation time)</b></th>
+        <th><b>Version (current)</b></th>
+        <th><b>Serial Number</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% items.each do |iitem| %>
+        <tr valign="top" class="<%= cycle('odd', 'even') %>">
+          <td><%= link_to iitem.cm_item.code, :controller => "cm_items", :action => "show", :id => iitem %></td>
+          <td><%= h(iitem.cm_item.name) %></td>
+          <td align="center"><%= h(iitem.rel_string) %></td>
+          <td align="center"><%= h(iitem.cm_item.version) %></td>
+          <td align="center"><%= h(iitem.cm_item.serial_number) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

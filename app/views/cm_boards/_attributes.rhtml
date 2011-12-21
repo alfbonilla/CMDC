@@ -1,0 +1,57 @@
+<% fields_for :cm_board, @cm_board, :builder => TabularFormBuilder do |f| %>
+
+<%= f.hidden_field :project_id %>
+
+  <p><%= f.text_field :cm_board_code, :size => 30, :required => true %>
+    <% if @cm_board.new_record? %>
+      <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'cm_board-form'} %>
+    <% else %>
+      <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+    <% end %></p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :subject, :required => true %></p>
+    <p><%= f.text_field :meeting_date, :required => true, :size => 10 %><%= calendar_for('cm_board_meeting_date') %></p>
+    <p><%= f.check_box :minutes_closed %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.select :type_id, (@cm_board_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <% if @cm_companies.nil? %>
+      <p><b>Company</b><small> There are no companies defined in the CM model</small></p>
+    <% else %>
+      <p><%= f.select :company_id, (@cm_companies.collect {|p| [p.name, p.id]}) %></p>
+      <p><%= f.text_field :action_counter %><small>(Automatically updated in every new relationship)</small></p>
+      <p><%= f.check_box :actions_completed %></p>
+    <% end %>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <p><%= f.text_area :distribution_list, :cols => 60, :rows => 2, :class => 'wiki-edit' %></p>
+  <p><%= f.text_area :participants, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+  <p><small>(Participants format for MOM generation: <b>user-company, user-company-*</b>. Asterisk for responsible of minutes)</small></p>
+  <p><%= f.text_area :board_body, :cols => 60, :rows => 10, :class => 'wiki-edit' %></p>
+  <%= wikitoolbar_for 'cm_board_board_body' %>
+  <%= call_hook(:new_cm_board_edit_board_body_bottom, { :cm_board => @cm_board, :form => f }) %>
+  <p><%= f.text_area :conclusions, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_boards" %></p>
+<% end %>
+
+<% if @cm_board.new_record? && User.current.allowed_to?(:add_cm_board_watchers, @project) -%>
+  <p><label><%= l(:label_issue_watchers) %></label>
+  <% @cm_board.project.users.sort.each do |user| -%>
+    <label class="floating"><%= check_box_tag 'cm_board[watcher_user_ids][]', user.id,
+    @cm_board.watched_by?(user) %> <%=h user %></label>
+  <% end -%>
+  </p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_board_cm_board_code')).value=new_code;}
+</script>

@@ -1,0 +1,213 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs"><%= @cm_nc.code %> #<%= @cm_nc.id %> <b>-</b> <%= @cm_nc.type %></h2>
+
+<div>
+  <%= avatar(@cm_nc.author, :size => "50") %>
+  <h3><%=h @cm_nc.name %></h3>
+  <p class="author">
+    <%= authoring @cm_nc.created_on, @cm_nc.author %>.
+    <% if @cm_nc.created_on != @cm_nc.updated_on %>
+      <%= l(:label_updated_time, time_tag(@cm_nc.updated_on)) %>.
+    <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Classification:</b></th><td><%= @cm_nc.classification.name %></td>
+  <th><b>Assigned To:</b></th><td><%= @cm_nc.assignee.name %></td>
+  <th><b>Any Work Around?:</b></th><td><%= image_tag 'true.png' if @cm_nc.has_was? %></td>
+</tr>
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_nc.status.name %></td>
+  <th><b>NC Issue:</b></th><td><%= @cm_nc.nc_issue %></td>
+  <th><b>Subsystem:</b></th><td><%= @cm_nc.subsystem.name unless @cm_nc.subsystem.nil? %></td>
+</tr>
+<tr>
+  <th><b>Open Date:</b></th><td><%= @cm_nc.created_on.strftime("%Y-%m-%d") %></td>
+  <% if @cm_nc.closing_date.nil? %>
+  <th><b>Close Date:</b></th><td><small>Not defined</small></td>
+  <% else %>
+  <th><b>Close Date:</b></th><td><%= @cm_nc.closing_date.strftime("%Y-%m-%d") %></td>
+  <% end %>
+  <th><b>Expected Resolution Version:</b></th><td><%= @cm_nc.rlse_expected.name unless @cm_nc.rlse_expected.nil? %></td>
+</tr>
+<tr>
+  <% if @cm_nc.supplier.nil? %>
+    <th><b>COTS Supplier:</b></th><td>"None"</td>
+  <% else %>
+    <th><b>COTS Supplier:</b></th><td><%= @cm_nc.supplier.name %></td>
+  <% end %>
+</tr>
+</table>
+
+<p><strong>Description</strong></p>
+<div class="wiki">
+<%= textilizable @cm_nc, :description %>
+</div>
+
+<br />
+<small>(<%= link_to "Detection Details", {},
+  :onclick => 'Effect.toggle("show_detection_details", "appear", {duration:0.3}); return false;' %>)
+</small>
+<small>(<%= link_to "Impact Details", {},
+  :onclick => 'Effect.toggle("show_impact_details", "appear", {duration:0.3}); return false;' %>)
+</small>
+<small>(<%= link_to "Solution Details", {},
+  :onclick => 'Effect.toggle("show_solution_details", "appear", {duration:0.3}); return false;' %>)
+</small>
+
+<div style="clear:both;"> </div>
+<br />
+<div id="show_detection_details" <%= 'style="display:none"' %>>
+<fieldset><legend>Detection Information</legend>
+  <p><strong>Violated Requirements</strong></p>
+  <div class="wiki">
+    <%= textilizable @cm_nc, :violated_reqs %>
+  </div>
+  <p><strong>Failed Tests</strong></p>
+  <div class="wiki">
+    <%= textilizable @cm_nc, :failed_tests %>
+  </div>
+  <table class="attributes">
+    <tr>
+      <th><b>Release Detected:</b></th><td><%= @cm_nc.rlse_detected.name unless @cm_nc.rlse_detected.nil? %></td>
+      <th><b>Additional Info:</b></th><td><%= @cm_nc.rlse_detected_info %></td>
+    </tr>
+    <tr>
+      <th><b>Detected On:</b></th><td><%= @cm_nc.detected_on %></td>
+      <th><b>Phase:</b></th><td><%= @cm_nc.phase.name %></td>
+    </tr>
+    <tr>
+      <th><b>Originator:</b></th><td><%= @cm_nc.originator %></td>
+      <% if @cm_nc.company.nil?  %>
+        <th><b>Company From:</b></th><td><small>None</small></td>
+      <% else %>
+        <th><b>Company From:</b></th><td><%= @cm_nc.company.name %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th><b>Priority:</b></th><td><%= @cm_nc.priority %></td>
+      <th><b>Reproducibility:</b></th><td><%= @cm_nc.reproducibility %></td>
+    </tr>
+    <tr>
+      <th><b>Steps to Reproduce:</b></th><td><%= textilizable @cm_nc, :steps_to_reproduce %></td>
+    </tr>
+  </table>
+</fieldset>
+</div>
+<div style="clear:both;"> </div>
+<br />
+<div id="show_impact_details" <%= 'style="display:none"' %>>
+<fieldset><legend>Impact Details</legend>
+  <p><strong>Impacted Items</strong></p>
+  <div class="wiki">
+    <%= textilizable @cm_nc, :impacted_items %>
+  </div>
+  <p><strong>Impact Notes</strong></p>
+  <div class="wiki">
+    <%= textilizable @cm_nc, :impact_notes %>
+  </div>
+  <p><strong>Reference Documents</strong></p>
+  <div class="wiki">
+    <%= textilizable @cm_nc, :reference_docs %>
+  </div>
+  <table class="attributes">
+    <tr>
+      <th><b>Documentation Problem:</b></th><td><%= @cm_nc.documentation_problem %></td>
+      <th><b>Changes in design done:</b></th><td><%= @cm_nc.design_changes_done %></td>
+    </tr>
+    <tr>
+      <th><b>Critical Item:</b></th><td><%= @cm_nc.critical_item %></td>
+      <th><b>Safety Item:</b></th><td><%= @cm_nc.safety_item %></td>
+    </tr>
+  </table>
+</fieldset>
+</div>
+<div style="clear:both;"> </div>
+<br />
+<div id="show_solution_details" <%= 'style="display:none"' %>>
+<fieldset><legend>Solution Information</legend>
+
+  <p><strong>Analysis</strong></p>
+  <div class="wiki">
+    <%= textilizable @cm_nc, :analysis %>
+  </div>
+
+  <table class="attributes">
+    <tr>
+      <% if @cm_nc.analyzed_on.nil? %>
+      <th><b>Analysis Date:</b></th><td><small>Not defined</small></td>
+      <% else %>
+      <th><b>Analysis Date:</b></th><td><%= @cm_nc.analyzed_on.strftime("%Y-%m-%d") %></td>
+      <% end %>
+      <th><b>RFW Reference:</b></th><td><%= @cm_nc.rfw_reference %></td>
+    </tr>
+    <tr>
+      <th><b>Preventive Action:</b></th><td><%= textilizable @cm_nc, :preventive_action %></td>
+    </tr>
+  </table>
+</fieldset>
+<br />
+<fieldset><legend>Implementation and Verification Details</legend>
+  <table class="attributes">
+    <tr>
+      <% if @cm_nc.rlse_solved.nil? %>
+      <th><b>Solved On:</b></th><td>Not Yet</td>
+      <% else %>
+      <th><b>Solved On:</b></th><td><%= @cm_nc.rlse_solved.name %></td>
+      <%  end %>
+      <th><b>Solved Info:</b></th><td><%= @cm_nc.rlse_solved_info %></td>
+    </tr>
+    <tr>
+      <% if @cm_nc.rlse_verified.nil? %>
+      <th><b>Verified On:</b></th><td>Not Yet</td>
+      <% else %>
+      <th><b>Verified On:</b></th><td><%= @cm_nc.rlse_verified.name %></td>
+      <% end %>
+      <th><b>Verified Info:</b></th><td><%= @cm_nc.rlse_verified_info %></td>
+    </tr>
+  </table>
+</fieldset>
+</div>
+
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+<hr />
+
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_nc %>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_ncs' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_ncs', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_nc %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% other_formats_links do |f| %>
+	<%= f.link_to 'Atom', :url => {:key => User.current.rss_key} %>
+	<%= f.link_to 'PDF' %>
+<% end %>
+
+<% html_title "#{@cm_nc.code} ##{@cm_nc.id}: #{@cm_nc.name}" %>

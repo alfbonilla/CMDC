@@ -1,0 +1,30 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="changes">New Child Change Relation</h2>
+
+<% labelled_tabular_form_for :cm_changes_change, @cm_changes_change,
+                             :html => {:id => 'cm_changes_change-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+ 
+  <%= error_messages_for 'cm_changes_change' %>
+
+  <% unless @change_to_relate.blank? %>
+
+    <div class="box">
+      <fieldset class="tabular"><legend>Change Relation Properties</legend>
+        <div id="attributes" class="attributes">
+          <%= render :partial => 'attributes', :locals => {:f => f} %>
+        </div>
+      </fieldset>
+    </div>
+
+    <%= submit_tag l(:button_create) %>
+
+  <% else %>
+    <p><small>No changes to relate!!</small></p>
+  <% end %>
+  
+<% end %>
+
+<% html_title "CM - New Change-Change Relation" %>

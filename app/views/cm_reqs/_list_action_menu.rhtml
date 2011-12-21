@@ -1,0 +1,13 @@
+<div class="contextual">
+<%= link_to("Import", {:controller => 'cm_commons',
+    :action => 'import_objects', :id => @project, :cmdc_object => "tes" },
+    :class => 'icon icon-summary') %>
+<%= link_to("Import Trace", {:action => 'import_trace', :id => @project },
+    :class => 'icon icon-summary') %>
+<%= link_to("Traceability Matrix", {:controller => 'cm_reqs', :action => 'matrix',
+    :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to("Approve All", {:controller => 'cm_reqs', :action => 'approve_all',
+    :id => @project }, :class => 'icon icon-checked') %>
+<%= link_to("Show Tree View", {:controller => 'cm_reqs', :action => 'index_tree',
+    :id => @project }, :class => 'icon icon-tree') %>
+</div>

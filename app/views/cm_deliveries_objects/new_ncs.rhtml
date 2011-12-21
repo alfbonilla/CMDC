@@ -1,0 +1,129 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs">NCs to Deliver Index</h2>
+
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <p>
+      <label for="code">Non-Conformance code: </label>
+      <%= text_field_tag("query_code", params['query_code'], :size => 20 ) %>
+      <% if @cm_subsystems %>
+        <label for="subsys">Subsystem: </label>
+        <%=select_tag("query_sub", options_from_collection_for_select(@cm_subsystems, 'id', 'name')) %>
+      <% end %>
+    </p>
+    <p>
+    <% if @x_type == "CmNcClosed" %>
+      <label for="code">Closed From Date: </label>
+      <%= text_field_tag("query_close", params['query_close'], :size => 20 ) %>
+      <small><i>(format: dd/mm/yyyy)</i></small>
+    <% else %>
+      <p>
+      <label for="">Get just those NCs with "Expected Release" the delivery's one:</label>
+      <%= check_box_tag("query_exp", params['query_exp'], false) %>
+      </p>
+    <% end %>
+    </p>
+    <input type="submit" value="Apply" />
+    <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+      <p><%= g.hidden_field :cm_delivery_id, :value => @cm_delivery_id %></p>
+      <p><%= g.hidden_field :x_type, :value => @x_type %></p>
+      <p><%= g.hidden_field :rlse_id, :value => @rlse_id %></p>
+    <% end %>
+  </form>
+  </fieldset>
+</p>
+
+
+<% labelled_tabular_form_for :cm_deliveries_objects, @cm_deliveries_objects,
+                             :url => {:action => 'new_ncs'},
+                             :html => {:id => 'ncs_list_form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+  <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+    <p><%= g.hidden_field :cm_delivery_id, :value => @cm_delivery_id %></p>
+    <p><%= g.hidden_field :x_type, :value => @x_type %></p>
+  <% end %>
+
+  <% if @cm_deliveries_objects.blank? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+
+    <div class="autoscroll">
+    <table class="list">
+    <thead>
+    <th><%= link_to image_tag('toggle_check.png'), {},
+      :onclick => 'toggleCmNCsSelection(Element.up(this, "form")); return false;',
+      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}", :cm_delivery_id => @cm_delivery_id %>
+    </th>
+    <th align="center"><b>Code</b></th>
+    <th align="center"><b>Name</b></th>
+    <% if @x_type == "CmNcClosed" %>
+      <th align="center"><b>Closing Date</b></th>
+    <% else %>
+      <th align="center"><b>Created On</b></th>
+    <% end %>
+    <th align="center"><b>Status</b></th>
+    <th align="center"><b>Subsystem</b></th>
+    <th align="center"><b>Expected/Solved Release</b></th>
+    </thead>
+    <tbody>
+    <% @cm_deliveries_objects.each do |cm_delivered_nc| %>
+      <tr id="cm_doc-<%= cm_delivered_nc.id %> <%= cycle('odd', 'even') %>">
+        <td class="checkbox"><%= check_box_tag("ids[]", cm_delivered_nc.id, false, :id => nil) %></td>
+        <td><%= link_to cm_delivered_nc.code, :controller => "cm_ncs", :action => "show", :id => cm_delivered_nc.id %></td>
+        <td><%= h(cm_delivered_nc.name) %></td>
+        <% if @x_type == "CmNcClosed" %>
+          <td><%= h(cm_delivered_nc.closing_date) %></td>
+        <% else %>
+          <td><%= h(cm_delivered_nc.created_on) %></td>
+        <% end %>
+        <td align="center"><%= h(cm_delivered_nc.status.name) %></td>
+        <td align="center"><%= h(cm_delivered_nc.subsystem.code) unless cm_delivered_nc.subsystem.nil? %></td>
+        <% if cm_delivered_nc.closed? %>
+          <td align="center">[sol]<%= h(cm_delivered_nc.rlse_solved.name) unless cm_delivered_nc.rlse_solved.nil? %></td>
+        <% else %>
+          <td align="center">[exp]<%= h(cm_delivered_nc.rlse_expected.name) unless cm_delivered_nc.rlse_expected.nil? %></td>
+    <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+    <p style="text-align:right;"><small><%=@cm_deliveries_objects.size %>
+      Non-Conformances found</small></p>
+    </div>
+    <br />
+
+  <% end %>
+
+    <p><i>Relations with delivery #<%=
+@cm_delivery_id %> would be created with Statuses and Dates
+  of the NCs. Update the NCs properties before creating the relationship if they are wrong</i></p>
+
+  <br />
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+    <p><a href="javascript:history.back()">Back</a></p>
+  </p>
+<% end %>
+
+<% html_title "CM - NCs to Deliver List" %>
+
+<script type="text/javascript">
+  function toggleCmNCsSelection(el) {
+	var boxes = el.getElementsBySelector('input[type=checkbox]');
+	var all_checked = true;
+	for (i = 0; i < boxes.length; i++) { if (boxes[i].checked == false) { all_checked = false; } }
+	for (i = 0; i < boxes.length; i++) {
+		if (all_checked) {
+			boxes[i].checked = false;
+			boxes[i].up('tr').removeClassName('context-menu-selection');
+		} else if (boxes[i].checked == false) {
+			boxes[i].checked = true;
+			boxes[i].up('tr').addClassName('context-menu-selection');
+		}
+	}
+}
+</script>

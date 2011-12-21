@@ -1,0 +1,37 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="sfiles">Load Source Files from input file</h2>
+
+<p>This process will load all the source files included in the input file.
+Those records with a duplicated file_name will be ignored. Prevails the first
+record in the database, so new records in input file matching with an already
+name in the database will be ignored: <b>already created records prevails!</b></p>
+
+<p>Format for input file:</p>
+
+<p>File_name(with path or not) @ revision(at the load time)</p>
+
+
+<% labelled_tabular_form_for :cm_bulk_load_info, @cm_bulk_load_info,
+                             :html => {:id => 'cm_builk_load-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_source_file' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Properties</legend>
+      <div id="attributes" class="attributes">
+        <% fields_for :cm_bulk_load_info, @cm_bulk_load_info, :builder => TabularFormBuilder do |f| %>
+          <p><%= f.check_box :remove_data %></p>
+          <p><%= f.file_field :file_name %></p>
+        <% end %>
+      </div>
+    </fieldset>
+  </div>
+
+  <br />
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - Load Source Files from Input File" %>

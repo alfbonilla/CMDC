@@ -1,0 +1,136 @@
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_change, :cm_object_type => "CmChange",
+    :cm_object_cont => "cm_changes", :export => "N" } %>
+
+<br /><hr />
+<div title="Versions">
+<h3>Change Versions</h3>
+
+<% if @cm_change.cm_changes_versions.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+  <td align="center"><b>Version</b></td>
+  <td align="center"><b>Applicable</b></td>
+  <td align="center"><b>Commnents</b></td>
+  <td align="center"><b>Maintained By</b></td>
+  <td align="center"><b>Last Modification</b></td>
+  <td align="center"><b>Edit</b></td>
+  <td align="center"><b>Delete</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_change.cm_changes_versions.each do |change3| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= h(change3.version) %></td>
+  <td align="center"><%= image_tag 'true.png' if change3.applicable? %></td>
+  <td align="center"><%= h(change3.comments) %></td>
+  <td align="center"><%= h(change3.author.login) %></td>
+  <td align="center"><%= h(change3.updated_on.strftime("%Y-%m-%d")) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_changes_versions', :action => 'edit', 
+                :id => change3, :project_id => @project.id}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_changes_versions', :action => 'destroy', 
+                :id => change3, :project_id => @project.id},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_change.cm_changes_versions.size %> Versions created</small></p>
+<% else %>
+<p style="text-align:right;"><small>No versions related</small></p>
+<% end %>
+<%= link_to "Add New Version", {:controller => "cm_changes_versions",
+  :action => 'new', :id => @project, :change_id => @cm_change.id}, :class => 'icon icon-add' %>
+</div>
+<br /><hr />
+
+<div title="RelatedChanges">
+<h3>Child Related Changes</h3>
+
+<% if @cm_change.cm_child_changes.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Child Change Name</b></td>
+<td align="center"><b>Relation Type</b></td>
+<td align="center"><b>Relation Details</b></td>
+<td align="center"><b>Delete Relationship</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_change.cm_child_changes.each do |change2| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% change2.child_change.nil? ? related_name = "Unknown. Id:"+change2.child_change_id.to_s : related_name = change2.child_change.name %>
+<% creation_text = "Created by " + change2.author.login + " on " + change2.created_on.strftime("%Y/%m/%d") %>
+<td><%= link_to h(related_name), {:controller => 'cm_changes', :action => 'show',
+    :id => change2.child_change_id}, :title => creation_text %></td>
+<td align="center"><%= h(change2.relation_type) %></td>
+<td><%= h(change2.description) %></td>
+<td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_changes_changes', :action => 'destroy',
+  :project_id => @project, :relation_id => change2.id, :change_id => change2.parent_change_id, :child_id => related_name},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_change.cm_child_changes.size %> Changes related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Changes related</small></p>
+<% end %>
+<%= link_to "Add Existing Child Change", {:controller => "cm_changes_changes",
+  :action => 'new', :project_id => @project, :id => @cm_change.id}, :class => 'icon icon-add' %>
+</div>
+
+<br /><hr />
+<div title="Parentchanges">
+<h3>Parent Related Changes</h3>
+
+<% if @cm_change.cm_parent_changes.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Parent Change Name</b></td>
+<td align="center"><b>Relation Type</b></td>
+<td align="center"><b>Relation Details</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_change.cm_parent_changes.each do |change3| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% change3.parent_change.nil? ? parent_name = "Unknown. Id:"+change3.parent_change_id.to_s : parent_name = change3.parent_change.name %>
+<% creation_text = "Created by " + change3.author.login + " on " + change3.created_on.strftime("%Y/%m/%d") %>
+<td><%= link_to h(parent_name), {:controller => 'cm_changes', :action => 'show',
+  :id => change3.parent_change_id}, :title => creation_text %></td>
+<td align="center"><%= h(change3.relation_type) %></td>
+<td><%= h(change3.description) %></td>
+<td align="center"><%= h(change3.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(change3.author.login) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_change.cm_parent_changes.size %> Parent Changes related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Parent Changes related</small></p>
+<% end %>
+</div>
+
+<%= render :partial => 'cm_reqs/reqs_related', :locals => { :cm_object => @cm_change, :export => "N" } %>
+
+<br /><hr />
+
+<%= render :partial => 'cm_smrs/smrs_related', 
+  :locals => { :cm_object => @cm_change, :cm_object_type => "CmChange", :caller_cont => "cm_changes" } %>
+
+<div title="Deliveries">
+<h3>Delivered in</h3>
+
+<% if @deliveries.any? %>
+  <%= render :partial => 'cm_deliveries/delivery_info' %>
+<p style="text-align:right;"><small><%=@deliveries.size %> Deliveries included</small></p>
+<% else %>
+<p style="text-align:right;"><small>Change not delivered</small></p>
+<% end %>
+</div>

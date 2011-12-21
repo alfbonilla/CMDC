@@ -1,0 +1,73 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="qrs"><%= @cm_qr.code %> #<%= @cm_qr.id %></h2>
+
+<div>
+  <%= avatar(@cm_qr.author, :size => "50") %>
+  <h3><%=h @cm_qr.code %></h3>
+  <p class="author">
+    <%= authoring @cm_qr.created_on, @cm_qr.author %>.
+    <% if @cm_qr.created_on != @cm_qr.updated_on %>
+      <%= l(:label_updated_time, time_tag(@cm_qr.updated_on)) %>.
+    <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_qr.status %></td>
+  <th><b>Type:</b></th><td><%= @cm_qr.type.name %></td>
+</tr>
+<tr>
+  <th><b>Object Name:</b></th><td><%= @cm_qr.x_name %></td>
+  <th><b>Object Type:</b></th><td><%= @cm_qr.x_type %></td>
+  <th><b>Object Id:</b></th><td><%= @cm_qr.x_id %></td>
+</tr>
+<tr>
+  <th><b>Assigned To:</b></th><td><%= @cm_qr.assignee.login %></td>
+  <th><b>Checklist Used:</b></th><td><%= @cm_qr.check_used %></td>
+</tr>
+</table>
+
+<p><strong>Reference Documents</strong></p>
+<p>C<%= @cm_qr.ref_docs %></p>
+
+<p><strong>Comments</strong></p>
+<div class="wiki">
+<%= textilizable @cm_qr, :comments %>
+</div>
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_qrs' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_qrs', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_qr %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% other_formats_links do |f| %>
+	<%= f.link_to 'Atom', :url => {:key => User.current.rss_key} %>
+	<%= f.link_to 'PDF' %>
+<% end %>
+
+<% html_title "#{@cm_qr.code} ##{@cm_qr.id}" %>

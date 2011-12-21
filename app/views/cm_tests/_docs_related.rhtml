@@ -1,0 +1,39 @@
+<p><h3>Related Documents</h3></p>
+
+<% if @cm_test.cm_docs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Code</b></td>
+    <td align="center"><b>Title</b></td>
+    <td align="center"><b>Relation Details</b></td>
+    <td></td>
+    <td></td> 
+  </tr>
+</thead>
+<tbody>
+<% @cm_test.cm_tests_objects.each do |doc| %>
+  <% if doc.x_type=="CmDoc" %>
+    <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <% creation_text = "Created by " + doc.author.login + " on " + doc.created_on.strftime("%Y/%m/%d") %>
+    <td align="center"><%= link_to h(doc.cm_doc.code ), {:controller => 'cm_docs',
+                :action => 'show', :id => doc.cm_doc.id}, :title => creation_text %></td>
+    <td align="center"><%= h(doc.cm_doc.name) %></td>
+    <td align="center"><%= h(doc.rel_string) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_tests_objects', 
+      :action => 'edit', :id => doc.id, :caller => 'cm_tests_docs'}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_tests_objects', 
+      :action => 'destroy', :id => doc.id,:project => doc.cm_test.project_id,:test_id => doc.cm_test
+        },:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    </tr>
+  <% end %>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_test.cm_docs.size %> Documents related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Documents related</small></p>
+<% end %>
+<%= link_to "Add Existing Document", {:controller => "cm_tests_objects", :action => 'new',
+    :id => @cm_test, :caller => 'cm_tests_docs',:project => @project}, :class => 'icon icon-add' %>
+

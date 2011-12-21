@@ -1,0 +1,154 @@
+<h2 class="boards"><%= @cm_board.subject %> #<%= @cm_board.id %></h2>
+
+<table class="attributes">
+<tr>
+  <th><b>Code:</b></th><td><%= @cm_board.cm_board_code %></td>
+</tr>
+<tr>
+  <th><b>Meeting Date:</b></th><td><%= @cm_board.meeting_date.strftime("%Y-%m-%d") %></td>
+  <th><b>Type:</b></th><td><%= @cm_board.type.name %></td>
+  <% if @cm_board.company.nil?  %>
+  <th><b>Company:</b></th><td><small>None</small></td>
+  <% else %>
+  <th><b>Company:</b></th><td><%= @cm_board.company.name %></td>
+  <% end %>
+</tr>
+<tr>
+  <th><b>Minutes Closed:</b></th><td><%= @cm_board.minutes_closed %></td>
+  <th><b>Actions Completed:</b></th><td><%= @cm_board.actions_completed %></td>
+</tr>
+<tr>
+  <th><b>Distribution List:</b></th><td><%= @cm_board.distribution_list %></td>
+  <th><b>Actions Counter:</b></th><td><%= @cm_board.action_counter %></td>
+</tr>
+</table>
+
+<p><strong>Participants</strong></p>
+<div class="wiki">
+<%= textilizable @cm_board, :participants %>
+</div>
+
+<p><strong>Meeting Body</strong></p>
+<div class="wiki">
+<%= textilizable @cm_board, :board_body %>
+</div>
+
+<p><strong>Conclusions</strong></p>
+<div class="wiki">
+<%= textilizable @cm_board, :conclusions %>
+</div>
+
+<div id="relations">
+<% if @cm_board.cm_changes_objects.any? %>
+<br /><hr />
+<h3>Changes Treated</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Change Code</b></td>
+    <td align="center"><b>Decision</b></td>
+    <td align="center"><b>Target Version</b></td>
+    <td align="center"><b>Due Date</b></td>
+    <td align="center"><b>Alert Raised</b></td>
+    <td align="center"><b>Comments</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Author</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_board.cm_changes_objects.each do |change| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% change.cm_change.nil? ? change_ref = "Unknown. Id:"+change.cm_change_id.to_s : change_ref = change.cm_change.code %>
+  <td align="center"><%= h(change_ref) %></td>
+  <td align="center"><%= h(change_decision_to_s(change.rel_string.to_i)) %></td>
+  <td align="center"><%= h(change.target_version.name) unless change.target_version.nil? %></td>
+  <td align="center"><%= h(change.rel_date.strftime("%Y/%m/%d")) unless change.rel_date.nil? %></td>
+  <td align="center"><%= h(change.rel_bool) %></td>
+  <td align="center"><%= h(change.rel_string_2) %></td>
+  <td align="center"><%= h(change.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(change.author.login) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% else %>
+<p><small>No Changes treated in this meeting</small></p>
+<% end %>
+
+<% if @cm_board.cm_ncs_objects.any? %>
+<br /><hr />
+<h3>NCs Treated</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>Decision</b></td>
+    <td align="center"><b>Target Version</b></td>
+    <td align="center"><b>Due Date</b></td>
+    <td align="center"><b>Alert Raised</b></td>
+    <td align="center"><b>Comments</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Author</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_board.cm_ncs_objects.each do |cmNcsObject| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% cmNcsObject.cm_nc.nil? ? nc_ref = "Unknown. Id:"+cmNcsObject.cm_nc_id.to_s : nc_ref = cmNcsObject.cm_nc.code %>
+  <td align="center"><%= h(nc_ref) %></td>
+  <td align="center"><%= h(change_nc_decision_to_s(cmNcsObject.rel_string.to_i)) %></td>
+  <td align="center"><%= h(cmNcsObject.target_version.name) unless cmNcsObject.target_version.nil? %></td>
+  <td align="center"><%= h(cmNcsObject.rel_date.strftime("%Y/%m/%d")) unless  cmNcsObject.rel_date.nil? %></td>
+  <td align="center"><%= h(cmNcsObject.rel_bool) %></td>
+  <td align="center"><%= h(cmNcsObject.rel_string_2) %></td>
+  <td align="center"><%= h(cmNcsObject.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(cmNcsObject.author.login) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% else %>
+<p><small>No Ncs treated in this meeting</small></p>
+<% end %>
+
+<% if @cm_board.cm_rids_objects.any? %>
+<br /><hr />
+<h3>RIDs Treated</h3>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>RID Code</b></td>
+    <td align="center"><b>Decision</b></td>
+    <td align="center"><b>Target Version</b></td>
+    <td align="center"><b>Due Date</b></td>
+    <td align="center"><b>Alert Raised</b></td>
+    <td align="center"><b>Comments</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Author</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_board.cm_rids_objects.each do |cmRidsObject| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= h(cmRidsObject.cm_rid.code) %></td>
+  <td align="center"><%= h(cmRidsObject.rel_string) %></td>
+  <td align="center"><%= h(cmRidsObject.target_version.name) unless cmRidsObject.target_version.nil? %></td>
+  <td align="center"><%= h(cmRidsObject.rel_date.strftime("%Y/%m/%d")) unless cmRidsObject.rel_date.nil? %></td>
+  <td align="center"><%= h(cmRidsObject.rel_bool) %></td>
+  <td align="center"><%= h(cmRidsObject.rel_string_2) %></td>
+  <td align="center"><%= h(cmRidsObject.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(cmRidsObject.author.login) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% else %>
+<p><small>No RIDs treated in this meeting</small></p>
+<% end %>
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_board, :cm_object_type => "CmBoard", 
+    :cm_object_cont => "cm_boards", :export => "Y" } %>
+</div>
+

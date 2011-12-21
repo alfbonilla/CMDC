@@ -1,0 +1,22 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">Test Records Index</h2>
+<title>Index of Test Records</title>
+
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="code">Test Record code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<% if @cm_test_records.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'cm_test_records/list' %>
+<% end %>
+
+<% html_title "CM - Test Records List" %>

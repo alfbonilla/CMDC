@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="subsystems">New Subsystem</h2>
+
+<% labelled_tabular_form_for :cm_subsystem, @cm_subsystem,
+                             :html => {:id => 'cm_subsystem-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_subsystem' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Subsystem Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New Subsystem" %>

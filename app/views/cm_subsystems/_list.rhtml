@@ -1,0 +1,27 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+<table class="list">
+<thead>
+<th><b>Id</b></th>
+<th><b>Code</b></th>
+<th><b>Name</b></th>
+<th><b>Edit</b></th>
+<th><b>Delete</b></th>
+</thead>
+<tbody>
+<% @cm_subsystems.each do |cm_subsystem| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= h(cm_subsystem.id) %></td>
+    <td><%= h(cm_subsystem.code) %></td>
+    <td><%= h(cm_subsystem.name) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_subsystems',
+                :action => 'edit', :id => cm_subsystem}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_subsystems',
+                :action => 'destroy', :id => cm_subsystem},
+                :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<% end %>

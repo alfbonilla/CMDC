@@ -1,0 +1,14 @@
+<b>Relationship between </b><%= @cm_test.code %><b> and:</b>
+<br />
+<br />
+
+<% fields_for :cm_tests_object, @cm_tests_object, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :x_type, :value => @cm_tests_object.x_type %></p>
+  <p><%= f.hidden_field :cm_test_id, :value => @cm_tests_object.cm_test_id %></p>
+  <p><%= f.select :x_id, (@objects_to_add.collect {|p| [p.code, p.id]}), :required => true %></p>
+  <% if @cm_tests_object.x_type == "CmReq" %>
+    <p><%= f.select :rel_id, (@verif_methods.collect {|p| [p.name, p.id]}) %><i>(Verification Method)</i></p>
+  <% end %>
+  <p><%= f.text_field :rel_string, :size => 100 %><i>(Comments)</i></p>
+  <p><%= f.text_field :rel_date, :size => 20 %><%= calendar_for('cm_tests_object_rel_date') %></p>
+<% end %>

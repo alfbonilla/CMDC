@@ -1,0 +1,31 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+  <table class="list">
+    <thead>
+      <th><b>Id</b></th>
+      <th><b>Code</b></th>
+      <th><b>Name</b></th>
+      <th><b>Version</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </thead>
+    <tbody>
+    <% @cm_test_scenarios.each do |cm_test_scenario| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to (h(cm_test_scenario.id)), :controller => "cm_test_scenarios",
+            :action => "show", :id => cm_test_scenario %></td>
+        <td align="center"><%= link_to (h(cm_test_scenario.code)), :controller => "cm_test_scenarios",
+            :action => "show", :id => cm_test_scenario %></td>
+        <td><%= h(cm_test_scenario.name) %></td>
+        <td align="center"><%= h(cm_test_scenario.version) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_test_scenarios',
+            :action => 'edit', :id => cm_test_scenario}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_test_scenarios',
+            :action => 'destroy', :id => cm_test_scenario},:confirm => l(:text_are_you_sure),
+            :method => :post) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>

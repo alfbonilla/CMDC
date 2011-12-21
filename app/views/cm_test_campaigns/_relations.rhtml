@@ -1,0 +1,149 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+<br /><hr />
+
+<div class="splitcontentleft">
+  <p><h3>Related Tests</h3></p>
+
+<% if ! @cm_test_campaigns_object.empty? %>
+  
+<table id="related_test_table" class="list" style="width:100%">
+<thead>
+  <tr>
+    <th align="center"><b>Order</b></th>
+    <th><b>Test Code</b></th>
+    <th><b>Last Record</b></th>
+    <th><b>Test Scenario</b></th>
+    <th><b></b></th>
+    <th><b></b></th>
+    <th><b></b></th>
+    <th><b>Records</b></th>
+    <th><b>Result</b></th>
+  </tr>
+</thead>
+<tbody> 
+<% @cm_test_campaigns_object.each do |iit| %>
+  <tr id="rel_<%=iit.id%>" title="Relation Comment: <%=iit.comments%>"  valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= h(iit.execution_order) %></td>
+    <td align="center" ><%= link_to h(iit.cm_test.code), :controller => 'cm_tests', :action => 'show', :id => iit.cm_test_id %></td>
+    <% if (iit.cm_test_record_id == 0)%>
+      <td align="center">N/A </td>
+    <%else%>
+      <td align="center"><%= link_to h(iit.cm_test_record.code), :controller => 'cm_test_records', :action => 'show', :id => iit.cm_test_record.id %></td>
+    <%end%>
+  <td align="center"><%= link_to h(iit.cm_test_scenario.code), :controller => 'cm_test_scenarios', :action => 'show', :id => iit.cm_test_scenario.id %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_test_campaigns_objects', :action => 'edit',
+    :id => iit.id, :caller_cont => "cm_test_campaigns", :project_id => @project}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_test_campaigns_objects', :action => 'destroy',
+      :id => iit.id, :cm_test_id => iit.cm_test_id, :cm_test_campaign_id => iit.cm_test_campaign_id, :caller_cont => "cm_test_campaigns"},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  <td align="center"><%= link_to(image_tag('history.png'), {:controller => 'cm_tests',
+      :action => 'history', :id => iit.cm_test.id}, :title => 'History') %></td>
+  <!-- Add/Show record button -->
+  <%if ! iit.cm_test_record.nil?%>
+    <td align="center">
+         <%= link_to_remote(image_tag('add.png',
+        :style => 'vertical-align: middle;', :title => 'Add New Record'), {
+        :url => {:controller => 'cm_test_records',:action => 'show_new_execution_form',:caller_cont => 'cm_test_campaign',
+        :project_id => @project,:cm_test_campaigns_object =>iit.id,:cm_test_campaign =>iit.cm_test_campaign_id,
+        :cm_test_record_code => iit.cm_test_record.code,
+        :update => "test_records_list" }}) %>
+         /
+      <%= link_to_remote(image_tag('zoom_in.png',
+          :style => 'vertical-align: middle;', :title => 'Show Records'), {
+          :url => {:controller => 'cm_test_records', :action => 'show_execution_list',:caller_cont => 'cm_test_campaign',:project_id => @project,
+          :project_id => @project, :id => iit.cm_test.project_id , :cm_test_campaign => iit.cm_test_campaign_id,
+          :cm_test_campaigns_object =>iit.id,:cm_test_record_code => iit.cm_test_record.code,
+          :update => "test_records_list" }}) %>
+    </td>
+  <%else%>
+     <td align="center"><%= link_to_remote(image_tag('add.png',
+        :style => 'vertical-align: middle;', :title => 'Add New Record'), {
+        :url => {:controller => 'cm_test_records',:action => 'show_new_execution_form',:caller_cont => 'cm_test_campaign',
+        :project_id => @project,:cm_test_campaigns_object =>iit.id,:cm_test_campaign =>iit.cm_test_campaign_id,
+        :update => "test_records_list" }}) %></td>
+  <%end%>
+
+
+  <!--*<td align="center">= link_to(image_tag('add.png',{:id => iit.id}), {} -->
+ <!-- #*:onclick => 'hide_show_record_list(event,"test_record_form"); return false;') </td>%>-->
+
+  <%  if !(iit.cm_test_record.nil?) %>
+      <% if (iit.cm_test_record.result == 1)%>
+          <td align="center"><%= image_tag('false.png')%></td>
+      <%else%>
+          <% if iit.cm_test_record.result == 2  %>
+            <td align="center"><%= image_tag('true.png')%></td>
+          <%else%>
+            <td align="center"><%= image_tag('time.png')%></td>
+          <%end%>
+      <%end%>
+  <%else%>
+    <td align="center"><%= image_tag('time.png')%></td>
+  <%end%>
+  <%end%>
+  
+  </tr>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_test_campaigns_object.size %> Tests related</small></p>
+<%= link_to "Add Existing Test", {:controller => "cm_test_campaigns_objects",
+  :action => 'new', :project_id => @project, :id =>@cm_test_campaigns_object.first.cm_test_campaign_id,
+  :number_of_tests => @cm_test_campaigns_object.size}, :class => 'icon icon-add' %>
+<% else %>
+<p style="text-align:left;"><small>No Tests related</small></p>
+<%= link_to "Add Existing Test", {:controller => "cm_test_campaigns_objects",
+  :action => 'new', :project_id => @project, :id => @cm_test_campaign.id,
+  :number_of_tests => @cm_test_campaigns_object.size}, :class => 'icon icon-add' %>
+<% end %>
+
+</div>
+
+<div  class="splitcontentright" id="test_records_list"  title="RelatedRecord">
+    <!--In this part will be uploaded the list of records related with the Test clicked using AJAX-->
+</div>
+
+<div style="clear: both;"></div>
+
+<br /><hr />
+
+<!--
+<script type="text/javascript">
+
+
+ var LastRowClicked = ""
+
+function hide_show_record_form(event){
+
+    /*Take the item id who has been clicked*/
+    tid=event.srcElement.id
+
+    /*Make div "test_record_fields" Visible (by default style.display=none)*/
+    if(document.getElementById('test_record_fields').style.display == "none")
+      {
+        document.getElementById('test_record_fields').style.display = ""
+      }
+    else
+      {
+        /*If last 2 clicks have been in the same item, the element is hidden again.*/
+        if(LastRowClicked == ("rel_" + tid))
+          {
+           document.getElementById('test_record_fields').style.display = "none"
+           document.getElementById(LastRowClicked).style.backgroundColor = LastRowClicked_Color
+          }
+      }
+
+    /*Add the id to  "cm_test_record_cm_test_campaigns_object_id" hidden field, to perform the relation in the controller*/
+    document.getElementById("cm_test_record_cm_test_campaigns_object_id").value=tid
+
+    document.getElementById("new_form_relation_id").value= "Relation Number #"+ tid
+    LastRowClicked_Color = document.getElementById("rel_"+ tid).style.backgroundColor
+    document.getElementById("rel_"+ tid).style.backgroundColor='#00CC00'
+    document.getElementById("Title_New_Record").lastChild.nodeValue = "New Test Record with: Relation Id #" + tid
+
+    if(LastRowClicked != "")
+      {
+    document.getElementById(LastRowClicked).style.backgroundColor = LastRowClicked_Color
+      }
+
+    LastRowClicked = "rel_" + tid
+}
+</script> -->

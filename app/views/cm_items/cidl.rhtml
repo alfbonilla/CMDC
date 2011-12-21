@@ -1,0 +1,67 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="iitems"><%= @cm_item.name %> Configuration Item Data List </h2>
+
+<p><b>Configuration Item Name:</b><%= @cm_item.name %></p>
+<p><b>Configuration Item Code:</b><%= @cm_item.code %></p>
+<p><b>Product Tree Code:</b><%= @cm_item.product_tree_code %></p>
+<p><b>Related Items</b></p>
+<% if @cm_item.cm_child_items.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Name</b></td>
+<td align="center"><b>Code</b></td>
+<td align="center"><b>Product Tree</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_item.cm_child_items.each do |iitem2| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<td><%= h(iitem2.child_item.name) %></td>
+<td><%= h(iitem2.child_item.code) %></td>
+<td><%= h(iitem2.child_item.product_tree_code) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%= @cm_item.cm_child_items.size %> Items related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No items related</small></p>
+<% end %>
+
+<% rel_docs = CmItemsObject.find(:all,
+    :conditions => ['cm_items_objects.cm_item_id=? AND cm_items_objects.x_type=?',
+      @cm_item.id, "CmDoc"],
+    :joins => 'LEFT JOIN cm_docs ON cm_items_objects.x_id=cm_docs.id',
+    :select => 'cm_docs.code, cm_docs.name, cm_docs.external_doc_id,
+      cm_docs.applicable_version, cm_docs.baseline',
+    :order => 'cm_docs.baseline') %>
+
+<% if rel_docs.any? %>
+<p><b>Applicable Documents List</b></p>
+  <% aux = 0 %>
+  <table class="attributes">
+  <% rel_docs.each do |iit| %>
+    <% if aux != iit.baseline %>
+      <% aux = iit.baseline %>
+        <tr><th COLSPAN="4"><%= change_baseline_to_s(iit.baseline.to_i) %> Baseline</th></tr>
+      <tr>
+        <th align="center">Acronym</th>
+        <th align="center">Document Title</th>
+        <th align="center">Document Reference</th>
+        <th align="center">Document Issue</th>
+      </tr>
+    <% end %>   
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td><%= h(iit.external_doc_id) %></td>
+        <td><%= h(iit.name) %></td>
+        <td><%= h(iit.code) %></td>
+        <td align="center"><%= h(iit.applicable_version) %></td>
+      </tr>
+  <% end %>
+  </table>
+  <p style="text-align:right;"><small><%=rel_docs.size %> Documents related</small></p>
+  <% else %>
+  <p style="text-align:right;"><small>No Documents related</small></p>
+<% end %>

@@ -1,0 +1,45 @@
+<%= render :partial => 'list_action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="changes">Changes Index</h2>
+<fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <p>
+    <label for="code">Change Code: </label>
+    <%= text_field_tag("query", params['query'], :size => 5 ) %>
+    <label for="name">Name: </label>
+    <%= text_field_tag("query1", params['query1'], :size => 10 ) %>
+    <label for="type">Type: </label>
+    <%=select_tag("query2", options_from_collection_for_select(@cm_change_types, 'id', 'name')) %>
+    <label for="type">Status: </label>
+    <%=select_tag("query3", options_from_collection_for_select(@cm_change_statuses, 'id', 'name')) %>
+    </p>
+    <p>
+    <label for="type">Implm: </label>
+    <%=select_tag("query4", options_for_select(@cm_change_implementation))%>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    <input type="submit" value="Apply" />
+    </p>
+  </form>
+</fieldset>
+
+
+<div id="table" class="autoscroll">
+  <% if @cm_changes.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_changes/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new change", {:controller => "cm_changes",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - Changes List" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export Data', {:controller => "cm_exports", :action => 'export_data',
+      :object_to_export => 'CmChange', :id => @project, :format => 'csv'}) %>
+</p>

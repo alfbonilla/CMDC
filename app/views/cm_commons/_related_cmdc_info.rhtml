@@ -1,0 +1,119 @@
+<%# if @project.module_enabled?("cm_dc") %>
+
+<strong>CM/DC Information<%= link_to "(hide/show)", {},
+        :onclick => 'Effect.toggle("cmdc_info_details", "appear", {duration:0.3}); return false;' %>
+</strong>
+
+<div id="cmdc_info_details">
+
+  <table class="list" style="width:100%">
+  <thead>
+  <tr></tr>
+  </thead>
+  <tbody>
+  <% rel_objs = CmObjectsIssue.find(:all,
+               :conditions => ['issue_id=?', @issue.id]) %>
+
+  <% if rel_objs.length > 0  %>
+    <% rel_objs.each do |rel_obj| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <% case rel_obj.cm_object_type
+        when "CmRid" %>
+        <td align="center"><%= image_tag 'rids.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.rid.code,
+              :controller => "cm_rids", :action => "show", :id => rel_obj.rid %></td>
+        <td><%= h(rel_obj.rid.problem_location) %></td>
+        <td><% case rel_obj.rid.internal_status_id
+           when 1 %>
+            Open
+          <% when 2 %>
+            Closed
+          <% when 3 %>
+            Deferred
+        <% end %></td>
+        <td><%= h(rel_obj.rid.close_out.name) %></td>
+        <% when "CmRisk" %>
+        <td align="center"><%= image_tag 'Warning.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.risk.code,
+            :controller => "cm_risks", :action => "show", :id => rel_obj.risk %></td>
+        <td><%= h(rel_obj.risk.name) %></td>
+        <td><%= h(rel_obj.risk.status.name) %></td>
+        <td><%= h(rel_obj.risk.type.name) %></td>
+
+        <% when "CmDoc" %>
+        <td align="center"><%= image_tag 'cmdocuments.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.doc.code,
+            :controller => "cm_docs", :action => "show", :id => rel_obj.doc %></td>
+        <td><%= h(rel_obj.doc.name) %></td>
+        <td><%= h(rel_obj.doc.last_version.status.name) %></td>
+        <td><%= h(rel_obj.doc.type.name) %></td>
+
+        <% when "CmItem" %>
+        <td align="center"><%= image_tag 'inventory.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.item.code,
+          :controller => "cm_items", :action => "show", :id => rel_obj.item %></td>
+        <td><%= h(rel_obj.item.name) %></td>
+        <td><%= h(rel_obj.item.type.name) %></td>
+        <td><%= h(rel_obj.item.status.name) %></td>
+
+        <% when "CmBoard" %>
+        <td align="center"><%= image_tag 'group.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.board.cm_board_code,
+            :controller => "cm_boards", :action => "show", :id => rel_obj.board %></td>
+        <td><%= h(rel_obj.board.subject) %></td>
+        <td><%= h(rel_obj.board.type.name) %></td>
+        <td><%= h(rel_obj.board.meeting_date.strftime("%Y-%m-%d")) %></td>
+
+        <% when "CmNc" %>
+        <td align="center"><%= image_tag 'ncrs.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.nc.code,
+            :controller => "cm_ncs", :action => "show", :id => rel_obj.nc %></td>
+        <td><%= h(rel_obj.nc.name) %></td>
+        <td><%= h(rel_obj.nc.type.name) %></td>
+        <td><%= h(rel_obj.nc.status.name) %></td>
+
+        <% when "CmChange" %>
+        <td align="center"><%= image_tag 'change.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.change.code,
+            :controller => "cm_changes", :action => "show", :id => rel_obj.change %></td>
+        <td><%= h(rel_obj.change.name) %></td>
+        <td><%= h(rel_obj.change.type.name) %></td>
+        <td><%= h(rel_obj.change.status.name) %></td>
+
+        <% when "CmReq" %>
+        <td align="center"><%= image_tag 'reqs.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.req.code,
+            :controller => "cm_reqs", :action => "show", :id => rel_obj.req %></td>
+        <td><%= h(rel_obj.req.name) %></td>
+        <td><%= h(rel_obj.req.type.name) %></td>
+        <td><%= h(rel_obj.req.classification.name) %></td>
+
+        <% when "CmMntLog" %>
+        <td align="center"><%= image_tag 'maintenanceLogs.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.mlog.code,
+            :controller => "cm_mnt_logs", :action => "show", :id => rel_obj.mlog %></td>
+        <td><%= h(rel_obj.mlog.name) %></td>
+        <td><%= h(rel_obj.mlog.type.name) %></td>
+        <td><%= h(rel_obj.mlog.status.name) %></td>
+
+        <% when "CmTest" %>
+        <td align="center"><%= image_tag 'tests.png', :plugin => "redmine_cm" %></td>
+        <td><%= link_to rel_obj.test.code,
+            :controller => "cm_tests", :action => "show", :id => rel_obj.test %></td>
+        <td><%= h(rel_obj.test.name) %></td>
+        <td><%= h(rel_obj.test.type.name) %></td>
+        <td><%= h(rel_obj.test.classification.name) %></td>
+
+      <% end %>
+      </tr>
+    <% end %>
+  <% else %>
+      No CM/DC information related to this issue
+  <% end %>
+
+  </tbody>
+  </table>
+
+</div>
+
+<%# end %>

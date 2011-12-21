@@ -1,0 +1,13 @@
+<b>Create Relationship between Change </b><%=  @change_to_relate.name %><b> and:</b>
+<br />
+<br />
+<% fields_for :cm_changes_change, @cm_changes_change, :builder => TabularFormBuilder do |f| %>
+  <%= f.hidden_field :parent_change_id, :value => @change_to_relate.id %>
+  <p><%= f.select :child_change_id, (@rest_of_changes.collect {|p| [p.code + " - " + p.name, p.id]}) %></p>
+  <p><%= f.text_field :description %></p>
+  <p><%= f.select :relation_type, [['derives from', 1], ['is contained in', 2],
+          ['answers to', 3], ['ammends to', 4], ['references to', 5]] %></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+        <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+<% end %>

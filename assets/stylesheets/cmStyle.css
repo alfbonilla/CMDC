@@ -1,0 +1,161 @@
+
+.floting_center {
+position: absolute;
+left: 20%;
+top: 20%;
+z-index: 2;
+overflow: auto;
+border: 1px solid black;
+}
+
+.sidebarmenu ul{
+margin: 0;
+padding: 0;
+padding-top: 5px;
+padding-bottom: 5px;
+list-style-type: none;
+font-family: Arial,Helvetica,sans-serif;
+background-repeat: no-repeat;
+background-position: 0% 50%;
+padding: 0px;
+width: 200px; /* Main Menu Item widths */
+/*border-bottom: 1px solid #ccc;*/
+}
+
+.sidebarmenu ul li{
+position: relative;
+}
+
+/* Top level menu links style */
+.sidebarmenu ul li a{
+display: block;
+overflow: auto; /*force hasLayout in IE7 */
+color: white;
+text-decoration: none;
+background-repeat: no-repeat;
+background-position: 0% 50%;
+padding: 20px;
+padding-top: 5px;
+padding-bottom: 5px;
+border-top: 1px solid #778;
+border-bottom: 1px solid #778;
+border-right: 1px solid #778;
+border-left: 1px solid #778;
+}
+
+.sidebarmenu ul li a:link, .sidebarmenu ul li a:visited, .sidebarmenu ul li a:active{
+background-color: white; /*background of tabs (default state) #FE9A2E; */
+}
+
+.sidebarmenu ul li a:link{
+color: olive;
+}
+
+.sidebarmenu ul li a:visited{
+color: maroon;
+}
+
+.sidebarmenu ul li a:hover{
+background-color: silver; /*#DF7401;  */
+}
+
+/*Sub level menu items */
+.sidebarmenu ul li ul{
+position: absolute;
+padding-top: 5px;
+padding-bottom: 5px;
+width: 200px; /*Sub Menu Items width */
+top: 0;
+visibility: hidden;
+}
+
+.sidebarmenu a.subfolderstyle{
+background: url(../images/bullet_arrow_right.png) no-repeat 97% 50%;
+}
+
+.icon-tree { background-image: url(../images/tree_list.png); }
+.icon-text-list { background-image: url(../images/text_list_bullets.png); }
+
+h2.scm { text-align: justify; text-indent: 50px;  background: url(../images/scm.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.iitems { text-align: justify; text-indent: 50px;  background: url(../images/inventory.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.mlogs { text-align: justify; text-indent: 50px;  background: url(../images/maintenanceLogs.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.cmdocs { text-align: justify; text-indent: 50px;  background: url(../images/cmdocuments.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.reqs { text-align: justify; text-indent: 50px;  background: url(../images/reqs.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.tests { text-align: justify; text-indent: 50px;  background: url(../images/tests.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.ncrs { text-align: justify; text-indent: 50px;  background: url(../images/ncrs.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.porders { text-align: justify; text-indent: 50px;  background: url(../images/porders.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.doccount { text-align: justify; text-indent: 50px;  background: url(../images/ticket.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.boards { text-align: justify; text-indent: 50px;  background: url(../images/group.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.companies { text-align: justify; text-indent: 50px;  background: url(../images/text_list_bullets.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.qrs { text-align: justify; text-indent: 50px;  background: url(../images/ticket_checked.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.deliveries { text-align: justify; text-indent: 50px;  background: url(../images/icon-delivery.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.codegens { text-align: justify; text-indent: 50px;  background: url(../images/codeGenerator.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.sfiles { text-align: justify; text-indent: 50px;  background: url(../images/sfiles.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.changes { text-align: justify; text-indent: 50px;  background: url(../images/change.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.smrs { text-align: justify; text-indent: 50px;  background: url(../images/smrs.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.rids { text-align: justify; text-indent: 50px;  background: url(../images/rids.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.cmxport { text-align: justify; text-indent: 50px;  background: url(../images/cmxports.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.risks { text-align: justify; text-indent: 50px;  background: url(../images/Warning.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.subsystems { text-align: justify; text-indent: 50px;  background: url(../images/subsystem.png) no-repeat 0% 50%; padding-left: 20px;}
+h2.searchcmdc { text-align: justify; text-indent: 50px;  background: url(../images/search-cmdc.png) no-repeat 0% 50%; padding-left: 20px;}
+
+.sidebarmenu a.iitems { background-image: url(../images/inventory.png); }
+.sidebarmenu a.mlogs { background-image: url(../images/maintenanceLogs.png); }
+.sidebarmenu a.cmdocs { background-image: url(../images/cmdocuments.png); }
+.sidebarmenu a.reqs { background-image: url(../images/reqs.png); }
+.sidebarmenu a.tests { background-image: url(../images/tests.png); }
+.sidebarmenu a.ncrs { background-image: url(../images/ncrs.png); }
+.sidebarmenu a.porders { background-image: url(../images/porders.png); }
+.sidebarmenu a.doccount { background-image: url(../images/ticket.png); }
+.sidebarmenu a.boards { background-image: url(../images/group.png); }
+.sidebarmenu a.companies { background-image: url(../images/text_list_bullets.png); }
+.sidebarmenu a.qrs { background-image: url(../images/ticket_checked.png); }
+.sidebarmenu a.deliveries { background-image: url(../images/icon-delivery.png); }
+.sidebarmenu a.codegens { background-image: url(../images/codeGenerator.png); }
+.sidebarmenu a.sfiles { background-image: url(../images/sfiles.png); }
+.sidebarmenu a.changes { background-image: url(../images/change.png); }
+.sidebarmenu a.smrs { background-image: url(../images/smrs.png); }
+.sidebarmenu a.rids { background-image: url(../images/rids.png); }
+.sidebarmenu a.cmxport { background-image: url(../images/cmxports.png); }
+.sidebarmenu a.risks { background-image: url(../images/Warning.png); }
+.sidebarmenu a.subsystems { background-image: url(../images/subsystem.png); }
+.sidebarmenu a.searchcmdc { background-image: url(../images/search-cmdc.png); }
+
+/* styles for list tree views */
+tr.parent { border: 1px solid #f8f8f8; }
+tr.parent td.name { white-space: nowrap;  width: 300px; }
+tr.child  { border: 1px solid #f8f8f8; }
+tr.child  td.name { white-space: nowrap;  width: 300px; }
+tr.parent span.expander {background-image: url(../images/bullet_toggle_plus.png); padding-left: 8px; margin-left: 0; cursor: pointer;}
+span.empty { text-align:right; width: 100%; cursor: pointer;}
+tr.parent.open span.expander {background-image: url(../images/bullet_toggle_minus.png); cursor: pointer;}
+tr.parent.open {background-color:#ffffbb;}
+tr.child span.none {background-image: url(../images/bullet_no_toggle.png); padding-left: 8px; margin-left: 0; cursor: pointer;}
+tr.hide {
+		display:none;
+	    }
+
+.rare_select {
+    font-family: verdana;
+    font-size: 10px;
+    color: white;
+    background-color: #CCC;
+    width: 80px}
+
+
+table.report_table {
+    table-layout: fixed;
+    width: 80%;
+    border-width: 2px;
+    border-color: black;
+    border-style: ridge;
+}
+    table.report_table td {
+        width: 60px;
+        height: 60px;
+        border-width: 1px;
+        border-color: gray;
+        border-style: ridge;
+        font-weight: bold;
+        font-family: sans-serif;
+    }

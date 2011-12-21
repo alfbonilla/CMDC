@@ -1,0 +1,156 @@
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_board, :cm_object_type => "CmBoard",
+    :cm_object_cont => "cm_boards", :export => "N" } %>
+
+<br /><hr />
+<h3>Changes Treated<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("changes_table", "appear", {duration:0.3}); return false;' %></small></h3>
+
+<div id="changes_list" >
+<% if @cm_board.cm_changes_objects.any? %>
+  <div id="changes_table" <%= 'style="display:none"' %> >
+    <table class="list" style="width:100%" >
+    <thead>
+      <tr>
+        <td align="center"><b>Change Code</b></td>
+        <td align="center"><b>Decision</b></td>
+        <td align="center"><b>Target Version</b></td>
+        <td align="center"><b>Due Date</b></td>
+        <td align="center"><b>Alert Raised</b></td>
+        <td align="center"><b>Comments</b></td>
+        <td align="center"><b>Edit</b></td>
+        <td align="center"><b>Delete</b></td>
+      </tr>
+    </thead>
+    <tbody>
+    <% @cm_board.cm_changes_objects.each do |change| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <% change.cm_change.nil? ? change_ref = "Unknown. Id:"+change.cm_change_id.to_s : change_ref = change.cm_change.code %>
+      <% creation_text = "Created by " + change.author.login + " on " + change.created_on.strftime("%Y/%m/%d") %>
+      <td align="center"><%= link_to h(change_ref), {:controller => 'cm_changes',
+          :action => 'show', :id => change.cm_change_id}, :title => creation_text %></td>
+      <td align="center"><%= h(change_decision_to_s(change.rel_string.to_i)) %></td>
+      <td align="center"><%= h(change.target_version.name) unless change.target_version.nil? %></td>
+      <td align="center"><%= h(change.rel_date.strftime("%Y/%m/%d")) unless change.rel_date.nil? %></td>
+      <td align="center"><%= h(change.rel_bool) %></td>
+      <td align="center"><%= h(change.rel_string_2) %></td>
+      <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_changes_objects', :action => 'edit',
+        :id => change.id, :caller_cont => "cm_boards", :change_code => change_ref}) %></td>
+      <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_changes_objects', :action => 'destroy',
+          :relation_id => change.id, :x_id => change.x_id, :x_type => "CmBoard",
+          :change_code => change_ref, :caller_cont => "cm_boards"},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+  </div>
+<p style="text-align:right;"><small><%=@cm_board.cm_changes_objects.size %> Changes treated</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Changes treated in this meeting</small></p>
+<% end %>
+<%= link_to "Add Existing Change", {:controller => "cm_changes_objects", :action => 'new',
+    :x_id => @cm_board.id, :x_type => "CmBoard", :caller_cont => "cm_boards"}, :class => 'icon icon-add' %>
+<br /><hr />
+</div>
+
+<h3>NCs Treated<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("ncs_table", "appear", {duration:0.3}); return false;' %></small></h3>
+
+<div id="ncs_list">
+<% if @cm_board.cm_ncs_objects.any? %>
+  <div id="ncs_table" <%= 'style="display:none"' %> >
+    <table class="list" style="width:100%">
+    <thead>
+      <tr>
+        <td align="center"><b>NC Code</b></td>
+        <td align="center"><b>Decision</b></td>
+        <td align="center"><b>Target Version</b></td>
+        <td align="center"><b>Due Date</b></td>
+        <td align="center"><b>Alert Raised</b></td>
+        <td align="center"><b>Comments</b></td>
+        <td align="center"><b>Edit</b></td>
+        <td align="center"><b>Delete</b></td>
+      </tr>
+    </thead>
+    <tbody>
+    <% @cm_board.cm_ncs_objects.each do |cno| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <% cno.cm_nc.nil? ? nc_ref = "Unknown. Id:"+cno.cm_nc_id.to_s : nc_ref = cno.cm_nc.code %>
+      <% creation_text = "Created by " + cno.author.login + " on " + cno.created_on.strftime("%Y/%m/%d") %>
+      <td align="center"><%= link_to h(nc_ref), {:controller => 'cm_ncs',
+        :action => 'show', :id => cno.cm_nc_id}, :title => creation_text %></td>
+      <td align="center"><%= h(change_nc_decision_to_s(cno.rel_string.to_i)) %></td>
+      <td align="center"><%= h(cno.target_version.name) unless cno.target_version.nil? %></td>
+      <td align="center"><%= h(cno.rel_date.strftime("%Y/%m/%d")) unless  cno.rel_date.nil? %></td>
+      <td align="center"><%= h(cno.rel_bool) %></td>
+      <td align="center"><%= h(cno.rel_string_2) %></td>
+      <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_ncs_objects', :action => 'edit',
+        :id => cno.id, :caller_cont => "cm_boards", :code => nc_ref}) %></td>
+      <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_objects', :action => 'destroy',
+          :relation_id => cno.id, :x_id => cno.x_id, :x_type => "CmBoard",
+          :code => nc_ref, :caller_cont => "cm_boards"},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+  </div>
+<p style="text-align:right;"><small><%=@cm_board.cm_ncs_objects.size %> NCs treated</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Ncs treated in this meeting</small></p>
+<% end %>
+<%= link_to "Add Existing NC", {:controller => "cm_ncs_objects", :action => 'new',
+    :x_id => @cm_board.id, :x_type => "CmBoard", :caller_cont => "cm_boards"}, :class => 'icon icon-add' %>
+<br /><hr />
+</div>
+
+<h3>RIDs Treated<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("rids_table", "appear", {duration:0.3}); return false;' %></small></h3>
+
+<div id="rids_list">
+<% if @cm_board.cm_rids_objects.any? %>
+  <div id="rids_table" <%= 'style="display:none"' %> >
+    <table class="list" style="width:100%">
+    <thead>
+      <tr>
+        <td align="center"><b>RID Code</b></td>
+        <td align="center"><b>Decision</b></td>
+        <td align="center"><b>Target Version</b></td>
+        <td align="center"><b>Due Date</b></td>
+        <td align="center"><b>Alert Raised</b></td>
+        <td align="center"><b>Comments</b></td>
+        <td align="center"><b>Edit</b></td>
+        <td align="center"><b>Delete</b></td>
+      </tr>
+    </thead>
+    <tbody>
+    <% @cm_board.cm_rids_objects.each do |cro| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <% creation_text = "Created by " + cro.author.login + " on " + cro.created_on.strftime("%Y/%m/%d") %>
+      <td align="center"><%= link_to h(cro.cm_rid.code), {:controller => 'cm_rids',
+              :action => 'show', :id => cro.cm_rid_id}, :title => creation_text %></td>
+      <td align="center"><%= h(cro.rel_string) %></td>
+      <td align="center"><%= h(cro.target_version.name) unless cro.target_version.nil? %></td>
+      <td align="center"><%= h(cro.rel_date.strftime("%Y/%m/%d")) unless cro.rel_date.nil? %></td>
+      <td align="center"><%= h(cro.rel_bool) %></td>
+      <td align="center"><%= h(cro.rel_string_2) %></td>
+      <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_rids_objects', :action => 'edit',
+        :id => cro.id, :caller_cont => "cm_boards", :code => cro.cm_rid.code}) %></td>
+      <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_rids_objects', :action => 'destroy',
+          :relation_id => cro.id, :x_id => cro.x_id, :x_type => "CmBoard",
+          :code => cro.cm_rid.code, :caller_cont => "cm_boards"},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+  </div>
+<p style="text-align:right;"><small><%=@cm_board.cm_rids_objects.size %> RIDs treated</small></p>
+<% else %>
+<p style="text-align:right;"><small>No RIDs treated in this meeting</small></p>
+<% end %>
+<%= link_to "Add Existing RID", {:controller => "cm_rids_objects", :action => 'new',
+    :x_id => @cm_board.id, :x_type => "CmBoard", :caller_cont => "cm_boards"}, :class => 'icon icon-add' %>
+<hr />
+</div>

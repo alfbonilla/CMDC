@@ -1,0 +1,50 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<%= render :partial => 'list_action_menu' %>
+
+<h2 class="rids">RIDs Index</h2>
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <p>
+    <label for="code">RID Code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <label for="problem_location">Problem Location: </label>
+    <%= text_field_tag("query1", params['query1'], :size => 20 ) %>
+    <label for="status">Status: </label>
+    <%=select_tag("query2", options_for_select(@cm_rid_statuses, :selected => 0)) %>
+    </p>
+    <p>
+    <label for="originator">Originator: </label>
+    <%= text_field_tag("query3", params['query3'], :size => 20 ) %>
+    <label for="category">Category: </label>
+    <%=select_tag("query4", options_for_select(@cm_rid_categories, :selected => 0)) %>
+    <label for="assignee">Assignee: </label>
+    <%=select_tag("query5", options_for_select(@cm_rid_assignees, :selected => 0)) %>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    <input type="submit" value="Apply" />
+    </p>
+  </form>
+  </fieldset>
+</p>
+
+<div id="table" class="autoscroll">
+  <% if @cm_rids.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_rids/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new rid", {:controller => "cm_rids",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - RIDs List" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export Data', {:controller => "cm_exports", :action => 'export_data',
+      :object_to_export => 'CmRid', :id => @project, :format => 'csv'}) %>
+  ,
+  <%= link_to('Export to HTML', {:action => 'index', :id => @project, :format => 'cmdc'}) %>
+</p>

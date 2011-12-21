@@ -1,0 +1,39 @@
+<br />
+
+<% fields_for :cm_ncs_object, @cm_ncs_object, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :x_type, :value => @cm_ncs_object.x_type %></p>
+  <p><%= f.hidden_field :x_id, :value => @cm_ncs_object.x_id %></p>
+  <% unless @items_to_select.nil? %>
+    <p><%= f.select :cm_nc_id, (@items_to_select.collect {|p| [p.code + "-" + p.name, p.id]}), :required => true %>
+    <% if @x_type == "CmTestRecord" %>
+      <small>(Just those NCs in some status "Ready to Verify" are shown)</small>
+    <% end %>
+    </p>
+  <% end %>
+  <% if @x_type == "CmBoard" %>
+    <p><%= f.select :rel_string,
+    [['Rework/Repair', 1], ['Close', 2], ['Reject', 3], ['Use as is', 4], ['Raise RFW/RFD', 5], ['Raise ECR', 6], ['Other', 7]]  %><i>(Decision Taken)</i></p>
+    <p><%= f.select :target_version_id, (@releases.collect {|p| [p.name, p.id]}), :required => true %>
+      <i>(NC expected resolution release field will be updated)</i></p>
+    <p><%= f.text_field :rel_date, :size => 20%><%= calendar_for('cm_ncs_object_rel_date') %><i>(Due Date)</i></p>
+    <p><%= f.check_box :rel_bool %><i>(Raise Alert)</i></p>
+  <% else %>
+    <p><%= f.text_field :rel_string, :size => 30 %></p>
+    <p><%= f.text_field :rel_date, :size => 20 %><%= calendar_for('cm_ncs_object_rel_date') %></p>
+  <% end %>
+  
+  <p><%= f.text_field :rel_string_2, :size => 100 %><i>(Comments)</i></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <% if @cm_ncs_object.new_record? and @cm_ncs_object.x_type == "CmBoard" %>
+  <fieldset><legend>Issue Creation</legend>
+    <p><%= g.check_box :create_issue, :size => 100 %></p>
+    <p><%= g.select :issue_project, (@issue_projects.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= g.select :issue_type, (@issue_types.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= g.text_field :issue_subject, :size => 20 %></p>
+  </fieldset>
+  <% end %>
+  <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+  <p><%= g.hidden_field :code, :value => @code %></p>
+  <p><%= g.hidden_field :caller_cont, :value => @caller_cont %></p>
+<% end %>

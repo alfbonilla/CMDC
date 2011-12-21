@@ -1,0 +1,29 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="mlogs">New Maintenance Log</h2>
+
+<% labelled_tabular_form_for :cm_mnt_log, @cm_mnt_log,
+                             :html => {:id => 'cm_mnt_log-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_mnt_log' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Maintenance Log Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+
+    <% if @cm_mnt_log.new_record? %>
+      <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+    <% end %>
+  </div>
+
+  <br />
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New Maintenance Log" %>

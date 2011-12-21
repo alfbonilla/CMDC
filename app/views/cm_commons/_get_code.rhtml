@@ -1,0 +1,10 @@
+<%# Render this part requires 1 vble:
+    1 - form_name with the name of the form to send %>
+
+  <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+    :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+    :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project},
+    :with => "Form.serialize('#{form_name}')"}) %></small>
+  <%= select_tag :counter_type, options_from_collection_for_select(@counter_types, 'id', 'name'),
+                :class => 'rare_select' %>
+  <hr />

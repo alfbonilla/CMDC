@@ -1,0 +1,41 @@
+<% fields_for :cm_purchase_order, @cm_purchase_order, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+<p><%= f.text_field :code, :size => 30, :required => true %>
+  <% if @cm_purchase_order.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+        :caller_cont => 'cm_purchase_orders', :cmdc_object => change_cmdc_object_to_i('Purchase Order')  }} )%></small>
+  <% end %>
+</p>
+<p><%= f.text_field :total_payment, :size => 10, :required => true %><small>(€)</small></p>
+<p><%= f.text_field :VAT_included %><small>%</small></p>
+<fieldset><legend>Requested & Authorized Info</legend>
+<p><%= f.text_field :requested_by %></p>
+<p><%= f.text_field :requested_date, :size => 10 %><%= calendar_for('cm_purchase_order_requested_date') %></p>
+<p><%= f.text_field :authorized_by %></p>
+<p><%= f.text_field :authorized_date, :size => 10 %><%= calendar_for('cm_purchase_order_authorized_date') %></p>
+</fieldset>
+<p><%= f.text_field :budget %></p>
+<p><%= f.text_field :delivery_note %></p>
+<p><%= f.text_field :leadtime, :size => 10 %><%= calendar_for('cm_purchase_order_leadtime') %></p>
+<p><%= f.check_box :review_leadtime %></p>
+</div>
+
+<div class="splitcontentright">
+<p><%= f.text_field :title, :size => 50, :required => true %></p>
+<p><%= f.text_field :purchase_date, :size => 10 %><%= calendar_for('cm_purchase_order_purchase_date') %></p>
+<p><%= f.select :supplier_id, (@suppliers.collect {|p| [p.name, p.id]}) %></p>
+<p><%= f.select :vendor_id, (@vendors.collect {|p| [p.name, p.id]}) %></p>
+<p><%= f.text_field :payment_period %></p>
+<p><%= f.text_field :payment_method %></p>
+<p><%= f.text_area :comments, :cols => 60, :rows => 7, :class => 'wiki-edit' %></p>
+</div>
+
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_purchase_order_code')).value=new_code;}
+</script>

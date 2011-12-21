@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="porders">New Purchase Order</h2>
+
+<% labelled_tabular_form_for :cm_purchase_order, @cm_purchase_order,
+                             :html => {:id => 'cm_purchase_order-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_purchase_order' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Purchase Order Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New Purchase Order" %>
+

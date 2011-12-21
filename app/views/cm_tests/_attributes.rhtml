@@ -1,0 +1,74 @@
+<% fields_for :cm_test, @cm_test, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :required => true %>
+  <% if @cm_test.new_record? %>
+    <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'new-cm_test-form'} %>
+  <% else %>
+    <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+  <%  end %></p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :name, :required => true %></p>
+    <p><%= f.text_field :version, :size => 10 %></p>
+    <p><%= f.select :status, [[change_t_status_to_s(2), 2], [change_t_status_to_s(1), 1],
+                              [change_t_status_to_s(3), 3]] %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.select :type_id, (@cm_test_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :assigned_to_id, (@cm_test_assignees.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.select :classification_id, (@cm_test_classifications.collect {|p| [p.name, p.id]}) %></p>
+  </div>
+
+  <p><%= f.text_area :objective, :cols => 60, :rows => 3, :class => 'wiki-edit' %></p>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_tests" %></p>
+  <p><%= g.hidden_field :father_id, :value => @father_id %></p>
+  <p><%= g.hidden_field :number_of_tests, :value => @number_of_tests_related %></p>
+<% end %>
+
+<div style="clear:both;"> </div>
+
+<% if @cm_test.new_record? %>
+  <div id="test_case_fields" <%= 'style="display:none"' unless @cm_test.errors.any? %>>
+<% else %>
+  <div id="test_case_fields" <%= 'style="display:none"' unless @cm_test.errors.any? or @cm_test.type.test_case? %>>
+<% end %>
+
+    <fieldset><legend>Test Case Fields</legend>
+      <div class="splitcontentleft">
+        <p><%= f.text_area :input_data, :rows => 4, :class => 'wiki-edit' %></p>
+        <p><%= f.text_area :output_data, :rows => 4, :class => 'wiki-edit' %></p>
+      </div>
+      <div class="splitcontentright">
+        <p><%= f.text_area :pass_fail_criteria, :rows => 9, :class => 'wiki-edit' %></p>
+      </div>
+    </fieldset>
+  </div>
+
+<div style="clear:both;"> </div>
+
+<% if @cm_test.new_record? %>
+  <div id="test_procedure_fields" <%= 'style="display:none"' unless @cm_test.errors.any? %>>
+<% else %>
+  <div id="test_procedure_fields" <%= 'style="display:none"' unless @cm_test.errors.any? or @cm_test.type.test_procedure? %>>
+<% end %>
+
+  <fieldset><legend>Test Procedure Fields</legend>
+    <div class="splitcontentleft">
+      <p><%= f.text_area :steps, :rows => 4, :class => 'wiki-edit' %></p>
+    </div>
+    <div class="splitcontentright">
+      <p><%= f.text_area :checkpoints, :rows => 4, :class => 'wiki-edit' %></p>
+    </div>
+  </fieldset>
+</div>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_test_code')).value=new_code;}
+</script>
+

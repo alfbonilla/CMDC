@@ -1,0 +1,107 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="reqs">Traceability Matrix</h2>
+
+<% labelled_tabular_form_for :cm_matrix, @cm_matrix,
+                             :html => {:id => 'cm_matrix-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+<%= error_messages_for 'cm_matrix' %>
+
+<% if @matrix_table.nil? %>
+  <%= f.select :te_1, (@req_types.collect {|p| [p.name, p.id]}) %>
+  <%= f.select :te_2, (@req_types.collect {|p| [p.name, p.id]}) %>
+<% else %>
+  <p>Traceability Elements : <strong><%= @te_1.name %></strong> and
+     <strong><%= @te_2.name %></strong></p>
+<% end %>
+<br/>
+
+<% unless @matrix_table.nil? %>
+
+<b>Summary</b>
+<ul>
+  <li><b>TE traced  :</b><%=@conta_ok %></li>
+  <li><b>TE error   :</b><%=@conta_errors %></li>
+  <li><b>TE warning :</b><%=@conta_warnings %></li>
+  <li><b>TE total   :</b><%=@conta_errors + @conta_ok + @conta_warnings %></li>
+  <li><b>Coverage % :</b><%=@cover_percentage %></li>
+</ul>
+
+<b>Legend</b>
+<table class="list">
+  <thead>
+    <tr>
+      <th>Trace Ok</th>
+      <th>No trace => ERROR</th>
+      <th>No trace => As expected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><%= image_tag 'bullet_no_toggle.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'Warning.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'ticket_checked.png', :plugin => "redmine_cm" %></td>
+    </tr>
+  </tbody>
+</table>
+
+<br/>
+
+<div id="table" class="autoscroll">
+  <b>Matrix</b>
+  <% if @matrix_table.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Traceability Report</b></th>
+      <th><b><%= @te_1.name %></b></th>
+      <th><b><%= @te_2.name %></b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @matrix_table.each do |ii| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <% case ii[1]
+        when "ERROR" %>
+          <td align="center"><%= image_tag 'Warning.png', :plugin => "redmine_cm" %></td>
+        <% when "WARNING" %>
+          <td align="center"><%= image_tag 'ticket_checked.png', :plugin => "redmine_cm" %></td>
+        <% else %>
+          <td align="center"><%= image_tag 'bullet_no_toggle.png', :plugin => "redmine_cm" %></td>
+        <% end %>
+        <td align="center"><%= link_to ii[0], :controller => "cm_reqs",
+                :action => "show", :id => ii[2] %></td>
+        <td><%= h(ii[1]) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <% end %>
+
+</div>
+
+<% end %>
+
+<br />
+
+<p>
+<% if @matrix_table.nil? %>
+  <input type="submit" value="Generate" />
+<% end %>
+<a href="javascript:history.back()">Back</a></p>
+
+<% unless @matrix_table.nil? %>
+<p class="other-formats">
+  Also available
+<%= link_to('Export to HTML', {:action => 'matrix', :id => @project, 
+    :format => 'cmdc', :te_1 => @te_1.id, :te_2 => @te_2.id }) %>
+</p>
+<% end %>
+
+<% end %>

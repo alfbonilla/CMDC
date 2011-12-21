@@ -1,0 +1,102 @@
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="changes"><%= @cm_change.code %> #<%= @cm_change.id %></h2>
+
+<div>
+  <%= avatar(@cm_change.author, :size => "50") %>
+  <h3><%=h @cm_change.name %></h3>
+  <p class="author">
+    <%= authoring @cm_change.created_on, @cm_change.author %>.
+    <% if @cm_change.created_on != @cm_change.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_change.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_change.status.name %></td>
+  <th><b>Type:</b></th><td><%= @cm_change.type.name %></td>
+  <th><b>Applicable Version:</b></th><td><%= @cm_change.applicable_version %></td>
+</tr>
+<tr>
+  <th><b>Reception/Delivery Date:</b></th><td><%= @cm_change.recep_deliv_date.strftime("%Y/%m/%d") if @cm_change.recep_deliv_date? %></td>
+  <th><b>Due Date:</b></th><td><%= @cm_change.due_date.strftime("%Y/%m/%d") if @cm_change.due_date? %></td>
+</tr>
+<tr>
+  <th><b>From Company:</b></th><td><%= @cm_change.source_company.name %></td>
+  <th><b>To Company:</b></th><td><%= @cm_change.target_company.name %></td>
+  <th><b>Classification:</b></th><td><%= change_classification_to_s(@cm_change.classification) %></td>
+</tr>
+<tr>
+  <th><b>Compliance:</b></th><td><%= change_compliance_to_s(@cm_change.compliance) %></td>
+  <th><b>Release:</b></th><td><%= @cm_change.release.name unless @cm_change.release.nil? %></td>
+  <th><b>Implementation:</b></th><td><%= change_implementation_to_s(@cm_change.implementation) %></td>
+</tr>
+<tr>
+  <th><b>Change Document:</b></th><td><%= @cm_change.change_doc.name unless @cm_change.change_doc.nil? %></td>
+</tr>
+</table>
+<fieldset><legend>Impacted Object Details</legend>
+  <table class="attributes">
+  <tr>
+    <th><b>Document:</b></th><td><%= @cm_change.affected_doc.name unless @cm_change.affected_doc.nil? %></td>
+    <th><b>Item:</b></th><td><%= @cm_change.affected_item.name unless @cm_change.affected_item.nil? %></td>
+  </tr>
+  <tr>
+    <th><b>Affected Version:</b></th><td><%= @cm_change.affected_version %></td>
+    <th><b>Integrated in Version:</b></th><td><%= @cm_change.affected_integrated_version %></td>
+  </tr>
+  </table>
+</fieldset>
+
+<hr />
+<p><strong>Description</strong></p>
+<div class="wiki">
+<%= textilizable @cm_change, :description %>
+</div>
+<p><strong>Reason for Change</strong></p>
+<div class="wiki">
+<%= textilizable @cm_change, :reason %>
+</div>
+
+<div id="relations">
+<%= render :partial => 'relations' %>
+</div>
+
+<br /><hr />
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_change %>
+
+<br /><hr />
+<% if @journals.any? %>
+<br />
+<div id="history">
+<h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_changes' } %>
+</div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_changes', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object = @cm_change %>
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_change.code} ##{@cm_change.id}: #{@cm_change.name}" %>
+
+<p class="other-formats">
+  Also available in
+  <%= link_to('PDF', {:action => 'show', :id => @cm_change, :format => 'pdf', :history => 'Y' }) %>
+  ,
+  <%= link_to('PDF (no history)', {:action => 'show', :id => @cm_change, :format => 'pdf', :history => 'N' }) %>
+</p>

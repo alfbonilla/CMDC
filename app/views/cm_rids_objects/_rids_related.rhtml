@@ -1,0 +1,52 @@
+<h3>Related RIDs</h3>
+<% if cm_object.cm_rids_objects.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>RID Code</b></td>
+    <td align="center"><b>Owner</b></td>
+    <td align="center"><b>Status</b></td>
+    <% if export == "N" %>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+<% cm_object.cm_rids_objects.each do |cro| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% if cro.cm_rid.nil? %>
+    <% rid_ref = "Unknown. Id:"+cro.cm_rid_id.to_s %>
+    <% rid_author = "Unknown" %>
+    <% rid_status = "Unknown" %>
+    <% creation_text = "Unknown" %>
+  <% else %>
+    <% rid_ref = cro.cm_rid.code %>
+    <% rid_author = cro.cm_rid.author.name %>
+    <% rid_status = change_internal_status_to_s(cro.cm_rid.internal_status_id) %>
+    <% creation_text = "Created by " + cro.author.login + " on " + cro.created_on.strftime("%Y/%m/%d") %>
+  <% end %>
+  <td align="center"><%= link_to h(rid_ref), {:controller => 'cm_rids',
+              :action => 'show', :id => cro.cm_rid_id}, :title => creation_text %></td>
+  <td align="center"><%= h(rid_author) %></td>
+  <td align="center"><%= h(rid_status) %></td>
+  <% if export == "N" %>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_rids_objects', :action => 'edit',
+    :id => cro.id, :caller_cont => caller_cont, :rid_code => rid_ref}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_rids_objects', :action => 'destroy',
+      :relation_id => cro.id, :x_id => cro.x_id, :x_type => cm_object_type,
+      :rid_code => rid_ref, :caller_cont => caller_cont},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=cm_object.cm_rids_objects.size %> RIDs related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No RIDs related</small></p>
+<% end %>
+<% if export == "N" %>
+<%= link_to "Add Existing RID", {:controller => "cm_rids_objects", :action => 'new',
+    :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont}, :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />

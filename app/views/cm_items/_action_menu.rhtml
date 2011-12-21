@@ -1,0 +1,13 @@
+<div class="contextual">
+<%= watcher_tag(@cm_item, User.current) %>
+
+<%= link_to_if_authorized("Create QR", {:controller => 'cm_qrs', :action => 'new',
+    :id => @project, :x_id => @cm_item.id,
+    :x_type => "InventoryItem", :x_name => @cm_item.name }, :class => 'icon icon-report') %>
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_items', :action => 'index',
+    :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_items', :action => 'edit',
+    :id => @cm_item }, :class => 'icon icon-edit') %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_items', :action => 'destroy',
+  :id => @cm_item}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

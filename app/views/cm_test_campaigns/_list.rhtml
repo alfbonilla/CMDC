@@ -1,0 +1,30 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Test Campaigns found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Test Campaign Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <th><b>Status</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_test_campaigns.each do |test_campaign| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to test_campaign.id, :controller => "cm_test_campaigns", :action => "show", :id => test_campaign %></td>
+        <td><%= link_to test_campaign.code, :controller => "cm_test_campaigns", :action => "show", :id => test_campaign %></td>
+        <td><%= h(test_campaign.name) %></td>
+        <td align="center"><%= h(change_tk_status_to_s(test_campaign.status)) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_test_campaigns', :action => 'edit', :id => test_campaign}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_test_campaigns', :action => 'destroy', :id => test_campaign},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_test_campaign_pages, @total %> </p>

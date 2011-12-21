@@ -1,0 +1,265 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="risks">Progress Report</h2>
+
+<% labelled_tabular_form_for :cm_get_filter, @cm_get_filter,
+                             :html => {:id => 'cm_get_filter-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_get_filter' %>
+
+  <label for="code">Initial Date: </label>
+  <%= text_field_tag 'init_date', @init_date, :required => true, :size => 10 %><%= calendar_for('init_date') %>
+
+  <label for="code">Ending Date: </label>
+  <%= text_field_tag 'ending_date', @ending_date, :required => true, :size => 10 %><%= calendar_for('ending_date') %>
+
+  <ul>
+    <li>Specify the dates for the progress report. </li>
+  </ul>
+
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+    <a href="javascript:history.back()">Back</a>
+  </p>
+
+  <% if @in_post %>
+    <br /><hr />
+    <h3>New Risks detected in the period</h3>
+    <% if @new_risks.size > 0 %>
+    <p>Number of new Risks: <b><%= @new_risks.size %></b></p>
+      <table class="list">
+        <tr>
+          <th><b>Code</b></th>
+          <th><b>Name</b></th>
+          <th><b>Status</b></th>
+          <th><b>Detection Date</b></th>
+        </tr>
+        <% @new_risks.each do |risk| %>
+        <tr>
+          <td align="center"><%= link_to risk.code, :controller => "cm_risks",
+                :action => "show", :id => risk %></td>
+          <td><%= risk.name %></td>
+          <td><%= risk.status.name %></td>
+          <td><%= risk.detection_date.strftime("%Y-%m-%d") %></td>
+        </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <p class="nodata"><%= l(:label_no_data) %></p>
+    <% end %>
+
+    <br /><hr />
+    <h3>Mitigation Actions created in the period</h3>
+    <% if @mitigated_risks.size > 0 %>
+    <p>Number of Mitigation Actions created: <b><%= @mitigated_risks.size %></b></p>
+      <table class="list">
+        <tr>
+          <th><b>Risk Code</b></th>
+          <th><b>Risk Name</b></th>
+          <th><b>Action Subject</b></th>
+          <th><b>Action Creation Date</b></th>
+        </tr>
+        <% @mitigated_risks.each do |risk| %>
+        <tr>
+          <td align="center"><%= link_to risk.code, :controller => "cm_risks",
+                :action => "show", :id => risk.id %></td>
+          <td><%= risk.name %></td>
+          <td><%= risk.subject %></td>
+          <td align="center"><%= risk.created_on.strftime("%Y-%m-%d") %></td>
+        </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <p class="nodata"><%= l(:label_no_data) %></p>
+    <% end %>
+
+    <br /><hr />
+    <h3>Risks avoided in the period</h3>
+    <% if @avoided_risks.size > 0 %>
+    <p>Number of avoided Risks: <b><%= @avoided_risks.size %></b></p>
+      <table class="list">
+        <tr>
+          <th><b>Code</b></th>
+          <th><b>Name</b></th>
+          <th><b>Status</b></th>
+          <th><b>Closing Date</b></th>
+        </tr>
+        <% @avoided_risks.each do |risk| %>
+        <tr>
+          <td align="center"><%= link_to risk.code, :controller => "cm_risks",
+                :action => "show", :id => risk %></td>
+          <td><%= risk.name %></td>
+          <td><%= risk.status.name %></td>
+          <td><%= risk.closing_date.strftime("%Y-%m-%d") %></td>
+        </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <p class="nodata"><%= l(:label_no_data) %></p>
+    <% end %>
+
+    <br /><hr />
+    <h3>Distribution by Status</h3>
+    <table class="list">
+      <tr>
+        <th><b>Risk Status</b></th>
+        <th><b>Total Risk</b></th>
+      </tr>
+      <% total = 0 %>
+      <% @risks_status.each do |risk| %>
+      <tr>
+        <td><%= risk.status.name %></td>
+        <td align="center"><%= risk.count_by_status %></td>
+      </tr>
+        <% total = total + risk.count_by_status.to_i %>
+      <% end %>
+      <tr>
+        <td>Total</td>
+        <td align="center"><%= total %></td>
+      </tr>
+    </table>
+
+    <br /><hr />
+    <h3>Risks Exposure Summary [IMPACT vs PROBABILITY]</h3>
+    <p>Out of date and closed risks are not displayed in table.</p>
+    <table class="report_table">
+      <tr>
+        <th></th>
+        <th colspan="6"><b>Probability</b></th></tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th><b>0..20</b></th>
+        <th><b>21..40</b></th>
+        <th><b>41..60</b></th>
+        <th><b>61..80</b></th>
+        <th><b>81..100</b></th>
+      </tr>
+      <% counter=5 %>
+      <% @impact_table.each do |risk| %>
+      <tr>
+        <% case counter
+        when 5 %>
+        <td rowspan="5"><b>Impact</b></td>
+        <td align="center"><b>Very High</b></td>
+        <td bgcolor = "#FFFF00"><%= risk[0] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[1] %></td>
+        <td bgcolor = "#FF9900"><%= risk[2] %></td>
+        <td bgcolor = "#FF0000"><%= risk[3] %></td>
+        <td bgcolor = "#FF0000"><%= risk[4] %></td>
+        <% when 4 %>
+        <td align="center"><b>High</b></td>
+        <td bgcolor = "#33FF00"><%= risk[0] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[1] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[2] %></td>
+        <td bgcolor = "#FF9900"><%= risk[3] %></td>
+        <td bgcolor = "#FF0000"><%= risk[4] %></td>
+        <% when 3 %>
+        <td align="center"><b>Moderate</b></td>
+        <td bgcolor = "#009933"><%= risk[0] %></td>
+        <td bgcolor = "#33FF00"><%= risk[1] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[2] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[3] %></td>
+        <td bgcolor = "#FF9900"><%= risk[4] %></td>
+        <% when 2 %>
+        <td align="center"><b>Low</b></td>
+        <td bgcolor = "#009933"><%= risk[0] %></td>
+        <td bgcolor = "#009933"><%= risk[1] %></td>
+        <td bgcolor = "#33FF00"><%= risk[2] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[3] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[4] %></td>
+        <% when 1 %>
+        <td align="center"><b>Very Low</b></td>
+        <td bgcolor = "#009933"><%= risk[0] %></td>
+        <td bgcolor = "#009933"><%= risk[1] %></td>
+        <td bgcolor = "#009933"><%= risk[2] %></td>
+        <td bgcolor = "#33FF00"><%= risk[3] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[4] %></td>
+        <% end %>
+        <% counter = counter - 1 %>
+      </tr>
+      <% end %>
+    </table>
+
+    <br /><hr />
+    <h3>Risks Priorities Summary [EXPOSURE vs TIME HORIZON]</h3>
+    <p>Out of date and closed risks are not displayed in table.</p>
+    <table class="report_table">
+      <tr>
+        <th></th>
+        <th colspan="6"><b>Time Horizon (days)</b></th></tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th><b> > 181</b></th>
+        <th><b>91..180</b></th>
+        <th><b>31..90</b></th>
+        <th><b>8..30</b></th>
+        <th><b>0..7</b></th>
+      </tr>
+      <% counter=5 %>
+      <% @priority_table.each do |risk| %>
+      <tr>
+        <% case counter
+        when 5 %>
+        <td rowspan="5"><b>Exposure</b></td>
+        <td align="center"><b>Very High</b></td>
+        <td bgcolor = "#FFFF00"><%= risk[0] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[1] %></td>
+        <td bgcolor = "#FF9900"><%= risk[2] %></td>
+        <td bgcolor = "#FF0000"><%= risk[3] %></td>
+        <td bgcolor = "#FF0000"><%= risk[4] %></td>
+        <% when 4 %>
+        <td align="center"><b>High</b></td>
+        <td bgcolor = "#33FF00"><%= risk[0] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[1] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[2] %></td>
+        <td bgcolor = "#FF9900"><%= risk[3] %></td>
+        <td bgcolor = "#FF0000"><%= risk[4] %></td>
+        <% when 3 %>
+        <td align="center"><b>Moderate</b></td>
+        <td bgcolor = "#009933"><%= risk[0] %></td>
+        <td bgcolor = "#33FF00"><%= risk[1] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[2] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[3] %></td>
+        <td bgcolor = "#FF9900"><%= risk[4] %></td>
+        <% when 2 %>
+        <td align="center"><b>Low</b></td>
+        <td bgcolor = "#009933"><%= risk[0] %></td>
+        <td bgcolor = "#009933"><%= risk[1] %></td>
+        <td bgcolor = "#33FF00"><%= risk[2] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[3] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[4] %></td>
+        <% when 1 %>
+        <td align="center"><b>Very Low</b></td>
+        <td bgcolor = "#009933"><%= risk[0] %></td>
+        <td bgcolor = "#009933"><%= risk[1] %></td>
+        <td bgcolor = "#009933"><%= risk[2] %></td>
+        <td bgcolor = "#33FF00"><%= risk[3] %></td>
+        <td bgcolor = "#FFFF00"><%= risk[4] %></td>
+        <% end %>
+        <% counter = counter - 1 %>
+      </tr>
+      <% end %>
+    </table>
+
+    <h3>Out of Date Risks</h3>
+    <p>Following risks are wrong. They are out of date and their statuses have not been
+    closed</p>
+    <% @out_of_date_risks.each do |out_date| %>
+    <li><%= out_date %> </li>
+    <% end %>
+
+    <h3>Closed Risks</h3>
+    <p>Following risks were closed</p>
+    <% @closed_risks.each do |cl_r| %>
+    <li><%= cl_r %> </li>
+    <% end %>
+
+  <% end %>
+
+<% end %>
+
+<% html_title "CM - Risks - Progress Report" %>

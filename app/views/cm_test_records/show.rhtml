@@ -1,0 +1,78 @@
+ <%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm', :cache => true %>
+
+<h2 class="test_records"><%= @cm_test_record.code %> #<%= @cm_test_record.id %></h2>
+
+<%= avatar(@cm_test_record.author, :size => "50") %>
+<p class="author">
+  <%= authoring @cm_test_record.created_on, @cm_test_record.author %>.
+  <% if @cm_test_record.created_on != @cm_test_record.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_test_record.updated_on)) %>.
+  <% end %>
+</p>
+<br />
+
+<table class="attributes">
+  <tr>
+    <th><b>Execution Date:</b></th><td><%= @cm_test_record.execution_date.strftime("%Y-%m-%d") unless @cm_test_record.execution_date.nil?%></td>
+    <th><b>Result</b></th><td><%= change_result_to_s(@cm_test_record.result) %></td>
+  </tr>
+  <tr>
+    <th><b>Execution Evidences</b></th><td><%= @cm_test_record.execution_evidences %></td>
+    <th><b>Witnessed by:</b></th><td><%= @cm_test_record.assignee.name unless @cm_test_record.assignee.nil? %></td>
+   </tr>
+</table>
+
+<div style="clear: both;"></div>
+
+<p><strong>Execution Log</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test_record, :execution_log %>
+</div>
+
+<p><strong>Restrict or Observe</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test_record, :restrict_or_observe %>
+</div>
+
+<br /><hr />
+
+<%= render :partial => 'cm_ncs_objects/ncs_related',
+  :locals => { :cm_object => @cm_test_record, :cm_object_type => 'CmTestRecord',
+  :caller_cont => 'cm_test_records', :export => 'N', :add_new => 'Y'} %>
+
+<br />
+
+<h3>Other Executions</h3>
+<% if @other_execs.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'cm_test_records/other_execs' %>
+<% end %>
+
+
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_test_record %>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_test_record' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_test_records', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "Code: #{@cm_test_record.code}" %>

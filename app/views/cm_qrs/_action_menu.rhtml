@@ -1,0 +1,6 @@
+<div class="contextual">
+<%= watcher_tag(@cm_qr, User.current) %>
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_qrs', :action => 'index', :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_qrs', :action => 'edit', :id => @cm_qr }, :onclick => 'showAndScrollTo("update", "notes"); return false;', :class => 'icon icon-edit', :accesskey => accesskey(:edit)) %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_qrs', :action => 'destroy', :id => @cm_qr}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

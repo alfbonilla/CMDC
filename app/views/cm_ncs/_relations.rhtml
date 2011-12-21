@@ -1,0 +1,202 @@
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_nc, :cm_object_type => "CmNc",
+    :cm_object_cont => "cm_ncs", :export => "N" } %>
+
+<br /><hr />
+
+<h3>Related NCs</h3>
+<% if @cm_nc.cm_ncs_ncs.any? or @cm_nc.cm_ncs_parent_ncs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Related NC id</b></td>
+    <td align="center"><b>Status</b></td>
+    <td align="center"><b>Any Work Around?</b></td>
+    <td align="center"><b>Relation Details</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Created By</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_nc.cm_ncs_ncs.each do |cmNcNc| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% cmNcNc.child_nc.nil? ? nc_ref = "Unknown. Id:"+cmNcNc.child_nc_id.to_s : nc_ref = cmNcNc.child_nc.code %>
+<td align="center"><%= link_to h(nc_ref), :controller => 'cm_ncs', :action => 'show', :id => cmNcNc.child_nc.id %></td>
+<td align="center"><%= h(cmNcNc.child_nc.status.name) %></td>
+<td align="center"><%= image_tag 'true.png' if cmNcNc.child_nc.has_was? %></td>
+<td align="center"><%= h(cmNcNc.description) %></td>
+<td align="center"><%= h(cmNcNc.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(cmNcNc.author.login) %></td>
+<td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_ncs', :action => 'destroy',
+  :id => @project, :relation_id => cmNcNc.id, :nc_id => cmNcNc.cm_nc_id, :child_id => nc_ref},
+  :confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+
+<% @cm_nc.cm_ncs_parent_ncs.each do |cmNcNc| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% cmNcNc.parent_nc.nil? ? nc_ref = "Unknown. Id:"+cmNcNc.cm_nc_id.to_s : nc_ref = cmNcNc.parent_nc.code %>
+<td align="center"><%= link_to h(nc_ref), :controller => 'cm_ncs', :action => 'show', :id => cmNcNc.parent_nc.id %></td>
+<td align="center"><%= h(cmNcNc.parent_nc.status.name) %></td>
+<td align="center"><%= image_tag 'true.png' if cmNcNc.parent_nc.has_was? %></td>
+<td align="center"><%= h(cmNcNc.description) %></td>
+<td align="center"><%= h(cmNcNc.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(cmNcNc.author.login) %></td>
+<td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_ncs', :action => 'destroy',
+  :id => @project, :relation_id => cmNcNc.id, :nc_id => @cm_nc.id, :child_id => nc_ref},
+  :confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_nc.cm_ncs_ncs.size + @cm_nc.cm_ncs_parent_ncs.size %>
+    Non-Conformances related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Non-Conformances related</small></p>
+<% end %>
+<br />
+<%= link_to "Add Existing Child NC", {:controller => "cm_ncs_ncs", :action => 'new',
+    :project_id => @project, :id => @cm_nc.id, :nc_level => @cm_nc.type.level}, :class => 'icon icon-add' %>
+<%= link_to "Add Existing Brother NC", {:controller => "cm_ncs_ncs", :action => 'new',
+    :project_id => @project, :id => @cm_nc.id, :nc_level => @cm_nc.type.level - 1}, :class => 'icon icon-add' %>
+<% if @allow_relate_children %>
+  <%= link_to "Add New Child NC", {:controller => "cm_ncs", :action => 'new',
+    :id => @project, :nc_id => @cm_nc.id, :nc_level => @cm_nc.type.level}, :class => 'icon icon-add' %>
+<% end %>
+
+<div title="RelatedItems">
+<br /><hr />
+
+<%= render :partial => 'cm_ncs_objects/items_related',
+  :locals => { :cm_object => @cm_nc, :cm_object_type => "CmItem",
+  :caller_cont => "cm_ncs", :export => "N"} %>
+</div>
+
+<div style="clear: both;"></div>
+
+<br />
+
+<div class="splitcontentleft">
+<%= render :partial => 'cm_reqs/reqs_related', :locals => { :cm_object => @cm_nc, :export => "N" } %>
+<%= link_to "Add Existing TE", {:controller => "cm_ncs_objects", :action => 'new',
+    :x_id => @cm_nc.id, :x_type => 'CmReq', :caller_cont => 'cm_ncs'}, :class => 'icon icon-add' %>
+<hr />
+</div>
+
+<div class="splitcontentright">
+<br /><hr />
+<h3>Related Test Records</h3>
+<% if @cm_nc.test_records.any? %>
+  <table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>Test Record Code</b></td>
+      <td align="center"><b>Execution Date</b></td>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cm_nc.cm_ncs_objects.each do |cmT| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <% if cmT.x_type == "CmTestRecord" %>
+      <% creation_text = "Created by " + cmT.author.login + " on " + cmT.created_on.strftime("%Y/%m/%d") %>
+      <td align="center"><%= link_to h(cmT.test_record.code), {:controller => 'cm_test_records',
+          :action => 'show', :id => cmT.x_id}, :title => creation_text %></td>
+      <td align="center"><%= h(cmT.test_record.execution_date.strftime("%Y/%m/%d")) unless cmT.test_record.execution_date.nil? %></td>
+    <% end %>
+  </tr>
+  <% end %>
+  </tbody>
+  </table>
+<p style="text-align:right;"><small><%=@cm_nc.test_records.size %> Test Records related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Test Records related</small></p>
+<% end %>
+<hr />
+</div>
+
+<div style="clear: both;"></div>
+
+<br />
+
+<h3>Related Documents</h3>
+<% if @cm_nc.docs.any? %>
+  <table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>Document Code</b></td>
+      <td align="center"><b>Title</b></td>
+      <td align="center"><b>Relation Details</b></td>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cm_nc.cm_ncs_objects.each do |cmD| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <% if cmD.x_type == "CmDoc" %>
+      <% creation_text = "Created by " + cmD.author.login + " on " + cmD.created_on.strftime("%Y/%m/%d") %>
+      <td align="center"><%= link_to h(cmD.doc.code), {:controller => 'cm_docs',
+          :action => 'show', :id => cmD.x_id}, :title => creation_text %></td>
+      <td align="center"><%= h(cmD.doc.name) %></td>
+      <td align="center"><%= h(cmD.rel_string) %></td>
+    <% end %>
+  </tr>
+  <% end %>
+  </tbody>
+  </table>
+<p style="text-align:right;"><small><%=@cm_nc.docs.size %> Documents related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Documents related</small></p>
+<% end %>
+
+<br /><hr />
+
+<% if @cm_nc.type.relate_smrs %>
+
+<%= render :partial => 'cm_smrs/smrs_related', 
+  :locals => { :cm_object => @cm_nc, :cm_object_type => "CmNc", 
+  :caller_cont => "cm_ncs", :export => "N" } %>
+
+<% end %>
+  
+<h3>Related Work Arounds</h3>
+<% if @cm_nc.cm_was.any? %>
+  <table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>Work Around Code</b></td>
+      <td align="center"><b>Status</b></td>
+      <td align="center"><b>Owner</b></td>
+      <td align="center"><b>Creation Date</b></td>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cm_nc.cm_was.each do |cmWa| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= link_to h(cmWa.cm_wa_code), :controller => 'cm_was', :action => 'show', :id => cmWa.id %></td>
+  <td align="center"><%= h(cmWa.status) %></td>
+  <td align="center"><%= h(cmWa.author.name) %></td>
+  <td align="center"><%= h(cmWa.created_on.strftime("%Y/%m/%d")) %></td>
+  </tr>
+  <% end %>
+  </tbody>
+  </table>
+<p style="text-align:right;"><small><%=@cm_nc.cm_was.size %> Work Around related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Work Around related</small></p>
+<% end %>
+
+<br /><hr />
+
+<div title="Deliveries">
+<h3>Delivered in</h3>
+
+<% if @deliveries.any? %>
+  <%= render :partial => 'cm_deliveries/delivery_info' %>
+<p style="text-align:right;"><small><%=@deliveries.size %> Deliveries included</small></p>
+<% else %>
+<p style="text-align:right;"><small>Non-Conformance not delivered</small></p>
+<% end %>
+</div>

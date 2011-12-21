@@ -1,0 +1,125 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<%= render :partial => 'list_action_menu' %>
+
+<h2 class="risks">Risks Index</h2>
+<title>Index of Risks</title>
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="code">Risk code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <label for="name">Name: </label>
+    <%= text_field_tag("query1", params['query1'], :size => 40 ) %>
+    <label for="name">Status: </label>
+    <%= select_tag("query2", options_from_collection_for_select(@cm_risks_statuses, 'id', 'name')) %>
+    <label for="status">Impact: </label>
+    <%=select_tag("query3", options_for_select(@cm_risks_impacts, :selected => 0)) %>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<div id="imagen2" class="floting_center" style="display:none;">
+  <%= image_tag('/plugin_assets/redmine_cm/images/DQS-RisksExposure.jpg') %>
+</div>
+<div id="imagen3" class="floting_center" style="display:none;">
+  <%= image_tag('/plugin_assets/redmine_cm/images/DQS-RisksRanking.jpg') %>
+</div>
+
+<div id="table" class="autoscroll">
+  <% if @cm_risks.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_risks/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new risk", {:controller => "cm_risks", :action => 'new',
+      :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - Risks List" %>
+
+<div style="clear:both;"> </div>
+
+<br/>
+<br/>
+<b>Priority and Exposure Values Legend</b>
+<table class="list">
+  <thead>
+    <tr>
+      <th>Very High Risk</th>
+      <th>High Risk</th>
+      <th>Moderate Risk</th>
+      <th>Low Risk</th>
+      <th>Very Low Risk</th>
+      <th>Out of Date Risk</th>
+      <th>Closed Risk</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><%= image_tag 'VeryHighRisk.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'HighRisk.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'ModerateRisk.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'LowRisk.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'VeryLowRisk.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'Warning.png', :plugin => "redmine_cm" %></td>
+      <td align="center"><%= image_tag 'close_hl.png' %></td>
+    </tr>
+  </tbody>
+</table>
+
+<b>Priority and Exposure Tables</b>
+<table class="list">
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <td onmouseover="hide_show_image(this,'imagen2')" onmouseout="hide_show_image(this,'imagen2')">
+    <small>"Risks Exposure tables help"</small></td>
+    <td onmouseover="hide_show_image(this,'imagen3')" onmouseout="hide_show_image(this,'imagen3')">
+    <small>"Risks Priority tables help"</small></td>
+    </tr>
+    <tr>
+      <td><small>Risk Exposure represents the combination of the probability of occurrence and
+  the impact of the risk. It is a calculated value where risk exposure equals
+  probability multiplied by impact. Risk exposure is a standard quantitative
+  measure of organization’s risk, and is used to compare risks with each other.
+  Due to the limits on the ranges of both probability and impact, risk exposure
+  has a numerical value between 0.01 (very low exposure) and 4.95 (very high
+  exposure) and it is qualitatively classified with a level exposure as
+  indicated in the combinations of the figure</small></td>
+      <td><small>Priority Ranking: This is the current priority ranking of the risk relative
+  to all other risks. It is calculated combining the risk exposure value with
+  the time horizon as indicated in the figure below. Rank 1 is highest priority,
+  rank 2 next, and so on. Risks shall be treated in the order established by
+  this ranking.</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export Data', {:controller => "cm_exports", :action => 'export_data',
+      :object_to_export => 'CmRisk', :id => @project, :format => 'csv'}) %>
+</p>
+
+<script type="text/javascript">
+function hide_show_image(event,my_div_name){
+    div_id = my_div_name
+    if(document.getElementById(div_id).style.display == "none")
+      {
+        document.getElementById(div_id).style.display = ""
+      }
+    else
+      {
+       document.getElementById(div_id).style.display = "none"
+      }
+  }
+</script>

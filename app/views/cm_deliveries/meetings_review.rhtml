@@ -1,0 +1,27 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="deliveries"><%= @cm_delivery.code %> #<%= @cm_delivery.id %></h2>
+
+<p>
+<% if @revision_ok %>
+  <strong>Delivery looks ok: <%= image_tag 'true.png' %></strong>
+<% else %>
+  <strong>Delivery has errors: <%= image_tag 'false.png' %></strong>
+<% end %>
+</p>
+
+<br/>
+
+<div id="table" class="autoscroll">
+  <% if @cmdc_objs.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_deliveries/revision_list' %>
+  <% end %>
+</div>
+
+<p><a href="javascript:history.back()">Back</a></p> 
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_delivery.code} Meetings Review" %>

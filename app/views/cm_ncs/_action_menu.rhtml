@@ -1,0 +1,10 @@
+<div class="contextual">
+<%= watcher_tag(@cm_nc, User.current) %>
+<%= link_to("Meetings Summary", {:controller => 'cm_ncs', :action => 'summary', :id => @cm_nc }, :class => 'icon icon-stats') %>
+<%= link_to_if_authorized(l(:button_list), {:controller => 'cm_ncs', :action => 'index',
+        :id => @project }, :class => 'icon icon-multiple') %>
+<%= link_to_if_authorized(l(:button_update), {:controller => 'cm_ncs', :action => 'edit',
+        :id => @cm_nc }, :class => 'icon icon-edit') %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'cm_ncs', :action => 'destroy',
+        :id => @cm_nc}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %>
+</div>

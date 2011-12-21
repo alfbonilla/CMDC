@@ -1,0 +1,95 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="cmxport">Export data</h2>
+
+<p>Select the columns to export. Carriage return characters in text columns will be converted
+  to " || " characters to avoid the "several records" problem. </p>
+<p>Later in the target tool, replace the " || " chars sequence by the end of line one
+  (if MS Excel, convert text to data and replace "||" by <strong>control+j</strong>)</p>
+<p>Give a column separator, select if show codes or names and login or names (where available)</p>
+
+<% labelled_tabular_form_for :cm_export_columns, @cm_export_columns,
+                             :url => {:action => 'export_data'},
+                             :html => {:id => 'cm_export-form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+ <%= error_messages_for 'cm_export' %>
+
+  <% if @cm_export_columns.blank? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <div class="autoscroll">
+      <fieldset><legend>Filter</legend>
+        <%= label_tag 'filter_code', 'Code'%>
+        <%= text_field_tag 'filter_code', @filter_code, :size => 30 %>
+      </fieldset>
+    <p>
+    <%= label_tag 'lab_separator', 'Separator'%>
+    <%= text_field_tag 'separator', @separator, :size => 3, :maxlength => 3, :required => true %>
+    <%= label_tag 'lab_outfile', 'Output File Name'%>
+    <%= text_field_tag 'outfile', @outfile_name, :size => 100, :required => true %>
+    </p>
+    <p><small>Set TAB for tabs separated files</small></p>
+    <p>
+    <%= label_tag 'lab_userinfo', 'User Info'%>
+    <%= select_tag 'userinfo', "<option>Login</option><option>Name</option>" %>
+    <%= label_tag 'lab_codeinfo', 'Acronym(code)/Name'%>
+    <%= select_tag 'codeinfo', "<option>Code</option><option>Name</option>" %>
+    </p>
+    <p>
+    <%= label_tag 'lab_quotes', 'Export Data enclosed in quotes?'%>
+    <%= check_box_tag("data_quotes", params['data_quotes'], true) %>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    </p>
+    <%= hidden_field_tag :object_to_export, @object_to_export %>
+    <%= hidden_field_tag :format, @format %>
+
+    <table class="list">
+    <thead>
+    <th><%= link_to image_tag('toggle_check.png'), {},
+      :onclick => 'toggleColumnsSelection(Element.up(this, "form")); return false;',
+      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}", :format => @format,
+      :object_to_export => @object_to_export, :id => @project %>
+    </th>
+    <th><b>Column Name</b></th>
+    </thead>
+    <tbody>
+    <% @cm_export_columns.each do |col| %>
+      <tr id="cm_export-<%= col %> <%= cycle('odd', 'even') %>">
+        <td class="checkbox"><%= check_box_tag("ids[]", col, false, :id => nil) %></td>
+        <td><%= h(col.gsub('_', ' ').capitalize) %></td> 
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+    </div>
+    <br />
+
+  <% end %>
+
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+    <p><a href="javascript:history.back()">Back</a></p>
+  </p>
+
+<% end %>
+
+<% html_title "CM - Export" %>
+
+<script type="text/javascript">
+  function toggleColumnsSelection(el) {
+	var boxes = el.getElementsBySelector('input[type=checkbox]');
+	var all_checked = true;
+
+	for (i = 0; i < boxes.length; i++) { if (boxes[i].checked == false) { all_checked = false; } }
+        if (all_checked == false){
+          for (i = 0; i < boxes.length; i++) {
+            if (boxes[i].checked == false){
+              boxes[i].checked = true;
+              boxes[i].up('tr').addClassName('context-menu-selection');
+            }
+          }
+        }
+  }
+</script>

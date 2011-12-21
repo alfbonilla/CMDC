@@ -1,0 +1,41 @@
+<%= render :partial => 'list_action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="boards">Meetings Index</h2>
+<title>Index of Meetings </title>
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="cm_board_code">Meeting code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <label for="subject">Subject: </label>
+    <%= text_field_tag("query2", params['query2'], :size => 40 ) %>    
+    <label for="board_type">Meeting type: </label>
+    <%= select_tag("query1", options_from_collection_for_select(@cm_board_types, 'id', 'name')) %>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<div id="table" class="autoscroll">
+  <% if @cm_boards.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_boards/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new Meeting", {:controller => "cm_boards", :action => 'new', :id => @project},
+    :class => 'icon icon-add' %>
+
+<% html_title "CM - Meetings List" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export Data', {:controller => "cm_exports", :action => 'export_data',
+      :object_to_export => 'CmBoard', :id => @project, :format => 'csv'}) %>
+  ,
+  <%= link_to('Export to HTML', {:action => 'index', :id => @project, :format => 'cmdc'}) %>
+</p>

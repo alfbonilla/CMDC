@@ -1,0 +1,27 @@
+<% labelled_tabular_form_for :cm_objects_issue, @cm_objects_issue,
+     :html => {:id => 'cm_objects_issue-form',
+     :class => nil,
+     :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_objects_issue' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Existing Issues to Relate</legend>
+      <div id="issues_relation_fields">
+      <p><label for="description">Relation Comment: </label>
+      <%= text_field_tag 'relation_desc', @relation_desc, :required => true %></p>
+      <p><label for="subsys">Issues: </label>
+      <%#= select(@issue_selected ,"id", @data['issues_to_relate'].collect {|p| [p.id.to_s + " - " + p.subject, p.id]}) %>
+      <%=select_tag(:issue_selected, options_from_collection_for_select(@data['issues_to_relate'], :id, :subject)) %></p>
+      </div>
+
+      <small><%= link_to_remote(image_tag('create_button.png', :plugin => "redmine_cm",
+          :style => 'vertical-align: middle;', :alt => 'Relate Issue', :title => 'Relate Issue'),
+          {:url => {:controller => 'cm_objects_issues', :action => 'new_relation',
+          :caller_cont => @data['caller_cont'], :type => @data['type'], 
+          :cm_object_id => @data['cm_object_id'], :update => "existing_issues" },
+          :with => "Form.serialize('issues_relation_fields')"}) %></small>
+    </fieldset>
+  </div>
+  
+<% end %>

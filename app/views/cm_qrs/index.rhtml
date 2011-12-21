@@ -1,0 +1,26 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="qrs">Quality Records Index</h2>
+<title>Index of Quality Records</title>
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="code">QR code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <label for="status">Type: </label>
+    <%=select_tag("query1", options_from_collection_for_select(@cm_qr_types, 'id', 'name')) %>
+    <%= render :partial => 'cm_commons/subprojects' %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<div id="table" class="autoscroll">
+  <% if @cm_qrs.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_qrs/list' %>
+  <% end %>
+</div>
+
+<% html_title "CM - Quality Records List" %>

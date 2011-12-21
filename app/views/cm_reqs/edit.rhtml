@@ -1,0 +1,9 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="reqs"><%= @cm_req.code %> #<%= @cm_req.id %></h2>
+
+<%= error_messages_for 'cm_req' %>
+
+<%= render :partial => 'edit' %>
+
+<% html_title "CM - Edit Req #{@cm_req.code}" %>

@@ -1,0 +1,7 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="mlogs"><%= @cm_mnt_log.name %> #<%= @cm_mnt_log.id %></h2>
+
+<%= render :partial => 'edit' %>
+
+<% html_title "CM - Edit Maintenance Log #{@cm_mnt_log.name}" %>

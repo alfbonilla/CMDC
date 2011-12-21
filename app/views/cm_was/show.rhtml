@@ -1,0 +1,67 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs"><%= @cm_wa.cm_wa_code %> #<%= @cm_wa.id %></h2>
+
+<div>
+  <%= avatar(@cm_wa.author, :size => "50") %>
+  <% @cm_wa.nonConformance.nil? ? nc_ref = "Unknown. Id:"+@cm_wa.cm_nc_id.to_s : nc_ref = @cm_wa.nonConformance.code %>
+  <h3><%=h nc_ref %></h3>
+  <p class="author">
+    <%= authoring @cm_wa.created_on, @cm_wa.author %>.
+    <% if @cm_wa.created_on != @cm_wa.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_wa.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <% if @cm_wa.nonConformance.nil? %>
+  <th><b>Related NC:</b></th><td><%= nc_ref %></td>
+  <% else %>
+  <th><b>Related NC:</b></th><td><%= link_to nc_ref, :controller => "cm_ncs", :action => "show", :id => @cm_wa.cm_nc_id %></td>
+  <% end %>
+  <th><b>Owner:</b></th><td><%= @cm_wa.author.name %></td>
+</tr>
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_wa.status %></td>
+  <th><b>Type:</b></th><td><%= @cm_wa.wa_type %></td>
+</tr>
+<tr>
+  <th><b>Release to Remove/Removed:</b></th><td><%= @cm_wa.rlse_removed.name unless @cm_wa.rlse_removed.nil? %></td>
+  <th><b>Creation Date:</b></th><td><%= @cm_wa.created_on.strftime("%Y-%m-%d") %></td>
+</tr>
+<br />
+<tr>
+  <th><b>Description:</b></th><td><%= textilizable @cm_wa, :description %></td>
+  <th><b>Affected Items:</b></th><td><%= textilizable @cm_wa, :affected_items %></td>
+</tr>
+<tr>
+  <th><b>Constraints:</b></th><td><%= textilizable @cm_wa, :constraints %></td>
+  <th><b>Comments:</b></th><td><%= textilizable @cm_wa, :comments %></td>
+</tr>
+</table>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_was' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_was', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_wa.cm_wa_code} ##{@cm_wa.id}: #{nc_ref}" %>

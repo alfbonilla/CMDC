@@ -1,0 +1,57 @@
+ <%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm', :cache => true %>
+
+<h2 class="test_scenarios"><%= @cm_test_scenario.code %> #<%= @cm_test_scenario.id %></h2>
+
+<div>
+  <%= avatar(@cm_test_scenario.author, :size => "50") %>
+  <h3><%=h @cm_test_scenario.name %></h3>
+  <p class="author">
+    <%= authoring @cm_test_scenario.created_on, @cm_test_scenario.author %>.
+    <% if @cm_test_scenario.created_on != @cm_test_scenario.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_test_scenario.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Version:</b></th><td><%= @cm_test_scenario.version %></td>
+  <th><b>Assigned To:</b></th><td><%= @cm_test_scenario.assignee.name unless @cm_test_scenario.assignee.nil? %></td>
+</tr>
+</table>
+
+<div style="clear: both;"></div>
+
+<p><strong>Environmental Needs</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test_scenario, :environmental_needs %>
+</div>
+
+<p><strong>Starting Conditions</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test_scenario, :starting_conditions %>
+</div>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_test_scenario' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_test_scenarios', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_test_scenario.code} ##{@cm_test_scenario.id}: #{@cm_test_scenario.name}" %>

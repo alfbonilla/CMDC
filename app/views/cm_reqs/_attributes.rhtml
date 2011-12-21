@@ -1,0 +1,96 @@
+<% fields_for :cm_req, @cm_req, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :required => true %>
+    <% if @cm_req.new_record? %>
+      <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'new-cm_req-form'} %>
+    <% else %>
+      <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+    <% end %>
+  </p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :name, :required => true %></p>
+    <p><%= f.text_field :version, :size => 10 %></p>
+    <p><%= f.select :verification_method_id, (@verif_methods.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.select :assigned_to_id, (@cm_req_assignees.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.select :type_id, (@cm_req_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+
+    <%= observe_field :cm_req_type_id, :frequency => 0.5,
+                      :url => {:action => :type_modified, :only_path => :false},
+                      :with => "'type_id='+encodeURIComponent(value)" %>
+
+    <p><%= f.select :classification_id, (@cm_req_classifications.collect {|p| [p.name, p.id]}) %></p>
+    <% if @cm_req.status.blank? %>
+      <p><% f.text_field :status, :value => change_t_status_to_s(1), :disabled => true %></p>
+    <% else %>
+      <p><% f.text_field :status, :value => change_t_status_to_s(:status), :disabled => true %></p>
+    <% end %>
+    <p><%= f.select :subsystem_id, (@cm_subsystems.collect {|p| [p.code, p.id]}), :include_blank => true %></p>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div id="soc_fields">
+    <% if @cm_req.soc_control_required? %>
+    <fieldset><legend>Compliance Details</legend>
+    <div class="splitcontentleft">
+      <p><%= f.select :compliance, [['Compliant', 1], ['Compliant with Assumptions', 2], ['Partially Compliant', 3], ['No Compliant', 4]] %></p>
+    </div>
+    <div class="splitcontentright">
+      <p><%= f.text_area :assumption, :cols => 55, :rows => 2 %></p>
+    </div>
+    </fieldset>
+    <% end %>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div id="fields_full_window">
+    <p><%= f.text_area :description, :cols => 60, :rows => 4, :class => 'wiki-edit' %></p>
+    <%= wikitoolbar_for 'cm_req_description' %>
+    <%= call_hook(:new_cm_req_edit_description_bottom, { :cm_req => @cm_req, :form => f }) %>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div class="splitcontentleft">
+    <p><%= f.check_box :optional %></p>
+    <p><%= f.text_field :display_order  %></p>
+    <p><%= f.text_field :place_in_doc  %></p>
+  </div>
+  <div class="splitcontentright">
+    <p><%= f.check_box :no_descendants %></p>
+    <p><%= f.check_box :no_ascendants %></p>
+    <p><%= f.text_field :created_on, :size => 10, :disabled => true %></p>
+    <p><%= f.text_field :updated_on, :size => 10, :disabled => true %></p>
+  </div>
+
+  <div style="clear:both;"> </div>
+
+  <div id="fields_full_window2">
+    <p><%= f.text_area :comments, :cols => 60, :rows => 2 %></p>
+  </div>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_reqs" %></p>
+  <p><%= g.hidden_field :father_id, :value => @father_id %></p>
+<% end %>
+
+<% if @cm_req.new_record? && User.current.allowed_to?(:add_cm_req_watchers, @project) %>
+  <p><label><%= l(:label_issue_watchers) %></label>
+  <% @cm_req.project.users.sort.each do |user| %>
+    <label class="floating"><%= check_box_tag 'cm_req[watcher_user_ids][]', user.id,
+      @cm_req.watched_by?(user) %> <%=h user %></label>
+  <% end %>
+  </p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_req_code')).value=new_code;}
+</script>

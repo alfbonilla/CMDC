@@ -1,0 +1,40 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+  <table class="list">
+    <thead>
+      <th><b>Id</b></th>
+      <th><b>Acronym (for Codes)</b></th>
+      <th><b>Name</b></th>
+      <th><b>Description</b></th>
+      <th><b>Level</b></th>
+      <th><b>Can relate SMRs</b></th>
+      <th><b>Is Default Value</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </thead>
+  <tbody>
+  <% @cm_ncs_types.each do |cm_ncs_type| %>
+    <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <td><%= h(cm_ncs_type.id) %></td>
+      <td><%= h(cm_ncs_type.acronym) %></td>
+      <td><%= h(cm_ncs_type.name) %></td>
+      <td><%= h(cm_ncs_type.description) %></td>
+      <td><%= h(cm_ncs_type.level) %></td>
+      <td align="center"><%= image_tag 'true.png' if cm_ncs_type.relate_smrs? %></td>
+      <td align="center"><%= image_tag 'true.png' if cm_ncs_type.is_default? %></td>
+      <% unless cm_ncs_type.project_id == 0 %>
+      <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_ncs_types',
+              :action => 'edit', :id => cm_ncs_type}) %></td>
+      <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_types', 
+              :action => 'destroy', :id => cm_ncs_type},:confirm => l(:text_are_you_sure),
+              :method => :post) %></td>
+      <% else %>
+      <td><small style="font-style: italic">Common Value</small></td>
+      <td><small style="font-style: italic">Common Value</small></td>
+      <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+  </table>
+</div>
+<% end %>

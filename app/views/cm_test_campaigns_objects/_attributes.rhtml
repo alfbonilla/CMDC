@@ -1,0 +1,23 @@
+<b>Relationship between </b><%= @cm_test_campaign.name unless @cm_test_campaign.nil? %><b> and:</b>
+<br />
+<br />
+
+<% fields_for :cm_test_campaigns_object, @cm_test_campaigns_object, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.hidden_field :cm_test_campaign_id, :value => @cm_test_campaign_id %></p>
+  <p><%= f.hidden_field :id, :value => @cm_test_campaigns_object.id %></p>
+  <% if  @rest_of_tests.nil? %>
+    <p><%= f.text_field :cm_test_id, :value => @cm_test_id, :disabled => true %></p>
+  <% else %>
+    <p><%= f.select :cm_test_id, ( @rest_of_tests.collect {|p| [p.code + "-" + p.name, p.id]}), :required => true %></p>
+    <p><%= f.select :cm_test_scenario_id, ( @rest_of_scenarios.collect {|p| [p.cm_test_scenario.code, p.x_id]}), :required => true %></p>
+    
+
+  <% end %>
+    <p><%= f.select :assigned_to_id, (@cm_test_record_assignees.collect {|p| [p.name, p.id]}), :include_blank => true %></p>
+    <p><%= f.text_field :execution_order, :value => @number_of_test_related, :size => 10 %></p>
+    <p><%= f.text_field :comments, :size => 100 %><i>(Comments)</i></p>
+    <%= observe_field :cm_test_campaigns_object_cm_test_id, :frequency => 0.5,
+                    :update => 'cm_test_campaigns_object_cm_test_scenario_id',
+                    :url => {:controller => 'cm_test_scenarios',:action => :reload_scenario_box, :only_path => :false},
+                    :with => "'cm_test_id='+encodeURIComponent(value)" %>
+<% end %>

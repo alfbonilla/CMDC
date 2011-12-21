@@ -1,0 +1,20 @@
+<% if @coming_from_purchase == "N" %>
+  <b>Create Relationship between Item </b><%=  @item_to_relate.name %><b> and:</b>
+<% else %>
+    <b>Create Relationship between Purchase Order </b><%=  @cm_purchase_order_id %><b> and:</b>
+<% end %>
+<br />
+<br />
+<% fields_for :cm_items_item, @cm_items_item, :builder => TabularFormBuilder do |f| %>
+  <%= f.hidden_field :cm_item_id, :value => @item_to_relate.id %>
+  <p><%= f.select :child_item_id, (@rest_of_items.collect {|p| [p.code + " - " + p.name, p.id]}) %></p>
+  <% if @coming_from_purchase == "N" %>
+    <p><%= f.text_field :description %></p>
+    <p><%= f.select :relation_type, CmItemsItem::ITEM_RELATIONS.collect %></p>
+  <% end %>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+        <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+        <p><%= g.hidden_field :cm_purchase_order_id, :value => @cm_purchase_order_id %></p>
+        <p><%= g.hidden_field :coming_from_purchase, :value => @coming_from_purchase %></p>
+<% end %>

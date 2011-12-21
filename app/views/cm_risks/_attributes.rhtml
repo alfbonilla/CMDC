@@ -1,0 +1,69 @@
+<% fields_for :cm_risk, @cm_risk, :builder => TabularFormBuilder do |f| %>
+
+
+  <p><%= f.text_field :code, :size => 50, :required => true %>
+     <% if @cm_risk.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+      :caller_cont => 'cm_risks', :cmdc_object => change_cmdc_object_to_i('Risk') }} ) %></small>
+    <% else %>
+      <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+    <% end %>
+  </p>
+<div class="splitcontentleft">
+  <p><%= f.text_field :name, :size => 50, :required => true %></p>
+  <p><%= f.select :impact, [['Very Low', 1], ['Low', 2], ['Moderate', 3], ['High', 4], ['Very High', 5]] %></p>
+  <p><%= f.text_field :probability, :size => 3, :required => true %><b>%</b></p>
+  <p><%= f.select :assigned_to_id, (@cm_risk_assignees.collect {|p| [p.name, p.id]}), :required => true %></p>
+
+  <fieldset><legend>Risk Impact Evaluation</legend>
+    <p><%= f.text_field :risk_exposure, :size => 2, :disabled => true %><small><i>Based on impact and probability</i></small></p>
+    <p><%= f.text_field :priority_ranking, :size => 2, :disabled => true %><small><i>Based on exposure and days to impact</i></small></p>
+    <p><small><%= link_to "Risk tables help", { :action => "risk_tables" }, 
+        :popup => ['risk_tables', 'height=400,width=800,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes'] %></small></p>
+  </fieldset>
+</div>
+
+<div class="splitcontentright">
+  <p><%= f.select :status_id, (@cm_risk_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
+  <p><%= f.select :type_id, (@cm_risk_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+  <p><%= f.text_field :detection_date, :required => true, :size => 10 %><%= calendar_for('cm_risk_detection_date') %></p>
+  <p><%= f.text_field :closing_date, :size => 10, :disabled => true %></p>
+  <fieldset><legend>Risk Impact Timescale</legend>
+    <p><%= f.text_field :impact_ini_date, :required => true, :size => 10 %><%= calendar_for('cm_risk_impact_ini_date') %></p>
+    <p><%= f.text_field :impact_end_date, :required => true, :size => 10 %><%= calendar_for('cm_risk_impact_end_date') %></p>
+  </fieldset>
+</div>
+
+<div style="clear:both;"> </div>
+
+<div id="fields_full_window">
+  <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  <%= wikitoolbar_for 'cm_risk_description' %>
+  <%= call_hook(:new_cm_risk_edit_description_bottom, { :cm_risk => @cm_risk, :form => f }) %>
+  <p><%= f.text_area :mitigation, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  <%= wikitoolbar_for 'cm_risk_mitigation' %>
+  <%= call_hook(:new_cm_risk_edit_mitigation_bottom, { :cm_risk => @cm_risk, :form => f }) %>
+  <p><%= f.text_area :comments, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  <%= wikitoolbar_for 'cm_risk_comments' %>
+  <%= call_hook(:new_cm_risk_edit_comments_bottom, { :cm_risk => @cm_risk, :form => f }) %>
+</div>
+
+<div style="clear:both;"> </div>
+
+<% end %>
+
+<% if @cm_risk.new_record? && User.current.allowed_to?(:add_cm_risk_watchers, @project) -%>
+<p><label><%= l(:label_issue_watchers) %></label>
+<% @cm_risk.project.users.sort.each do |user| -%>
+<label class="floating"><%= check_box_tag 'cm_risk[watcher_user_ids][]', user.id,
+  @cm_risk.watched_by?(user) %> <%=h user %></label>
+<% end -%>
+</p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_risk_code')).value=new_code;}
+</script>

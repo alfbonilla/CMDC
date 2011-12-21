@@ -1,0 +1,21 @@
+<h2 class="rids">New RID relation with <%= @item_name %></h2>
+
+  <% labelled_tabular_form_for :cm_rids_object, @cm_rids_object,
+       :html => {:id => 'cm_rids_object-form',
+       :class => nil,
+       :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_rids_object' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Related RID Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - New RID-#{@cm_rids_object.x_type} Relation" %>

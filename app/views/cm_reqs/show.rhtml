@@ -1,0 +1,132 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="reqs"><%= @cm_req.code %> #<%= @cm_req.id %> <b>-</b> <%= @cm_req.type.name %></h2>
+
+<%= avatar(@cm_req.author, :size => "50") %>
+<h3><%=h @cm_req.name %></h3>
+<p class="author">
+  <%= authoring @cm_req.created_on, @cm_req.author %>.
+  <% if @cm_req.created_on != @cm_req.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_req.updated_on)) %>.
+  <% end %>
+</p>
+
+<br />
+
+<div id="change_tracking">
+  <fieldset class="tabular"><legend>Change Tracking Operations</legend>
+    <table class="attributes">
+      <thead></thead>
+      <tbody>
+    <% if @cm_req.status == 2 %>
+      <td><%= link_to("Change Log", {:controller => 'cm_reqs', :action => 'change_log',
+        :id => @cm_req}, :class => 'icon icon-multiple') %></td>
+    <% end %>
+    <% if @cm_req.status == 2 %>
+      <td><%= link_to_if_authorized("Approve", {:controller => 'cm_reqs', :action => 'approve',
+        :id => @cm_req}, :class => 'icon icon-checked') %></td>
+      <td><%= link_to_if_authorized "Reject", {:controller => 'cm_reqs', :action => 'reject',
+        :id => @cm_req}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-del' %></td>
+    <% end %>
+    <% if @cm_req.status == 3 %>
+      <td><%= link_to_if_authorized "Propose", {:controller => 'cm_reqs', :action => 'propose',
+        :id => @cm_req}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-history' %></td>
+    <% else %>
+      <td><%= link_to_if_authorized "Dismiss", {:controller => 'cm_reqs', :action => 'dismiss',
+        :id => @cm_req}, :confirm => l(:text_are_you_sure), :method => :post, :class => 'icon icon-move' %></td>
+    <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+
+<br />
+
+<div id="whole_form">
+
+<table class="attributes">
+<tr>
+  <th><b>Classification:</b></th><td><%= @cm_req.classification.name %></td>
+  <th><b>Status:</b></th><td><%= change_t_status_to_s(@cm_req.status) %></td>
+</tr>
+<tr>
+  <th><b>Assigned To:</b></th><td><%= @cm_req.assignee.name unless @cm_req.assignee.nil? %></td>
+  <th><b>Type:</b></th><td><%= @cm_req.type.name %></td>
+</tr>
+<tr>
+  <th><b>Version:</b></th><td><%= @cm_req.version %></td>
+  <th><b>Optional:</b></th><td><%= @cm_req.optional %></td>
+</tr>
+<tr>
+  <th><b>Verification Method:</b></th><td><%= @cm_req.verification_method.name unless @cm_req.verification_method.nil? %></td>
+  <th><b>Subsystem:</b></th><td><%= @cm_req.subsystem.name unless @cm_req.subsystem.nil? %></td>
+</tr>
+<tr>
+  <th><b>No Ancestors:</b></th><td><%= @cm_req.no_ascendants %></td>
+  <th><b>No Descendants:</b></th><td><%= @cm_req.no_descendants %></td>
+</tr>
+<tr>
+  <th><b>Order:</b></th><td><%= @cm_req.display_order %></td>
+  <th><b>Place in Doc:</b></th><td><%= @cm_req.place_in_doc %></td>
+</tr>
+</table>
+
+<div style="clear: both;"></div>
+
+<p><strong>Description</strong></p>
+<div class="wiki">
+<%= textilizable @cm_req, :description %>
+</div>
+
+<% if @cm_req.soc_control_required? %>
+<table><tr>
+    <td><b>Compliance:</b><%= change_compliance_to_s(@cm_req.compliance) %></td>
+    <td><b>Assumption:</b><%= @cm_req.assumption %></td>
+</tr></table>
+<% end %>
+
+<p><strong>Comments</strong></p>
+<div class="wiki">
+<%= textilizable @cm_req, :comments %>
+</div>
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+<hr />
+
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_req %>
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_reqs' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+</div>
+
+<% if authorize_for('cm_reqs', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_req %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_req.code} ##{@cm_req.id}: #{@cm_req.name}" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export to HTML', {:action => 'show', :id => @cm_req, :format => 'cmdc' }) %>
+</p>

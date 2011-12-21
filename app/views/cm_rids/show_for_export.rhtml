@@ -1,0 +1,77 @@
+<h2 class="rids"><%= @cm_rid.code %> #<%= @cm_rid.id %></h2>
+
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= change_internal_status_to_s(@cm_rid.internal_status_id) %></td>
+  <th><b>Close Out:</b></th><td><%= @cm_rid.close_out.name %></td>
+</tr>
+<tr>
+  <th><b>Assigned To:</b></th><td><%= @cm_rid.assignee.name unless @cm_rid.assignee.nil? %></td>
+</tr>
+<tr>
+  <th><b>Due Date:</b></th><td><%= @cm_rid.doc_due_date.strftime("%Y/%m/%d") if @cm_rid.doc_due_date? %></td>
+  <th><b>Generation Date:</b></th><td><%= @cm_rid.generation_date.strftime("%Y/%m/%d") if @cm_rid.generation_date? %></td>
+</tr>
+</table>
+<fieldset><legend>Originator Data</legend>
+<table class="attributes">
+<tr>
+  <th><b>Originator:</b></th><td><%= @cm_rid.originator %></td>
+  <th><b>Company:</b></th><td><%= @cm_rid.originator_company.name %></td>
+  <th><b>Open on Release:</b></th><td><%= @cm_rid.open_release.name unless @cm_rid.open_release.nil? %></td>
+</tr>
+<p><strong>Recommendation</strong></p>
+<div class="wiki">
+<%= textilizable @cm_rid, :recommendation %>
+</div>
+<p><strong>Discrepancy</strong></p>
+<div class="wiki">
+<%= textilizable @cm_rid, :discrepancy %>
+</div>
+</table>
+</fieldset>
+<fieldset><legend>Affected Document</legend>
+<table class="attributes">
+<tr>
+  <th><b>Name:</b></th><td><%= @cm_rid.affected_doc.name unless @cm_rid.affected_doc.nil? %></td>
+  <th><b>Version:</b></th><td><%= @cm_rid.affected_doc_version %></td>
+</tr>
+<tr>
+  <th><b>Location:</b></th><td><%= @cm_rid.problem_location %></td>
+</tr>
+</table>
+</fieldset>
+
+<hr />
+<fieldset><legend>Solution</legend>
+<p><strong>Author Response</strong></p>
+<div class="wiki">
+<%= textilizable @cm_rid, :author_response %>
+</div>
+<p><strong>Disposition</strong></p>
+<div class="wiki">
+<%= textilizable @cm_rid, :disposition %>
+</div>
+<table class="attributes">
+  <tr>
+    <th><b>Implemented on Release:</b></th><td><%= @cm_rid.implementation_release.name unless @cm_rid.implementation_release.nil? %></td>
+  </tr>
+  <tr>
+    <th><b>Implemented on Location:</b></th><td><%= @cm_rid.implementation_location %></td>
+    <th><b>Reviewed:</b></th><td><%= @cm_rid.reviewed %></td>
+  </tr>
+</table>
+</fieldset>
+
+<p><strong>Comments</strong></p>
+<div class="wiki">
+<%= textilizable @cm_rid, :comments %>
+</div>
+
+<%= render :partial => 'cm_reqs/reqs_related', 
+  :locals => { :cm_object => @cm_rid, :export => "Y" } %>
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_rid, :cm_object_type => "CmRid", 
+    :cm_object_cont => "cm_rids", :export => "Y" } %>

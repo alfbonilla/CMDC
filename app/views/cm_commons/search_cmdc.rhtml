@@ -1,0 +1,86 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="searchcmdc">Search in CM/DC</h2>
+
+<% labelled_tabular_form_for :cm_search_objects, @cm_search_objects,
+                             :html => {:id => 'cm_search_objects-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+<%= error_messages_for 'cm_search_objects' %>
+
+<label for="object">Object: </label>
+<%=select_tag("selected_object", options_for_select(@cmdc_objects, :selected => 0)) %>
+<label for="text_to_search">Text to Search: </label>
+<%= text_field_tag 'text_to_search', @text_to_search, :required => true %>
+
+<p><strong>Fields reviewed:</strong>
+<ul>
+  <li>Items                 : <small>Description and Comments</small></li>
+  <li>Maintenance Logs      : <small>Installation Log and Configuration Comments</small></li>
+  <li>Traceability Elements : <small>Description and Comments</small></li>
+  <li>Request for Changes   : <small>Description and Reason</small></li>
+  <li>Documents             : <small>Description and Physical Location</small></li>
+  <li>Meetings              : <small>Board Body and Conclusions</small></li>
+  <li>Non-Conformances      : <small>Description and Analysis</small></li>
+  <li>Work Around           : <small>Description and Comments</small></li>
+  <li>RIDs                  : <small>Discrepancy, Disposition and Author Response</small></li>
+  <li>Risks                 : <small>Description and Comments</small></li>
+  <li>SMRs                  : <small>Description</small></li>
+  <li>Tests                 : <small>Objective, Steps and Checkpoints and Pass Fail Criteria</small></li>
+  <li>Tests Records         : <small>Execution Log and Execution Evidences</small></li>
+  <li>Tests Campaigns       : <small>Description</small></li>
+  <li>Deliveries            : <small>Description</small></li>
+</ul>
+</p>
+
+<% unless @list.nil? %>
+<div id="table" class="autoscroll">
+  <% if @list.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th><b>Code</b></th>
+      <th><b>Name/Type</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @list.each do |ii| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <% case @caller_cont
+           when "cm_boards" %>
+            <td align="center"><%= link_to ii.cm_board_code, :controller => @caller_cont,
+                :action => "show", :id => ii.id %></td>
+        <%  else %>
+            <td align="center"><%= link_to ii.code, :controller => @caller_cont,
+                :action => "show", :id => ii.id %></td>
+        <% end %>
+        <% case @caller_cont
+           when "cm_boards", "cm_was" %>
+          <td><%= h(ii.type.name) %></td>
+        <% when "cm_rids" %>
+          <td><%= h(ii.originator) %></td>
+        <% when "cm_smrs", "cm_test_records" %>
+          <td>---</td>
+        <%  else %>
+            <td><%= link_to ii.name, :controller => @caller_cont,
+                :action => "show", :id => ii.id %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <% end %>
+</div>
+<% end %>
+
+<br />
+<p><input type="submit" value="Search" />
+<a href="javascript:history.back()">Back</a></p>
+
+<% end %>
+

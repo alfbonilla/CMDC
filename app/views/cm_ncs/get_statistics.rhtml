@@ -1,0 +1,146 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="ncrs">Get Statistics</h2>
+
+<% labelled_tabular_form_for :cm_get_filter, @cm_get_filter,
+                             :html => {:id => 'cm_get_filter-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_get_filter' %>
+
+  <label for="code">Code: </label>
+  <%= text_field_tag 'codes_to_approve', @codes_to_approve, :required => true %>
+  <ul>
+    <li>Specify the code (or part of the code) of the NCS to be included in the statistic. </li>
+    <li>Set % for ALL the NCS</li>
+  </ul>
+  <% if @cm_subsystems %>
+    <label for="subsys">Subsystem: </label>
+    <%=select_tag("query_sub", options_from_collection_for_select(@cm_subsystems, 'id', 'name')) %>
+  <% end %>
+
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+    <a href="javascript:history.back()">Back</a>
+  </p>
+
+  <% if @tot_ncs %>
+    <% if @tot_ncs > 0 %>
+
+      <p><b>Total Number of NCS selected: <%= @tot_ncs.to_s %></b></p>
+
+      <div class="splitcontentleft">
+      <br /><hr />
+      <h3>Distribution by Status</h3>
+      <table>
+        <% @ncs_status.each do |nc| %>
+        <% perc=nc.count_by_status.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <th><%= nc.status.name %></th>
+          <td><%= nc.count_by_status %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Distribution by Type</h3>
+      <table>
+        <% @ncs_type.each do |nc| %>
+        <% perc=nc.count_by_type.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <th><%= nc.type.name %></th>
+          <td><%= nc.count_by_type %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Distribution by Status and Type</h3>
+      <table>
+        <% @ncs_status_type.each do |nc| %>
+        <% perc=nc.count_by_status_type.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <th><%= nc.type.name %> : <%= nc.status.name %></th>
+          <td><%= nc.count_by_status_type %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Distribution by Status, Type and Classification</h3>
+      <table>
+        <% @ncs_type_classification.each do |nc| %>
+        <% perc=nc.count_by_type_classification.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <th><%= nc.type.name %> : <%= nc.status.name %> : <%= nc.classification.name %> </th>
+          <td><%= nc.count_by_type_classification %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+      </div>
+      <div class="splitcontentright">
+      <br /><hr />
+      <h3>Distribution by Classification</h3>
+      <table>
+        <% @ncs_classification.each do |nc| %>
+        <% perc=nc.count_by_classification.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <th><%= nc.classification.name %></th>
+          <td><%= nc.count_by_classification %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Distribution by Originator Company</h3>
+      <table>
+        <% @ncs_company.each do |nc| %>
+        <% perc=nc.count_by_company.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <th><%= nc.company.name %></th>
+          <td><%= nc.count_by_company %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      <br /><hr />
+
+      <h3>Distribution by Subsystem, Status and Type</h3>
+      <table>
+        <% @ncs_status_type_subsystem.each do |nc| %>
+        <% perc=nc.count_by_subsystem.to_i * 100.0 / @tot_ncs %>
+        <tr>
+          <% if nc.subsystem.nil? %>
+            <th>Not Assigned : <%= nc.type.name %> : <%= nc.status.name %></th>
+          <%  else %>
+            <th><%= nc.subsystem.name %> : <%= nc.type.name %> : <%= nc.status.name %></th>
+          <% end %>
+          <td><%= nc.count_by_subsystem %></td>
+          <td>(<%= perc %> %)</td>
+        </tr>
+        <% end %>
+      </table>
+
+      </div> 
+
+    <% else %>
+      <p>No NCS found with selected code</p>
+    <% end %>
+  <% end %>
+
+<% end %>
+
+<% html_title "CM - NCs - Get Statistics" %>

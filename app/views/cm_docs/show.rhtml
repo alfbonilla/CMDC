@@ -1,0 +1,75 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="cmdocs"><%= @cm_doc.code %> #<%= @cm_doc.id %></h2>
+
+<div>
+  <%= avatar(@cm_doc.author, :size => "50") %>
+  <h3><%=h @cm_doc.name %></h3>
+  <p class="author">
+    <%= authoring @cm_doc.created_on, @cm_doc.author %>.
+    <% if @cm_doc.created_on != @cm_doc.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_doc.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Applicable Version:</b></th><td><%= @cm_doc.applicable_version %></td>
+  <th><b>Approved Date:</b></th><td><%= @cm_doc.approved_date.strftime("%Y-%m-%d") unless @cm_doc.approved_date.nil? %></td>
+</tr>
+<tr>
+  <th><b>Type:</b></th><td><%= @cm_doc.type.name %></td>
+  <th><b>Category:</b></th><td><%= @cm_doc.category.name %></td>
+  <th><b>Subsystem:</b></th><td><%= @cm_doc.subsystem.name unless @cm_doc.subsystem.nil? %></td>
+</tr>
+<tr>
+  <th><b>Deliverable:</b></th><td><%= image_tag 'true.png' if @cm_doc.deliverable? %></td>
+  <th><b>Referable:</b></th><td><%= image_tag 'true.png' if @cm_doc.referable? %></td>
+  <th><b>Approval Level:</b></th><td><%= change_approval_level_to_s(@cm_doc.approval_level) %></td>
+</tr>
+<tr>
+  <th><b>Originator Company:</b></th><td><%= @cm_doc.company.name unless @cm_doc.company.nil? %></td>
+  <th><b>External Identification:</b></th><td><%= @cm_doc.external_doc_id %></td>
+  <th><b>Baseline:</b></th><td><%= change_baseline_to_s(@cm_doc.baseline) %></td>
+</tr>
+</table>
+
+<p><strong>Description</strong></p>
+<div class="wiki">
+  <%= textilizable @cm_doc, :description %>
+</div>
+
+<div id="relations">
+<%= render :partial => 'relations' %>
+</div>
+
+<br /><hr />
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_doc %>
+<hr />
+
+<% if @journals.any? %>
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_docs' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_docs', 'edit') %>
+  <div id="update" style="display:none;">
+    <h3><%= l(:button_update) %></h3>
+    <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_doc %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_doc.id}: #{@cm_doc.name}" %>

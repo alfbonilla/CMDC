@@ -1,0 +1,132 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="risks"><%= @cm_risk.code %> #<%= @cm_risk.id %></h2>
+
+<div>
+<%= avatar(@cm_risk.author, :size => "50") %>
+<h3><%=h @cm_risk.name %></h3>
+<p class="author">
+  <%= authoring @cm_risk.created_on, @cm_risk.author %>.
+  <% if @cm_risk.created_on != @cm_risk.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_risk.updated_on)) %>.
+  <% end %>
+</p>
+</div>
+
+<div id="imagen2" class="floting_center" style="display:none;">
+  <%= image_tag('/plugin_assets/redmine_cm/images/DQS-RisksExposure.jpg') %>
+</div>
+<div id="imagen3" class="floting_center" style="display:none;">
+  <%= image_tag('/plugin_assets/redmine_cm/images/DQS-RisksRanking.jpg') %>
+</div>
+
+<fieldset class="tabular"><legend>Risk Properties</legend>
+<table class="attributes">
+<tr>
+  <th><b>Impact:</b></th><td><%= change_impact_to_s(@cm_risk.impact) %></td>
+  <th><b>Probability:</b></th><td><%= @cm_risk.probability %></td>
+</tr>
+<tr>
+  <th><b>Status:</b></th><td><%= @cm_risk.status.name %></td>
+  <th><b>Type:</b></th><td><%= @cm_risk.type.name %></td>
+  <th><b>Assigned To:</b></th><td><%= @cm_risk.assignee.name %></td>
+</tr>
+<tr>
+  <th><b>Detection Date:</b></th><td><%= @cm_risk.detection_date.strftime("%Y-%m-%d") %></td>
+  <th><b>Closing Date:</b></th><td><%= @cm_risk.closing_date.strftime("%Y-%m-%d") unless @cm_risk.closing_date.nil? %></td>
+</tr>
+</table>
+</fieldset>
+<fieldset class="tabular"><legend>Risk Impact Timescale</legend>
+<table class="attributes">
+<tr>
+  <th><b>Impact Initial Date:</b></th><td><%= @cm_risk.impact_ini_date.strftime("%Y-%m-%d") %></td>
+  <th><b>Impact End Date:</b></th><td><%= @cm_risk.impact_end_date.strftime("%Y-%m-%d") %></td>
+</tr>
+</table>
+</fieldset>
+<fieldset class="tabular"><legend>Risk Impact Evaluation</legend>
+<table class="attributes">
+<tr>
+  <th><b>Risk Exposure:</b></th><td><b><%= change_impact_to_s(@cm_risk.risk_exposure) %></b></td>
+  <th><b>Priority Ranking:</b></th><td><b><%= change_impact_to_s(@cm_risk.priority_ranking) %></b></td>
+</tr>
+<tr>
+  <th></th><td><small><i>(Based on impact and probability)</i></small></td>
+  <th></th><td><small><i>(Based on exposure and days to impact)</i></small></td>
+</tr>
+<tr>
+  <th></th>
+  <td onmouseover="hide_show_image(this,'imagen2')" onmouseout="hide_show_image(this,'imagen2')">
+    <small>"Risks Exposure tables help"</small></td>
+  <th></th>
+  <td onmouseover="hide_show_image(this,'imagen3')" onmouseout="hide_show_image(this,'imagen3')">
+    <small>"Risks Priority tables help"</small></td>
+</tr>
+</table>
+</fieldset>
+<p><strong>Description</strong></p>
+<div class="wiki">
+<%= textilizable @cm_risk, :description %>
+</div>
+<p><strong>Mitigation</strong></p>
+<div class="wiki">
+<%= textilizable @cm_risk, :mitigation %>
+</div>
+<p><strong>Comments</strong></p>
+<div class="wiki">
+<%= textilizable @cm_risk, :comments %>
+</div>
+
+<div style="clear:both;"> </div>
+<br />
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+<hr />
+
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_risks' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_risks', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_risk %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% other_formats_links do |f| %>
+	<%= f.link_to 'Atom', :url => {:key => User.current.rss_key} %>
+	<%= f.link_to 'PDF' %>
+<% end %>
+
+<% html_title "#{@cm_risk.code} ##{@cm_risk.id}: #{@cm_risk.name}" %>
+
+<script type="text/javascript">
+function hide_show_image(event,my_div_name){
+    div_id = my_div_name
+    if(document.getElementById(div_id).style.display == "none")
+      {
+        document.getElementById(div_id).style.display = ""
+      }
+    else
+      {
+       document.getElementById(div_id).style.display = "none"
+      }
+  }
+</script>

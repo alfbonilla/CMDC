@@ -1,0 +1,28 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+<table class="list">
+<thead>
+  <th><b>Id</b></th>
+  <th><b>Name</b></th>
+  <th><b>Revision at load</b></th>
+  <th><b>Edit</b></th>
+  <th><b>Delete</b></th>
+</thead>
+<tbody>
+<% @cm_source_files.each do |cm_source_file| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= h(cm_source_file.id) %></td>
+    <td><%= h(cm_source_file.file_name) %></td>
+    <td><%= h(cm_source_file.revision_at_load) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), 
+      {:controller => 'cm_source_files', :action => 'edit', :id => cm_source_file}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), 
+      {:controller => 'cm_source_files', :action => 'destroy', :id => cm_source_file},
+      :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<br />
+<% end %>

@@ -1,0 +1,29 @@
+<% form_tag({}) do -%>
+<div class="autoscroll">
+<table class="list">
+<thead>
+  <th><b>Meeting Code</b></th>
+  <th><b>Meeting Date</b></th>
+  <th><b>Decision</b></th>
+  <th><b>Target Version</b></th>
+  <th><b>Due Date</b></th>
+  <th><b>Alert Raisen</b></th>
+</thead>
+<tbody>
+  <% @cm_rids_boards.each do |board| %>
+    <tr valign="top" class="<%= cycle('odd', 'even') %>">
+      <td><%= link_to board.cm_board_code, :controller => "cm_boards", :action => "show", :id => board.x_id %></td>
+      <td><%= h(board.meeting_date) %></td>
+      <td><%= h(board.rel_string) %></td>
+      <td><%= h(board.target_version.name) unless board.target_version.nil? %></td>
+      <td><%= h(board.rel_date.strftime("%Y-%m-%d")) unless board.rel_date.nil? %></td>
+      <td align="center"><%= image_tag 'true.png' if board.rel_bool %></td>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+</div>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% end %>

@@ -1,0 +1,124 @@
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="iitems"><%= @cm_item.code %> #<%= @cm_item.id %></h2>
+
+<div>
+  <%= avatar(@cm_item.author, :size => "50") %>
+  <h3><%=h @cm_item.name %></h3>
+  <p class="author">
+    <%= authoring @cm_item.created_on, @cm_item.author %>.
+    <% if @cm_item.created_on != @cm_item.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_item.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+  <tr>
+    <th><b>Group:</b></th><td><%= @cm_item.group.name %></td>
+    <th><b>Status:</b></th><td><%= @cm_item.status.name %></td>
+    <th><b>Type:</b></th><td><%= @cm_item.type.name %></td>
+  </tr>
+  <tr>
+    <th><b>Category:</b></th><td><%= @cm_item.category.name %></td>
+    <th><b>Quantity:</b></th><td><%= @cm_item.quantity %></td>
+    <th><b>Classification:</b></th><td><%= @cm_item.classification.name %></td>
+  </tr>
+  <tr>
+    <th><b>Version:</b></th><td><%= @cm_item.version %></td>
+    <th><b>Owner:</b></th><td><%= @cm_item.item_owner %></td>
+    <th><b>Frame Contract:</b></th><td><%= @cm_item.frame_contract %></td>
+  </tr>
+  <tr>
+    <th><b>Physical Location:</b></th><td><%= @cm_item.physical_location %></td>
+    <th><b>Estimated:</b></th><td><%= @cm_item.actual_estimated %></td>
+    <th><b>Disposal:</b></th><td><%= @cm_item.disposal_method %></td>
+  </tr>
+</table>
+<% if @cm_item.type.name == "Stock" or @cm_item.type.name != "Single" %>
+<fieldset><legend>Stock Item Details</legend>
+  <table class="attributes">
+    <tr>
+      <th><b>Available Quantity:</b></th><td><%= @cm_item.available_qty %></td>
+      <th><b>Model Number:</b></th><td><%= @cm_item.model_number %></td>
+      <th><b>External Info:</b></th><td><%= @cm_item.external_info %></td>
+    </tr>
+  </table>
+</fieldset>
+<% end %>
+<% if @cm_item.type.name == "Single" or @cm_item.type.name != "Stock" %>
+<fieldset><legend>Single Item Details</legend>
+  <table class="attributes">
+    <tr>
+      <th><b>Label:</b></th><td><%= @cm_item.markings %></td>
+      <th><b>Serial Number:</b></th><td><%= @cm_item.serial_number %></td>
+      <th><b>Installed on:</b></th><td><%= @cm_item.installed_on_host %></td>
+    </tr>
+    <tr>
+      <th><b>Configuration Item:</b></th><td><%= @cm_item.configuration_item %></td>
+      <th><b>Critical Item:</b></th><td><%= @cm_item.critical_item %></td>
+      <th><b>Long Lead Item:</b></th><td><%= @cm_item.long_lead_item %></td>
+    </tr>
+    <tr>
+      <th><b>Product Tree Code:</b></th><td><%= @cm_item.product_tree_code %></td>
+      <th><b>Expiration Date:</b></th><td><%= @cm_item.expiration_date.strftime("%Y/%m/%d") if @cm_item.expiration_date? %></td>
+      <th><b>License/Warranty Comments:</b></th><td><%= textilizable @cm_item, :comments_on_license %></td>
+    </tr>
+  </table>
+</fieldset>
+<% end %>
+<hr />
+<p><strong>Description</strong></p>
+<div class="wiki">
+<%= textilizable @cm_item, :description %>
+<p><strong>Comments</strong></p>
+<div class="wiki">
+<%= textilizable @cm_item, :comments %>
+</div>
+</div>
+
+<div id="relations">
+<%= render :partial => 'relations' %>
+</div>
+
+<br /><hr />
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_item %>
+
+<br /><hr />
+<% if @journals.any? %>
+<br />
+<div id="history">
+<h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_items' } %>
+</div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_items', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object = @cm_item %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_item.code} ##{@cm_item.id}: #{@cm_item.name}" %>
+
+<p class="other-formats">
+  Also available in
+  <% if @cm_item.configuration_item %>
+  <%= link_to('CIDL', {:action => 'cidl', :id => @cm_item }) %>
+  ,
+  <% end %>
+  <%= link_to('PDF', {:action => 'show', :id => @cm_item, :format => 'pdf', :history => 'Y' }) %>
+  ,
+  <%= link_to('PDF (no history)', {:action => 'show', :id => @cm_item, :format => 'pdf', :history => 'N' }) %>
+</p>

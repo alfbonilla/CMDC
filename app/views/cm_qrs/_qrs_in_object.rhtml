@@ -1,0 +1,24 @@
+<% unless @cm_qrs.blank? %>
+<table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>Identifier</b></td>
+      <td align="center"><b>Code</b></td>
+      <td align="center"><b>QR Type</b></td>
+      <td align="center"><b>Status</b></td>
+      <td align="center"><b>Assignee</b></td>
+    </tr>
+  </thead>
+<tbody>
+<% @cm_qrs.each do |qr| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= h(qr.id) %></td>
+    <td align="center"><%= link_to h(qr.code), :controller => 'cm_qrs', :action => 'show', :id => qr %></td>
+    <td align="center"><%= h(qr.type.name) %></td>
+    <td align="center"><%= h(qr.status) %></td>
+    <td align="center"><%= h(qr.assignee.name) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>

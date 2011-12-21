@@ -1,0 +1,12 @@
+<b>Create Relationship between Change  </b><%= @change_to_relate.name %><b>  and:  </b>
+<br />
+<br />
+<% fields_for :cm_changes_version, @cm_changes_version, :builder => TabularFormBuilder do |f| %>
+	<p><%= f.hidden_field :cm_change_id, :value => @change_to_relate.id %></p>
+	<p><%= f.text_field :version, :required => true %></p>
+        <p><%= f.check_box :applicable %></p>
+	<p><%= f.text_field :comments %></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+        <p><%= g.hidden_field :project_id, :value => @project_id %></p>
+<% end %>  

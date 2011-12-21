@@ -1,0 +1,34 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="iitems">New Item</h2>
+
+<% labelled_tabular_form_for :cm_item, @cm_item,
+                             :html => {:id => 'new-cm_item-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+                             
+  <%= error_messages_for 'cm_item' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Define Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+      <small>(<%= link_to "Specific Stock Fields", {},
+        :onclick => 'Effect.toggle("iitem_stock_fields", "appear", {duration:0.3}); return false;' %>)
+      </small>
+      <small>(<%= link_to "Specific Single Fields", {},
+        :onclick => 'Effect.toggle("iitem_single_fields", "appear", {duration:0.3}); return false;' %>)
+      </small>
+    </fieldset>
+
+    <% if @cm_item.new_record? %>
+      <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+    <% end %>
+  </div>
+  <br />
+  <%= submit_tag l(:button_create) %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>
+<% end %>
+
+<% html_title "CM - New Item" %>

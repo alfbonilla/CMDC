@@ -1,0 +1,8 @@
+<div class="contextual">
+<%= link_to("Refresh Risks Priorities", {:controller => 'cm_risks',
+    :action => 'refresh_priority', :id => @project }, :method=> :post,
+    :class => 'icon icon-stats') %>
+<%= link_to("Progress Report", {:controller => 'cm_risks',
+    :action => 'progress_report', :id => @project }, 
+    :class => 'icon icon-time') %>
+</div>

@@ -1,0 +1,40 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of Purchase Orders found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Purchase Order Code') %>
+      <%= sort_header_tag('title', :caption => 'Title') %>
+      <th><b>Total</b></th>
+      <th><b>Requested Date</b></th>
+      <th><b>Authorized Date</b></th>
+      <th><b>Purchase Date</b></th>
+      <th><b>Supplier</b></th>
+      <th><b>Vendor</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+    <tbody>
+    <% @cm_purchase_orders.each do |po| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to po.id, :controller => "cm_purchase_orders", :action => "show", :id => po %></td>
+        <td><%= link_to po.code, :controller => "cm_purchase_orders", :action => "show", :id => po %></td>
+        <td><%= link_to po.title, :controller => "cm_purchase_orders", :action => "show", :id => po %></td>
+        <td align="center"><%= h(po.total_payment) %></td>
+        <td align="center"><%= h(po.requested_date.strftime("%Y-%m-%d")) if not po.requested_date.nil? %></td>
+        <td align="center"><%= h(po.authorized_date.strftime("%Y-%m-%d")) if not po.authorized_date.nil? %></td>
+        <td align="center"><%= h(po.purchase_date.strftime("%Y-%m-%d")) if not po.purchase_date.nil? %></td>
+        <td align="center"><%= h(po.supplier.name) if not po.supplier.nil? %></td>
+        <td align="center"><%= h(po.vendor.name) if not po.vendor.nil? %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_purchase_orders', :action => 'edit', :id => po}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_purchase_orders', :action => 'destroy', :id => po},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_purchase_order_pages, @total %></p>

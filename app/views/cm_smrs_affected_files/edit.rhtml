@@ -1,0 +1,23 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="sfiles"><%= @cm_smrs_affected_file.file_name %> #<%= @cm_smrs_affected_file.id %></h2>
+
+<% labelled_tabular_form_for :cm_smrs_affected_file, @cm_smrs_affected_file,
+                             :url => {:action => 'edit', :id => @cm_smrs_affected_file},
+                             :html => {:id => 'cm_smrs_affected_file-form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_smrs_affected_file' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Affected File Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+    <%= submit_tag l(:button_submit) %>
+  </div>
+<% end %>
+
+<% html_title "CM - Edit SMR Affected file #{@cm_smrs_affected_file.id}" %>

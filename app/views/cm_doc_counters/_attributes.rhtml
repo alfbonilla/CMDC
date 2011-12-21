@@ -1,0 +1,24 @@
+<% fields_for :cm_doc_counter, @cm_doc_counter, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+<p><%= f.text_field :name, :size => 30, :required => true %></p>
+</div>
+
+<div class="splitcontentright">
+<p><%= f.text_field :counter, :size => 5, :required => false %></p>
+<p><%= f.text_field :increment_by, :size => 5, :required => false %></p>
+</div>
+
+<p><%= f.text_field :format, :size => 40 %></p>
+<%= render :partial => 'cm_commons/cmdc_objects' %>
+<% end %>
+
+<i>Rules for naming pattern:
+    <ul>
+      <li>{V} for replacing with selected Version</li>
+      <li>{n} for Counter of n positions, justifying with zeroes</li>
+      <li>{S} for replacing with selected Subsystem</li>
+      <li>{T} for replacing with selected Type</li>
+      <li>{A} for replacing with selected Documents Approval Level</li>
+    </ul>
+ </i>

@@ -1,0 +1,215 @@
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_item, :cm_object_type => "CmItem",
+    :cm_object_cont => "cm_items", :export => "N" } %>
+
+<br /><hr />
+
+<div title="RelatedItems">
+<h3>Child Related Items</h3>
+
+<% if @cm_item.cm_child_items.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Child Item Name</b></td>
+<td align="center"><b>Relation Type</b></td>
+<td align="center"><b>Relation Details</b></td>
+<td align="center"><b>Creation Date</b></td>
+<td align="center"><b>Created By</b></td>
+<td align="center"><b>Delete Relationship</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_item.cm_child_items.each do |iitem2| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% iitem2.child_item.nil? ? related_name = "Unknown. Id:"+iitem2.child_item_id.to_s : related_name = iitem2.child_item.name %>
+<td><%= link_to h(related_name), :controller => 'cm_items', :action => 'show', :id => iitem2.child_item_id %></td>
+<td align="center"><%= h(iitem2.relation_type) %></td>
+<td><%= h(iitem2.description) %></td>
+<td align="center"><%= h(iitem2.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(iitem2.author.login) %></td>
+<td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_items_items', :action => 'destroy',
+  :project_id => @project, :relation_id => iitem2.id, :iitem_id => iitem2.cm_item_id, :child_id => related_name},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%= @cm_item.cm_child_items.size %> Child items related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No child items related</small></p>
+<% end %>
+<%= link_to "Add Existing Child Item", {:controller => "cm_items_items",
+  :action => 'new', :project_id => @project, :id => @cm_item.id}, :class => 'icon icon-add' %>
+</div>
+
+<br /><hr />
+<div title="ParentItems">
+<h3>Parent Related Items</h3>
+
+<% if @cm_item.cm_parent_items.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Parent Item Name</b></td>
+<td align="center"><b>Relation Type</b></td>
+<td align="center"><b>Relation Details</b></td>
+<td align="center"><b>Creation Date</b></td>
+<td align="center"><b>Created By</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_item.cm_parent_items.each do |iitem3| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% iitem3.parent_item.nil? ? parent_name = "Unknown. Id:"+iitem3.cm_item_id.to_s : parent_name = iitem3.parent_item.name %>
+<td><%= link_to h(parent_name), :controller => 'cm_items', :action => 'show', :id => iitem3.cm_item_id %></td>
+<td align="center"><%= h(iitem3.relation_type) %></td>
+<td><%= h(iitem3.description) %></td>
+<td align="center"><%= h(iitem3.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(iitem3.author.login) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%= @cm_item.cm_parent_items.size %> Parent items related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No parent items related</small></p>
+<% end %>
+</div>
+
+<br /><hr />
+<div title="Maintenances">
+<h3>Maintenances</h3>
+
+<% if @cm_item.cm_mnt_logs.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Name</b></td>
+<td align="center"><b>Type</b></td>
+<td align="center"><b>Status</b></td>
+<td align="center"><b>Start Date</b></td>
+<td align="center"><b>Maintained By</b></td>
+<td align="center"><b>Last Modification</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_item.cm_mnt_logs.each do |iitem3| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<td align="center"><%= link_to h(iitem3.name), :controller => 'cm_mnt_logs', :action => 'show', :id => iitem3.id %></td>
+<td align="center"><%= h(iitem3.type.name) %></td>
+<td align="center"><%= h(iitem3.status.name) %></td>
+<td align="center"><%= h(iitem3.maintenance_start_date.strftime("%Y-%m-%d")) %></td>
+<td align="center"><%= h(iitem3.installer.login) %></td>
+<td align="center"><%= h(iitem3.updated_on.strftime("%Y-%m-%d")) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%= @cm_item.cm_mnt_logs.size %> Maintenances performed</small></p>
+<% else %>
+<p style="text-align:right;"><small>No maintenances related</small></p>
+<% end %>
+<%= link_to_if_authorized "Add New Maintenance Log", {:controller => "cm_mnt_logs",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+</div>
+
+<br /><hr />
+<div title="Docs">
+<h3>Related Documents</h3>
+
+<% if @cm_item.cm_docs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Document Code</b></td>
+    <td align="center"><b>Baseline</b></td>
+    <td align="center"><b>Applicable Version</b></td>
+    <td align="center"><b>Rel. Creation Date</b></td>
+    <td align="center"><b>Rel. Created By</b></td>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_item.cm_items_objects.each do |iit| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= link_to h(iit.cm_doc.code), :controller => 'cm_docs', :action => 'show', :id => iit.x_id %></td>
+  <td align="center"><%= h(change_baseline_to_s(iit.cm_doc.baseline)) %></td>
+  <td align="center"><%= h(iit.cm_doc.applicable_version) %></td>
+  <td align="center"><%= h(iit.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(iit.author.login) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_items_objects', :action => 'edit',
+    :id => iit.id, :caller_cont => "cm_items", :code => iit.cm_doc.code}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_items_objects', :action => 'destroy',
+      :relation_id => iit.id, :x_id => iit.x_id, :x_type => "CmDoc",
+      :code => iit.cm_doc.code, :caller_cont => "cm_items"},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_item.cm_docs.size %> Documents related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Documents related</small></p>
+<% end %>
+</div>
+
+<br /><hr />
+
+<div title="RelatedNCs">
+
+<%= render :partial => 'cm_ncs_objects/ncs_related',
+  :locals => { :cm_object => @cm_item, :cm_object_type => "CmItem", 
+  :caller_cont => "cm_items", :export => "N", :add_new => "N"} %>
+</div>
+
+<div title="PurchaseOrders">
+<h3>Purchase Orders</h3>
+
+<% if @cm_po_details.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Purchase Order Id</b></td>
+<td align="center"><b>Purchase Order Name</b></td>
+<td align="center"><b>Creation Date</b></td>
+<td align="center"><b>Created By</b></td>
+</tr>
+</thead>
+<tbody>
+<% @cm_po_details.each do |po| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<td align="center"><%= h(po.cm_purchase_order_id) %></td>
+<td><%= link_to h(po.purchase_order.title), :controller => 'cm_purchase_orders',
+                      :action => 'show', :id => po.cm_purchase_order_id %></td>
+<td align="center"><%= h(po.created_on.strftime("%Y/%m/%d")) %></td>
+<td align="center"><%= h(po.author.login) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%= @cm_po_details.size %> Purchase orders related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No purchase orders related</small></p>
+<% end %>
+</div>
+
+<br /><hr />
+<div title="Deliveries">
+<h3>Delivered in</h3>
+
+<% if @deliveries.any? %>
+  <%= render :partial => 'cm_deliveries/delivery_info' %>
+  <p style="text-align:right;"><small><%= @deliveries.size %> Deliveries included</small></p>
+<% else %>
+  <p style="text-align:right;"><small>Item not delivered</small></p>
+<% end %>
+</div>
+
+<br /><hr />
+<div title="RelatedQRs">
+<h3>Related Quality Records</h3>
+<%= render :partial => 'cm_qrs/qrs_in_object.rhtml', :locals => {:cm_qrs => @cm_qrs} %>
+</div>

@@ -1,0 +1,121 @@
+<pre>
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+</pre>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="rids"><%= @cm_rid.code %> #<%= @cm_rid.id %></h2>
+
+<div>
+  <%= avatar(@cm_rid.author, :size => "50") %>
+  <p class="author">
+    <%= authoring @cm_rid.created_on, @cm_rid.author %>.
+    <% if @cm_rid.created_on != @cm_rid.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_rid.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= change_internal_status_to_s(@cm_rid.internal_status_id) %></td>
+  <th><b>Close Out:</b></th><td><%= @cm_rid.close_out.name %></td>
+</tr>
+<tr>
+  <th><b>Assigned To:</b></th><td><%= @cm_rid.assignee.name unless @cm_rid.assignee.nil? %></td>
+  <th><b>Category:</b></th><td><%= change_category_to_s(@cm_rid.category) %></td>
+</tr>
+<tr>
+  <th><b>Due Date:</b></th><td><%= @cm_rid.doc_due_date.strftime("%Y/%m/%d") if @cm_rid.doc_due_date? %></td>
+  <th><b>Generation Date:</b></th><td><%= @cm_rid.generation_date.strftime("%Y/%m/%d") if @cm_rid.generation_date? %></td>
+</tr>
+</table>
+
+<fieldset><legend>Affected Document</legend>
+<table class="attributes">
+<tr>
+  <th><b>Name:</b></th><td><%= link_to @cm_rid.affected_doc.name, :controller => "cm_docs",
+      :action => "show", :id => @cm_rid.affected_doc.id unless @cm_rid.affected_doc.nil? %></td>
+  <th><b>Version:</b></th><td><%= @cm_rid.affected_doc_version %></td>
+</tr>
+<tr>
+  <th><b>Location:</b></th><td><%= @cm_rid.problem_location %></td>
+  <th><b>Open on Release:</b></th><td><%= @cm_rid.open_release.name unless @cm_rid.open_release.nil? %></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset><legend>Originator Data</legend>
+<table class="attributes">
+<tr>
+  <th><b>Originator:</b></th><td><%= @cm_rid.originator %></td>
+  <th><b>Company:</b></th><td><%= @cm_rid.originator_company.name %></td>
+</tr>
+<tr>
+  <th><b>Discrepancy</b></th><td><div class="wiki"><%= textilizable @cm_rid, :discrepancy %></div></td>
+  <th><b>Recommendation</b></th><td><div class="wiki"><%= textilizable @cm_rid, :recommendation %></div></td>
+</tr>
+<tr>
+  <th><b>Violated Requirements</b></th><td><div class="wiki"><%= textilizable @cm_rid, :violated_reqs %></div></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset><legend>Solution</legend>
+<table class="attributes">
+  <tr>
+  <th><b>Author Response</b></th><td><div class="wiki"><%= textilizable @cm_rid, :author_response %></div></td>
+  <th><b>Disposition</b></th><td><div class="wiki"><%= textilizable @cm_rid, :disposition %></div></td>
+  </tr>
+  <tr>
+    <th><b>Implemented on Release:</b></th><td><%= @cm_rid.implementation_release.name unless @cm_rid.implementation_release.nil? %></td>
+  </tr>
+  <tr>
+    <th><b>Implemented on Location:</b></th><td><%= @cm_rid.implementation_location %></td>
+    <th><b>Reviewed:</b></th><td><%= @cm_rid.reviewed %></td>
+  </tr>
+</table>
+</fieldset>
+
+<p><strong>Comments</strong></p>
+<div class="wiki">
+<%= textilizable @cm_rid, :comments %>
+</div>
+
+<div id="relations">
+<%= render :partial => 'relations' %>
+</div>
+
+<br /><hr />
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_rid %>
+
+<br /><hr />
+<% if @journals.any? %>
+<br />
+<div id="history">
+<h3><%=l(:label_history)%></h3>
+  <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_rids' } %>
+</div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_rids', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_rid %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_rid.code} ##{@cm_rid.id}" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export to HTML', {:action => 'show', :id => @cm_rid, :format => 'cmdc' }) %>
+</p>

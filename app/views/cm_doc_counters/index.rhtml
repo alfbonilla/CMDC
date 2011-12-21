@@ -1,0 +1,29 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="codegens">Codes Index</h2>
+<title>Index of Codes</title>
+
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="name">Name: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<div id="table" class="autoscroll">
+  <% if @cm_doc_counters.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_doc_counters/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new code", {:controller => "cm_doc_counters",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "CM - Codes List" %>

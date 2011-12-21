@@ -1,0 +1,40 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of changes found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Change Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <%= sort_header_tag('type_id', :caption => 'Type') %>
+      <th><b>Status</b></th>
+      <th><b>From Company</b></th>
+      <th><b>Reception/Delivery Date</b></th>
+      <th><b>Due Date</b></th>
+      <th><b>Applicable Version</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_changes.each do |change| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to change.id, :controller => "cm_changes", :action => "show", :id => change %></td>
+        <td><%= link_to change.code, :controller => "cm_changes", :action => "show", :id => change %></td>
+        <td><%= h(change.name) %></td>
+        <td align="center"><%= h(change.type.name) %></td>
+        <td align="center"><%= h(change.status.name) %></td>
+        <td align="center"><%= h(change.source_company.name) %></td>
+        <td align="center"><%= h(change.recep_deliv_date.strftime("%Y-%m-%d")) if not change.recep_deliv_date.nil? %></td>
+        <td align="center"><%= h(change.due_date.strftime("%Y-%m-%d")) if not change.due_date.nil? %></td>
+        <td align="center"><%= h(change.applicable_version) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_changes', :action => 'edit', :id => change}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_changes', :action => 'destroy', :id => change},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_change_pages, @total %></p>

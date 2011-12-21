@@ -1,0 +1,4 @@
+<% if Setting.display_subprojects_issues? %>
+  <label for="">Subprojects: </label>
+  <%= check_box_tag("query_subp", params['query_subp'], true) %>
+<% end %>

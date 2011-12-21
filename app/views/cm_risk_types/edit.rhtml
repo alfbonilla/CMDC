@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="risks">Edit Risk Type</h2>
+
+<% labelled_tabular_form_for :cm_risk_type, @cm_risk_type,
+                             :html => {:id => 'cm_risk_type-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_risk_type' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Risk Type Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+  <%= submit_tag l(:button_submit) %>
+
+<% end %>
+
+<% html_title "CM - Edit Risk Type #{@cm_risk_type.name}" %>

@@ -1,0 +1,33 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="cmdocs">Get Changes Log</h2>
+
+<% labelled_tabular_form_for :cm_get_log, @cm_get_log,
+                             :html => {:id => 'cm_get_log-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_get_log' %>
+
+  <h3>Changes Log for document <%= @cm_doc.code %> ( <%= @cm_doc.name %> ) </h3>
+
+  <label for="code">Code: </label>
+  <%= text_field_tag 'codes_to_get', @codes_to_get, :required => true %>
+
+  <ul>
+    <li>Specify the code (or part of the code) of the RIDS to get the change log. </li>
+    <li>Just those RIDS with <b>implementation location</b> completed will be included. </li>
+  </ul>
+
+  <p> <%= submit_tag l(:button_submit), :method => :post %> </p>
+
+  <br /><hr />
+
+  <p><label for="code">Resulting Change Log: </label></p>
+  <p><%= text_area_tag 'changes_log', @changes_log, :cols => 60, :rows => 20 %></p>
+  
+  <p> <a href="javascript:history.back()">Back</a>  </p>
+
+<% end %>
+
+<% html_title "CM - RIDs - Get Changes Log" %>

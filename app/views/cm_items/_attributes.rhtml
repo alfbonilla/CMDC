@@ -1,0 +1,88 @@
+<% fields_for :cm_item, @cm_item, :builder => TabularFormBuilder do |f| %>
+
+  <p><%= f.text_field :code, :size => 50, :required => true %>
+  <% if @cm_item.new_record? %>
+    <%= render :partial => 'cm_commons/get_code', :locals => {:form_name => 'new-cm_item-form'} %>
+  <% else %>
+    <small><%= submit_tag l(:button_submit) %><b>[[Save changes]]</b></small>
+  <% end %>
+  </p>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :name, :size => 50, :required => true %></p>
+    <p><%= f.select :status_id, (@cm_item_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+    <p><%= f.text_field :version, :size => 50 %></p>
+    <p><%= f.text_field :physical_location %></p>
+    <p><%= f.text_field :item_owner %></p>
+    <p><%= f.text_field :disposal_method %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.select :category_id, (@cm_item_categories.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <% unless @cm_item_groups.empty? %>
+    <p><%= f.select :cm_item_group_id, (@cm_item_groups.collect {|p| [p.name, p.id]}) %></p>
+    <% end %>
+    <p><%= f.select :type_id, (@cm_item_types.collect {|p| [p.name, p.id]}), :required => true %></p>
+    <p><%= f.text_area :comments, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+    <p><%= f.select :classification_id, (@cm_item_classifications.collect {|p| [p.name, p.id]}) %></p>
+    <p><%= f.check_box :frame_contract %></p>
+    <p><%= f.check_box :actual_estimated %></p>
+    <p><%= f.text_field :quantity, :size => 10 %></p>
+  </div>
+
+  <div style="clear:both;"> </div>
+  <% if @cm_item.new_record? %>
+    <div id="iitem_stock_fields" <%= 'style="display:none"' unless @cm_item.errors.any? %>>
+  <% else %>
+    <div id="iitem_stock_fields" <%= 'style="display:none"' unless @cm_item.errors.any? or @cm_item.type.name == "Stock" %>>
+  <% end %>
+    <fieldset><legend>Stock Item Details</legend>
+    <div class="splitcontentleft">
+      <p><%= f.text_field :available_qty, :size => 50 %></p>
+      <p><%= f.text_field :model_number, :size => 50 %></p>
+    </div>
+    <div class="splitcontentright">
+      <p><%= f.text_field :external_info, :size => 50 %></p>
+    </div>
+    </fieldset>
+  </div>
+
+  <% if @cm_item.new_record? %>
+    <div id="iitem_single_fields" <%= 'style="display:none"' unless @cm_item.errors.any? %>>
+  <% else %>
+    <div id="iitem_single_fields" <%= 'style="display:none"' unless @cm_item.errors.any? or @cm_item.type.name == "Single" %>>
+  <% end %>
+
+    <fieldset><legend>Single Item Details</legend>
+    <div class="splitcontentleft">
+      <p><%= f.text_field :serial_number, :size => 50 %></p>
+      <p><%= f.text_field :installed_on_host %></p>
+      <p><%= f.text_field :markings, :size => 50 %></p>
+      <p><%= f.text_field :product_tree_code, :size => 50 %></p>
+    </div>
+    <div class="splitcontentright">
+      <p><%= f.check_box :configuration_item %></p>
+      <p><%= f.check_box :critical_item %></p>
+      <p><%= f.check_box :long_lead_item %></p>
+      <fieldset><legend>Lifetime Info</legend>
+      <p><%= f.text_field :expiration_date, :size => 10 %><%= calendar_for('cm_item_expiration_date') %></p>
+      <p><%= f.text_area :comments_on_license, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+      </fieldset>
+    </div>
+    </fieldset>
+  </div>
+
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :w_cm_purchase_order_id, :value => @cm_purchase_order_id %></p>
+  <p><%= g.hidden_field :w_cm_purchase_order_code, :value => @cm_purchase_order_code %></p>
+  <p><%= g.hidden_field :coming_from_purchase, :value => @coming_from_purchase %></p>
+  <p><%= g.hidden_field :caller_cont, :value => "cm_items" %></p>
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_item_code')).value=new_code;}
+</script>

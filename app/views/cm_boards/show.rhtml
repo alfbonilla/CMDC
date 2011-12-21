@@ -1,0 +1,91 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<h2 class="boards"><%= @cm_board.subject %> #<%= @cm_board.id %></h2>
+
+<div>
+  <%= avatar(@cm_board.author, :size => "50") %>
+  <h3><%=h @cm_board.cm_board_code %></h3>
+  <p class="author">
+    <%= authoring @cm_board.created_on, @cm_board.author %>.
+    <% if @cm_board.created_on != @cm_board.updated_on %>
+      <%= l(:label_updated_time, time_tag(@cm_board.updated_on)) %>.
+    <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Meeting Date:</b></th><td><%= @cm_board.meeting_date.strftime("%Y-%m-%d") %></td>
+  <th><b>Type:</b></th><td><%= @cm_board.type.name %></td>
+  <% if @cm_board.company.nil?  %>
+  <th><b>Company:</b></th><td><small>None</small></td>
+  <% else %>
+  <th><b>Company:</b></th><td><%= @cm_board.company.name %></td>
+  <% end %>
+</tr>
+<tr>
+  <th><b>Minutes Closed:</b></th><td><%= @cm_board.minutes_closed %></td>
+  <th><b>Actions Completed:</b></th><td><%= @cm_board.actions_completed %></td>
+</tr>
+<tr>
+  <th><b>Distribution List:</b></th><td><%= @cm_board.distribution_list %></td>
+  <th><b>Actions Counter:</b></th><td><%= @cm_board.action_counter %></td>
+</tr>
+</table>
+
+<p><strong>Participants</strong></p>
+<div class="wiki">
+<%= textilizable @cm_board, :participants %>
+</div>
+
+<p><strong>Meeting Body</strong></p>
+<div class="wiki">
+<%= textilizable @cm_board, :board_body %>
+</div>
+
+<p><strong>Conclusions</strong></p>
+<div class="wiki">
+<%= textilizable @cm_board, :conclusions %>
+</div>
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+
+<br /><hr />
+<h3>Attachments</h3>
+<%= link_to_attachments @cm_board %>
+
+<br /><hr />
+<% if @journals.any? %>
+  <br />
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_boards' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_boards', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object_to_watch = @cm_board %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Minutes of Meeting (PDF)', {:action => 'show', :id => @cm_board, :format => 'pdf' }) %>
+  ,
+  <%= link_to('Export to HTML', {:action => 'show', :id => @cm_board, :format => 'cmdc' }) %>
+</p>
+
+<% html_title "#{@cm_board.cm_board_code} ##{@cm_board.id}" %>

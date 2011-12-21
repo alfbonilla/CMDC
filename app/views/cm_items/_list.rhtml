@@ -1,0 +1,47 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of items found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('id', :caption => 'Id') %>
+      <%= sort_header_tag('code', :caption => 'Item Code') %>
+      <%= sort_header_tag('name', :caption => 'Name') %>
+      <%= sort_header_tag('cm_item_group_id', :caption => 'Group') %>
+      <th><b>Type</b></th>
+      <th><b>Status</b></th>
+      <th><b>Serial Number</b></th>
+      <th><b>CI</b></th>
+      <th><b>Critical</b></th>
+      <th><b>LLI</b></th>
+      <th><b>Hierarchy</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_items.each do |iitem| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to iitem.id, :controller => "cm_items", :action => "show", :id => iitem %></td>
+        <td><%= link_to iitem.code, :controller => "cm_items", :action => "show", :id => iitem %></td>
+        <td><%= h(iitem.name) %></td>
+        <td align="center"><%= h(iitem.group.name) %></td>
+        <td align="center"><%= h(iitem.type.name) %></td>
+        <td align="center"><%= h(iitem.status.name) %></td>
+        <td align="center"><%= h(iitem.serial_number) %></td>
+        <td align="center"><%= image_tag 'true.png' if iitem.configuration_item? %></td>
+        <td align="center"><%= image_tag 'true.png' if iitem.critical_item? %></td>
+        <td align="center"><%= image_tag 'true.png' if iitem.long_lead_item? %></td>
+        <td align="center"><%= link_to(image_tag('hierarchy.png', :plugin => "redmine_cm"),
+          {:controller => 'cm_items', :action => 'copy_item', :copy_item_id => iitem, :id => @project}) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_items',
+          :action => 'edit', :id => iitem}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_items',
+          :action => 'destroy', :id => iitem},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_item_pages, @total %></p>

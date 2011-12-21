@@ -1,0 +1,32 @@
+<hr />
+<h3>NCs Related</h3>
+
+<% if @cm_qr.cm_ncs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>NC Name</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Author</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_qr.cm_ncs.each do |cmQrNc| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td align="center"><%= h(cmQrNc.code) %></td>
+  <td><%= h(cmQrNc.name) %></td>
+  <td align="center"><%= h(cmQrNc.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(cmQrNc.author.login) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs', :action => 'remove_qr_relation',
+        :id => cmQrNc.id, :qr_id => @cm_qr.id }, :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% else %>
+<p><small>No NCs related to this Quality Record</small></p>
+<% end %>
+
+<br /><hr />

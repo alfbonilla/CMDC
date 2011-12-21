@@ -1,0 +1,41 @@
+<%if  @data['caller_cont'] == 'cm_test_campaign'  %>
+  <b>Relationship between </b><%= @cm_test_campaign.code unless @cm_test_campaign.nil? %><b> and:</b>
+  <br />
+  <br />
+  <b><%=@relation_id%></b>
+<% end %>
+
+<% fields_for :cm_test_record, @cm_test_record, :builder => TabularFormBuilder do |f| %>
+  <p id ="new_form_relation_id"></p>
+ 
+  <% if @data['cm_test_record_code'].nil? %>
+     <p><%= f.text_field :code, :size => 30, :required => true %>
+       <% if @cm_test_record.nil? %>
+      <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png', 
+        :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+        :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+           :caller_cont => 'cm_test_records', :cmdc_object => change_cmdc_object_to_i('Test Record')}} )%></small>
+       <% end %>
+      </p>
+  <% else %>
+        <h3><p><b>Code: <%=@data['cm_test_record_code']%> </b></p></h3>
+       <p><%= f.hidden_field :code, :value => @data['cm_test_record_code'] %></p>
+   <% end %>
+   
+    <p><%= f.text_field :execution_date, :size => 20%><%= calendar_for('cm_test_record_execution_date') %><i>(Due Date)</i></p>
+    <p><%= f.text_area :execution_log, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+    <p><%= f.text_field :execution_evidences, :size => 20 %></p>
+    <p><%= f.text_area :restrict_or_observe, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+    <p><%= f.select :witnessed_by, (@data['cm_test_record_assignees'].collect {|p| [p.name, p.id]}),
+                    :include_blank => true %></p>
+    <p><%= f.select :result, [['Pending', 0],['Failed', 1], ['Passed', 2],
+                            ['Passed with Restrictions', 3]], :size => 20 %></p>
+
+        <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+           <p><%= g.hidden_field :caller_cont, :value => @data['caller_cont'] %></p>
+           <p><%= g.hidden_field :action, :value => 'add_new_record' %></p>
+           <p><%= g.hidden_field :cm_test_campaigns_object, :value => @data['cm_test_campaigns_object'] %></p>
+           <p><%= g.hidden_field :cm_test_campaign, :value => @data['cm_test_campaign'] %></p>
+        <% end %>
+
+   <% end %>

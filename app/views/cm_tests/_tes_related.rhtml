@@ -1,0 +1,39 @@
+<p><h3>Related Traceability Elements</h3></p>
+
+<% if @cm_test.cm_reqs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Code</b></td>
+    <td align="center"><b>Verification Method</b></td>
+    <td align="center"><b>Relation Details</b></td>
+    <td></td>
+    <td></td> 
+  </tr>
+</thead>
+<tbody>
+<% @cm_test.cm_tests_objects.each do |tst| %>
+  <% if tst.x_type=="CmReq" %>
+    <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <% creation_text = "Created by " + tst.author.login + " on " + tst.created_on.strftime("%Y/%m/%d") %>
+    <td align="center"><%= link_to h(tst.cm_req.code ), {:controller => 'cm_reqs',
+                :action => 'show', :id => tst.cm_req.id}, :title => creation_text %></td>
+    <td align="center"><%= h(tst.verification_method.name) %></td>
+    <td align="center"><%= h(tst.rel_string) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_tests_objects', 
+      :action => 'edit', :id => tst.id, :caller => 'cm_tests_tes'}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_tests_objects', 
+      :action => 'destroy', :id => tst.id,:project => tst.cm_test.project_id,:test_id => tst.cm_test
+        },:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    </tr>
+  <% end %>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=@cm_test.cm_reqs.size %> TEs related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No TEs related</small></p>
+<% end %>
+<%= link_to "Add Existing TE", {:controller => "cm_tests_objects", :action => 'new',
+    :id => @cm_test, :caller => 'cm_tests_tes',:project => @project}, :class => 'icon icon-add' %>
+

@@ -1,0 +1,30 @@
+<%= hidden_field_tag 'back_url', url_for(params) %>
+
+<p>Number of smrs found: <b><%= @total %></b></p>
+
+<table class="list">
+  <thead>
+    <tr>
+      <%= sort_header_tag('smr_code', :caption => 'Code') %>
+      <%= sort_header_tag('cm_nc_id', :caption => 'Non-Conformance') %>
+      <%= sort_header_tag('cm_change_id', :caption => 'Change') %>
+      <th><b>Created On</b></th>
+      <th><b>Edit</b></th>
+      <th><b>Delete</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cm_smrs.each do |smr| %>
+      <tr valign="top" class="<%= cycle('odd', 'even') %>">
+        <td align="center"><%= link_to smr.smr_code, :controller => "cm_smrs", :action => "show", :id => smr %></td>
+        <td align="center"><%= h(smr.nonConformance.code) if not smr.nonConformance.nil? %></td>
+        <td align="center"><%= h(smr.change.code) if not smr.change.nil? %></td>
+        <td align="center"><%= h(smr.created_on.strftime("%Y-%m-%d")) %></td>
+        <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_smrs', :action => 'edit', :id => smr}) %></td>
+        <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_smrs', :action => 'destroy', :id => smr},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p class="pagination"><%= pagination_links_full @cm_smr_pages, @total %></p>

@@ -1,0 +1,12 @@
+<div class="contextual">
+  <%= link_to(l(:label_history), {:action => 'history', :id => @cm_test},
+    :class => 'icon icon-history') %>
+  <%= watcher_tag(@cm_test, User.current) %>
+  <%= link_to_if_authorized(l(:button_list), {:controller => 'cm_tests',
+      :action => 'index', :id => @project }, :class => 'icon icon-multiple') %>
+  <%= link_to_if_authorized(l(:button_update), {:controller => 'cm_tests',
+      :action => 'edit', :id => @cm_test }, :class => 'icon icon-edit') %>
+  <%= link_to_if_authorized l(:button_delete), {:controller => 'cm_tests', 
+    :action => 'destroy', :id => @cm_test}, :confirm => l(:text_are_you_sure),
+    :method => :post, :class => 'icon icon-del' %>
+</div>

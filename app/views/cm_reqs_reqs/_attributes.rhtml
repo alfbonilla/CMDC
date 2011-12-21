@@ -1,0 +1,24 @@
+<b>Create Relationship between Req  </b><%=  @intro_req.code %><b>  and:  </b>
+<br />
+<br />
+<% fields_for :cm_reqs_req, @cm_reqs_req, :builder => TabularFormBuilder do |f| %>
+  <% if @new_type == "father" %>
+    <p><%= f.hidden_field :child_req_id, :value => @cm_reqs_req.child_req_id %></p>
+  <% else %>
+    <p><%= f.hidden_field :cm_req_id, :value => @cm_reqs_req.cm_req_id %></p>
+  <% end %>
+  <p><%= f.hidden_field :relation_type %></p>
+  <% if @new_type == "father" %>
+  <p><%= f.select :cm_req_id, (@reqs_to_add.collect {|p| [p.code, p.id]}) %></p>
+  <% else %>
+  <p><%= f.select :child_req_id, (@reqs_to_add.collect {|p| [p.code, p.id]}) %></p>
+  <% end %>
+  <p><%= f.text_field :relation_type,
+    :value => change_relation_type_to_s(@cm_reqs_req.relation_type), :disabled => true %></p>
+  <p><%= f.text_field :description %></p>
+<% end %>
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+        <p><%= g.hidden_field :reqs_to_add, :value => @reqs_to_add %>
+           <%= g.hidden_field :project_id, :value => @project_id %>
+           <%= g.hidden_field :new_type, :value => @new_type %> </p>
+<% end %>

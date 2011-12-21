@@ -1,0 +1,56 @@
+<h3>Related NCs</h3>
+<% if cm_object.cm_ncs_objects.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>Owner</b></td>
+    <td align="center"><b>Status</b></td>
+    <td align="center"><b>Rel. creation date</b></td>
+    <td align="center"><b>Rel. created by</b></td>
+    <% if export == "N" %>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+<% cm_object.cm_ncs_objects.each do |cmNcsObject| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% if cmNcsObject.cm_nc.nil? %>
+    <% nc_ref = "Unknown. Id:"+cmNcsObject.cm_nc_id.to_s %>
+    <% nc_author = "Unknown" %>
+    <% nc_status = "Unknown" %>
+  <% else %>
+    <% nc_ref = cmNcsObject.cm_nc.code %>
+    <% nc_author = cmNcsObject.cm_nc.author.name %>
+    <% nc_status = cmNcsObject.cm_nc.status.name %>
+  <% end %>
+  <td align="center"><%= link_to h(nc_ref), :controller => 'cm_ncs',
+              :action => 'show', :id => cmNcsObject.cm_nc_id %></td>
+  <td><%= h(nc_author) %></td>
+  <td><%= h(nc_status) %></td>
+  <td align="center"><%= h(cmNcsObject.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(cmNcsObject.author.login) %></td>
+  <% if export == "N" %>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_ncs_objects', :action => 'edit',
+    :id => cmNcsObject.id, :caller_cont => caller_cont, :code => nc_ref }) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_objects', :action => 'destroy',
+      :relation_id => cmNcsObject.id, :x_id => cmNcsObject.x_id, :x_type => cm_object_type,
+      :code => nc_ref, :caller_cont =>  caller_cont},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=cm_object.cm_ncs_objects.size %> Non-Conformances related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Non-Conformances related</small></p>
+<% end %>
+
+<% if export == "N" %>
+<%= link_to "Add New NC related", {:controller => "cm_ncs_objects", :action => 'new',
+    :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont}, :class => 'icon icon-add' %>
+<% end %>
+
+<br /><hr />

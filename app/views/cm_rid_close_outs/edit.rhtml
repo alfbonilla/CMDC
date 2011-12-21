@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="rids">Edit RID Close Out Values</h2>
+
+<% labelled_tabular_form_for :cm_rid_close_out, @cm_rid_close_out,
+                             :html => {:id => 'cm_rid_close_out-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_rid_close_out' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>RID Close Out Properties</legend>
+      <div id="attributes" class="attributes">
+       <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+  <%= submit_tag l(:button_submit) %>
+
+<% end %>
+
+<% html_title "CM - Edit RID Close Out #{@cm_rid_close_out.name}" %>

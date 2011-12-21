@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="porders">Edit Relation Details in Purchase Order</h2>
+
+<% labelled_tabular_form_for :cm_po_detail, @cm_po_detail,
+                             :html => {:id => 'cm_po_detail-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_po_detail' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Purchase Order Relationship Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <br />
+  <%= submit_tag l(:button_submit) %>
+<% end %>
+
+<% html_title "CM - Edit PO Relationship #{@cm_po_detail.cm_purchase_order_id}" %>

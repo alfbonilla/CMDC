@@ -1,0 +1,21 @@
+<h2 class="iitems">Edit Item relation with <% @object_name %></h2>
+
+<% labelled_tabular_form_for :cm_items_object, @cm_items_object,
+     :html => {:id => 'cm_items_object-form',
+     :class => nil,
+     :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_items_object' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Related Item Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% html_title "CM - Edit Item-#{@object_name} Relation" %>

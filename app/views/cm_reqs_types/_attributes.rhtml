@@ -1,0 +1,17 @@
+<% fields_for :cm_reqs_type, @cm_reqs_type, :builder => TabularFormBuilder do |f| %>
+
+  <div class="splitcontentleft">
+    <p><%= f.text_field :acronym, :size => 10  %></p>
+    <p><%= f.text_field :name, :size => 30, :required => true %></p>
+  </div>
+
+  <div class="splitcontentright">
+    <p><%= f.text_field :level, :size => 10, :required => true %></p>
+    <p><label for="type_is_default"><%=l(:field_is_default)%></label>
+    <%= f.check_box :is_default %></p>
+    <p><label for="type_soc_control"><%=l(:field_soc_control)%></label>
+    <%= f.check_box :soc_control %></p>
+  </div>
+
+  <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+<% end %>

@@ -1,0 +1,20 @@
+<% fields_for :cm_po_detail, @cm_po_detail, :builder => TabularFormBuilder do |f| %>
+  <p><%= f.text_field :cm_item_id, :value => @cm_po_detail.item.name, :disabled => true %></p>
+  <p><%= f.text_field :quantity, :required => true %></p>
+  <p><%= f.text_field :cost_per_unit, :required => true %><small>(€)</small></p>
+  <p><%= f.check_box :VAT_included %></p>
+  <p><%= f.text_field :reception_date, :size => 10 %><%= calendar_for('cm_po_detail_reception_date') %></p>
+  <p><%= f.text_area :comments, :cols => 60, :rows => 7, :class => 'wiki-edit' %></p>
+  <% if not @cm_po_detail.new_record? %>
+    <p><%= f.text_field :created_on, :value => @cm_po_detail.created_on, :disabled => true %></p>
+    <p><%= f.text_field :updated_on, :value => @cm_po_detail.updated_on, :disabled => true %></p>
+    <p><%= f.text_field :author, :value => @cm_po_detail.author.name, :disabled => true %></p>
+  <% end %>
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :project_id, :value => @project.id %></p>
+  <p><%= g.hidden_field :cm_item_id, :value => @cm_item_id %></p>
+  <p><%= g.hidden_field :cm_purchase_order_id, :value => @cm_purchase_order_id %></p>
+  <p><%= g.hidden_field :cm_item_code, :value => @cm_item_code %></p>
+<% end %>

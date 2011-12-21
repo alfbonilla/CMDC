@@ -1,0 +1,13 @@
+<select id="cm_test_campaigns_object_cm_test_scenario_id" name="cm_test_campaigns_object[cm_test_scenario_id]">
+<%if @results.empty?%>
+    <option value="0" >
+      This Test has not any scenario related
+    </option>
+<%else%>
+    <% @results.each do |scenario| %>
+    <option value="<%=scenario.x_id%>" >
+    <%= scenario.cm_test_scenario.code %>
+    </option>
+    <% end -%>
+<%end%>
+</select>

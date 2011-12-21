@@ -1,0 +1,32 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+<table class="list">
+<thead>
+<th><b>Id</b></th>
+<th><b>Name</b></th>
+<th><b>Description</b></th>
+<th><b>Is Default Value</b></th>
+<th><b>Edit</b></th>
+<th><b>Delete</b></th>
+</thead>
+<tbody>
+<% @cm_mnt_log_types.each do |cm_mnt_log_type| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td><%= h(cm_mnt_log_type.id) %></td>
+    <td><%= h(cm_mnt_log_type.name) %></td>
+    <td><%= h(cm_mnt_log_type.description) %></td>
+    <td align="center"><%= image_tag 'true.png' if cm_mnt_log_type.is_default? %></td>
+    <% unless cm_mnt_log_type.project_id == 0 %>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_mnt_log_types', :action => 'edit', :id => cm_mnt_log_type}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_mnt_log_types', :action => 'destroy', :id => cm_mnt_log_type},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    <% else %>
+    <td><small style="font-style: italic">Common Value</small></td>
+    <td><small style="font-style: italic">Common Value</small></td>
+    <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<br />
+<% end %>

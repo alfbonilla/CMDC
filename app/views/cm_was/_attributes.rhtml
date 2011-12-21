@@ -1,0 +1,32 @@
+<% fields_for :cm_wa, @cm_wa, :builder => TabularFormBuilder do |f| %>
+
+<div class="splitcontentleft">
+<p><%= f.text_field :cm_wa_code, :size => 50, :required => true %>
+  <% if @cm_wa.new_record? %>
+    <small id="new_code_generated"><%= link_to_remote(image_tag('reload.png',
+      :style => 'vertical-align: middle;', :alt => 'Get Code', :title => 'Get Code'), {
+      :url => {:controller => 'cm_doc_counters', :action => 'new_doc_by_type', :id => @project,
+         :caller_cont => 'cm_was', :cmdc_object => change_cmdc_object_to_i('Work Around') }} )%></small>
+  <% end %>
+</p>
+<p><%= f.select :cm_nc_id, (@cm_ncs.collect {|p| [p.code, p.id]}) %></p>
+<p><%= f.select :rlse_removed_id, (@releases.collect {|p| [p.name, p.id]}), 
+                              :required => true, :include_blank => true %></p>
+<p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+<p><%= f.text_area :constraints, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+</div>
+
+<div class="splitcontentright">
+  <p><%= f.select :status, CmWa::WA_STATUSES.collect %></p>
+  <p><%= f.select :wa_type, CmWa::WA_TYPES.collect %></p>
+  <p><%= f.text_area :affected_items, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  <p><%= f.text_area :comments, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+</div>
+
+<% end %>
+
+<script type="text/javascript">
+function updateCode(new_code){
+ (document.getElementById('cm_wa_cm_wa_code')).value=new_code;}
+</script>
+

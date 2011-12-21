@@ -1,0 +1,97 @@
+<%= render :partial => 'action_menu', :locals => {:replace_watcher => 'watcher2' } %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="test_campaigns"><%= @cm_test_campaign.code %> #<%= @cm_test_campaign.id %></h2>
+
+<div>
+  <%= avatar(@cm_test_campaign.author, :size => "50") %>
+  <h3><%=h @cm_test_campaign.name %></h3>
+  <p class="author">
+    <%= authoring @cm_test_campaign.created_on, @cm_test_campaign.author %>.
+    <% if @cm_test_campaign.created_on != @cm_test_campaign.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_test_campaign.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+<table class="attributes">
+<tr>
+  <th><b>Status:</b></th><td><%= change_tk_status_to_s(@cm_test_campaign.status) %></td>
+  <th><b>Assigned to:</b></th><td><%= @cm_test_campaign.assignee.name unless @cm_test_campaign.assignee.nil? %></td>
+</tr>
+
+<tr>
+  <th><b>Start Date:</b></th><td> <%= @cm_test_campaign.start_date.strftime("%Y-%m-%d") unless @cm_test_campaign.start_date.nil? %> </td>
+  <th><b>Finish Date:</b></th><td> <%= @cm_test_campaign.finish_date.strftime("%Y-%m-%d") unless @cm_test_campaign.finish_date.nil? %> </td>
+</tr>
+
+<tr>
+  <th><b>Release Id:</b></th><td> <%= @release_id.name unless @release_id.nil? %> </td>
+ </tr>
+
+</table>
+
+<p><strong>Description</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test_campaign, :description %>
+</div>
+
+<p><strong>Environment</strong></p>
+<div class="wiki">
+<%= textilizable @cm_test_campaign, :environment %>
+</div>
+
+<div id="relations">
+  <%= render :partial => 'relations' %>
+</div>
+
+<div style="clear:both "></div>
+
+<%#* Items related is included here instead of in the relations form %>
+<%#* because relations is updated dinamically %>
+<div id="Items_related_id">
+  <p><h3>Related Inventory Items</h3></p>
+  <%= render :partial => 'cm_items/related_items', :locals => {:items => @cm_test_campaign.cm_items} %>
+  <%= link_to "Include new item(s)", {:controller => "cm_items_objects",
+     :action => 'relate_items', :id => @project, :x_id => @cm_test_campaign.id,
+     :x_type => "CmTestCampaign", :caller_cont => "cm_test_campaigns"}, :class => 'icon icon-add' %>
+</div>
+
+<br /><hr />
+<% if @journals.any? %>
+<br />
+<div id="history">
+<h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+      :locals => { :journals => @journals, :caller_cont => 'cm_test_campaigns' } %>
+</div>
+<% end %>
+
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_test_campaigns', 'edit') %>
+  <div id="update" style="display:none;">
+  <h3><%= l(:button_update) %></h3>
+  <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<% @cm_object = @cm_test_campaign %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_test_campaign.code} ##{@cm_test_campaign.id}: #{@cm_test_campaign.name}" %>
+
+<p class="other-formats">
+  Also available in
+  <%= link_to('PDF', {:action => 'show', :id => @cm_test_campaign, :format => 'pdf', :history => 'Y' }) %>
+  ,
+  <%= link_to('PDF (no history)', {:action => 'show', :id => @cm_test_campaign, :format => 'pdf', :history => 'N' }) %>
+</p>
+
+<script type="text/javascript">
+
+function updateCode(new_code){
+   (document.getElementById('cm_test_record_code')).value=new_code;}
+</script>

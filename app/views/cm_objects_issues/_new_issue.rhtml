@@ -1,0 +1,124 @@
+<%# Form render this part requires 2 vbles:
+    1 - cm_object with the id to relate
+    2 - cm_object_type with the object type
+    3 - cm_object_cont with the views folder name %>
+
+<% relate_boards="N" unless relate_boards %>
+
+<%# Called for updating the div %>
+<% unless @data.nil? %>
+  <% obj=@data[:cm_object] %>
+  <% obj_type=@data[:cm_object_type] %>
+  <% obj_cont=@data[:cm_object_cont] %>
+  <% export = 'N' %>
+<% else %>
+  <%# Called to show the list %>
+  <% obj=cm_object %>
+  <% obj_type=cm_object_type %>
+  <% obj_cont=cm_object_cont %>
+<% end %>
+
+<div id="issues">
+
+<div id="issues_related">
+<h3>Issues Related</h3>
+<% if obj.cm_objects_issues.any? %>
+<table class="list" style="width:100%">
+<thead>
+<tr>
+<td align="center"><b>Type</b></td>
+<td align="center"><b>Subject</b></td>
+<td align="center"><b>Status</b></td>
+<td align="center"><b>Relation Details</b></td>
+<td align="center"><b>Assignee</b></td>
+<td align="center"><b>Created On</b></td>
+<td align="center"><b>Created By</b></td>
+<% if export == "N" %>
+<td align="center"><b>Delete Relationship</b></td>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<% obj.cm_objects_issues.each do |cmobj| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% if cmobj.issue.nil? %>
+  <% issue_subject = "Unknown. Id:"+cmobj.issue_id.to_s %>
+  <% issue_status = "Unknown" %>
+  <% issue_name = "Unknown" %>
+  <% issue_type = "Unknown" %>
+<% else %>
+  <% issue_subject = cmobj.issue.subject %>
+  <% issue_status = cmobj.issue.status.name %>
+  <% issue_name = cmobj.issue.assigned_to.name unless cmobj.issue.assigned_to.nil? %>
+  <% issue_type = cmobj.issue.tracker.name %>
+<% end %>
+<td><%= h(issue_type) %></td>
+<td><%= link_to h(issue_subject), :controller => 'issues', :action => 'show', :id => cmobj.issue_id %></td>
+<td align="center"><%= h(issue_status) %></td>
+<td><%= h(cmobj.description) %></td>
+<td><%= h(issue_name) %></td>
+<td><%= h(cmobj.created_on.strftime("%Y-%m-%d")) %></td>
+<td><%= h(cmobj.author.name) %></td>
+<% if export == "N" %>
+<td align="center"><%= link_to_remote(image_tag('delete.png'), {:url => {:controller => 'cm_objects_issues', :action => 'destroy',
+  :id => @project, :relation_id => cmobj.id, :cm_object_id => cmobj.cm_object_id, :child_id => issue_subject,
+  :type => obj_type, :caller_cont => obj_cont, :update => "existing_issues"}},
+  :confirm => l(:text_are_you_sure), :method => :post) %></td>
+<% end %>
+</tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=obj.cm_objects_issues.size %> Issues related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No issues related</small></p>
+<% end %>
+</div>
+
+<% if export == "N" %>
+
+<% @total_projects = @project.children.visible  %>
+<% @total_projects.insert(0, @project) %>
+<% @issue_project = @total_projects[0] %>
+<% @issue_project_name = @total_projects[0].name %>
+
+<% @issue_types = @project.trackers.find(:all) %>
+<% @issue_type = @issue_types[0] %>
+<% @issue_type_name = @issue_types[0].name %>
+
+<div id="object_issue_info">
+<p>
+  <%= label_tag 'issue_project', 'Project'%>
+  <%= select @issue_project, "name", @total_projects.collect {|p| [p.name, p.id]} %>
+  <%= label_tag 'issue_type', 'Issue Type'%>
+  <%= select @issue_type, "name", @issue_types.collect {|p| [p.name, p.id]} %>
+  <%= label_tag 'issue_text', 'Subject'%>
+  <%= text_field_tag 'issue_text', @issue_text, :size => 20 %>
+  <% if relate_boards == "Y" %>
+  <strong>[[</strong><%= label_tag 'board_to_relate', 'Relate Issue to Meeting'%>
+    <%= select @issue_board, "board_id", @cm_boards.collect {|p| [p.cm_board_code, p.id]},
+      :include_blank => true %>
+  <strong>]]</strong>
+  <% end %>
+</p>
+
+<p>
+<div id="existing_issues">
+<!--In this part will be uploaded the list of existing issues in the project -->
+</div>
+</p>
+
+<p>
+  <%= link_to_remote "Add New Issue", {:url => {:controller => "cm_objects_issues", :action => 'new',
+    :issue_type => @issue_type_name, :issue_project => @issue_project_name,
+    :cm_object_id => obj.id, :type => obj_type},
+    :with => "Form.serialize('object_issue_info')"}, :class => 'icon icon-add', :method => :post %>
+  <%= link_to_remote "Add Existing Issue", {:url => {:controller => "cm_objects_issues", :action => 'show_existing_issues',
+    :cm_object_id => obj.id, :type => obj_type, :caller_cont => obj_cont, :update => "existing_issues"}},
+    :class => 'icon icon-add' %>
+</p>
+</div>
+
+</div>
+
+<% end %>

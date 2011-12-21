@@ -1,0 +1,81 @@
+<%= render :partial => 'action_menu' %>
+
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="mlogs"><%= @cm_mnt_log.code %> #<%= @cm_mnt_log.id %></h2>
+
+<div>
+  <%= avatar(@cm_mnt_log.author, :size => "50") %>
+  <h3><%=h @cm_mnt_log.name %></h3>
+  <p class="author">
+    <%= authoring @cm_mnt_log.created_on, @cm_mnt_log.author %>.
+    <% if @cm_mnt_log.created_on != @cm_mnt_log.updated_on %>
+    <%= l(:label_updated_time, time_tag(@cm_mnt_log.updated_on)) %>.
+  <% end %>
+  </p>
+</div>
+
+<table class="attributes">
+<tr>
+  <th><b>Inventory Item:</b></th><td><%= @cm_mnt_log.item.name %></td>
+  <th><b>Installer:</b></th><td><%= @cm_mnt_log.installer.login %></td>
+</tr>
+<tr>
+  <th><b>Start Date:</b></th><td><%= @cm_mnt_log.maintenance_start_date %></td>
+  <th><b>Maintenance performed from/at:</b></th><td><%= @cm_mnt_log.physical_location %></td>
+</tr>
+<tr>
+  <th><b>Type:</b></th><td><%= @cm_mnt_log.type.name %></td>
+  <th><b>Status:</b></th><td><%= @cm_mnt_log.status.name %></td>
+</tr>
+<tr>
+  <th><b>Time spent:</b></th><td><%= @cm_mnt_log.maintenance_time %></td>
+  <th><b>Process Followed (Installation Manual, PDP...):</b></th><td><%= @cm_mnt_log.process_used %></td>
+</tr>
+<tr>
+  <th><b>Non-Conformance Reference (if any):</b></th><td><%= @cm_mnt_log.nc_ref %></td>
+</tr>
+</table>
+
+<p><strong>Installation Log</strong></p>
+<div class="wiki">
+  <%= textilizable @cm_mnt_log, :installation_log %>
+</div>
+
+<p><strong>Configuration Notes</strong></p>
+<div class="wiki">
+  <%= textilizable @cm_mnt_log, :configuration_comments %>
+</div>
+
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_mnt_log, :cm_object_type => "CmMntLog",
+    :cm_object_cont => "cm_mnt_logs", :export => "N" } %>
+
+<br /><hr />
+
+<p><strong>Attachments</strong></p>
+<%= link_to_attachments @cm_mnt_log %>
+
+<% if @journals.any? %>
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'cm_commons/history',
+        :locals => { :journals => @journals, :caller_cont => 'cm_mnt_logs' } %>
+  </div>
+<% end %>
+
+<div style="clear: both;"></div>
+
+<% if authorize_for('cm_mnt_logs', 'edit') %>
+  <div id="update" style="display:none;">
+    <h3><%= l(:button_update) %></h3>
+    <%= render :partial => 'edit' %>
+  </div>
+<% end %>
+
+<%= render :partial => 'cm_commons/shortcuts' %>
+
+<% html_title "#{@cm_mnt_log.id}: #{@cm_mnt_log.name}" %>

@@ -1,0 +1,63 @@
+<h3>Related NCs</h3>
+<% if cm_object.cm_ncs_objects.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>Name</b></td>
+    <td align="center"><b>Status</b></td>
+    <td align="center"><b>Rel. info</b></td>
+    <% if export == "N" %>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+<% cm_object.cm_ncs_objects.each do |cno1| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% if cno1.cm_nc.nil? %>
+    <% nc_ref = "Unknown. Id:"+cno1.cm_nc_id.to_s %>
+    <% nc_name = "Unknown" %>
+    <% nc_status = "Unknown" %>
+    <% creation_text = "Unknown" %>
+  <% else %>
+    <% nc_ref = cno1.cm_nc.code %>
+    <% nc_name = cno1.cm_nc.name %>
+    <% nc_status = cno1.cm_nc.status.name %>
+    <% creation_text = "Created by " + cno1.author.login + " on " + cno1.created_on.strftime("%Y/%m/%d") %>
+  <% end %>
+  <td align="center"><%= link_to h(nc_ref), {:controller => 'cm_ncs',
+              :action => 'show', :id => cno1.cm_nc_id}, :title => creation_text %></td>
+  <td><%= h(nc_name) %></td>
+  <td><%= h(nc_status) %></td>
+  <td><%= h(cno1.rel_string) %></td>
+  <% if export == "N" %>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_ncs_objects', :action => 'edit',
+    :id => cno1.id, :caller_cont => caller_cont, :code => nc_ref}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_ncs_objects', :action => 'destroy',
+      :relation_id => cno1.id, :x_id => cno1.x_id, :x_type => cm_object_type,
+      :code => nc_ref, :caller_cont =>  caller_cont},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+  <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=cm_object.cm_ncs_objects.size %> Non-Conformances related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Non-Conformances related</small></p>
+<% end %>
+
+<% if export == "N" %>
+  <%= link_to "Add Existing NC", {:controller => "cm_ncs_objects", :action => 'new',
+    :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont}, :class => 'icon icon-add' %>
+
+  <% if add_new == "Y" %>
+    <%= link_to "Add New NC", {:controller => 'cm_ncs', :action => 'new', :id => @project,
+        :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont},
+        :class => 'icon icon-add' %>
+
+  <% end %>
+<% end %>
+
+<br /><hr />

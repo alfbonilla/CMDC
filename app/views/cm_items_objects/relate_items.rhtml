@@ -1,0 +1,78 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="iitems">Items to Relate Index</h2>
+
+<% labelled_tabular_form_for :cm_items_objects, @cm_items_objects,
+                             :url => {:action => 'relate_items'},
+                             :html => {:id => 'items_list_form',
+                                       :class => nil,
+                                       :multipart => true} do |f| %>
+
+  <% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+    <p><%= g.hidden_field :x_id, :value => @x_id %></p>
+    <p><%= g.hidden_field :x_type, :value => @x_type %></p>
+    <p><%= g.hidden_field :caller_cont, :value => @caller_cont %></p>
+  <% end %>
+
+  <% if @cm_items_objects.blank? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <div class="autoscroll">
+    <table class="list">
+    <thead>
+    <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {},
+      :onclick => 'toggleItemsSelection(Element.up(this, "form")); return false;',
+      :title => "#{l(:buttontoggleCmItemsSelection_check_all)}/#{l(:button_uncheck_all)}", :x_id => @x_id %>
+    </th>
+    <th align="center"><b>Id</b></th>
+    <th align="center"><b>Code</b></th>
+    <th align="center"><b>Name</b></th>
+    <th align="center"><b>Version</b></th>
+    <th align="center"><b>Status</b></th>
+    </thead>
+    <tbody>
+    <% @cm_items_objects.each do |it| %>
+      <tr id="cm_item-<%= it.id %> <%= cycle('odd', 'even') %>">
+        <td class="checkbox"><%= check_box_tag("ids[]", it.id, false, :id => nil) %></td>
+        <td align="center"><%= h(it.id) %></td>
+        <td align="center"><%= h(it.code) %></td>
+        <td><%= h(it.name) %></td>
+        <td align="center"><%= h(it.version) %></td>
+        <td align="center"><%= h(it.status.name) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+    </div>
+    <br />
+
+  <% end %>
+
+    <p><i>Relations with object would be created with Versions and Locations
+  of the items. Update the items properties before creating the relationship if they are wrong</i></p>
+
+  <br />
+  <p>
+    <%= submit_tag l(:button_submit), :method => :post %>
+    <p><a href="javascript:history.back()">Back</a></p>
+  </p>
+<% end %>
+
+<% html_title "CM - Items to Relate List" %>
+
+<script type="text/javascript">
+  function toggleItemsSelection(el) {
+	var boxes = el.getElementsBySelector('input[type=checkbox]');
+	var all_checked = true;
+	for (i = 0; i < boxes.length; i++) { if (boxes[i].checked == false) { all_checked = false; } }
+	for (i = 0; i < boxes.length; i++) {
+		if (all_checked) {
+			boxes[i].checked = false;
+			boxes[i].up('tr').removeClassName('context-menu-selection');
+		} else if (boxes[i].checked == false) {
+			boxes[i].checked = true;
+			boxes[i].up('tr').addClassName('context-menu-selection');
+		}
+	}
+}
+</script>

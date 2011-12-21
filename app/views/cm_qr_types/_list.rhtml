@@ -1,0 +1,29 @@
+<% form_tag({}) do -%>	
+<div class="autoscroll">
+<table class="list">
+<thead>
+<th><b>Id</b></th>
+<th><b>Name</b></th>
+<th><b>Description</b></th>
+<th><b>Template</b></th>
+<th><b>Edit</b></th>
+<th><b>Delete</b></th>
+</thead>
+<tbody>
+<% @cm_qr_types.each do |cm_qr_type| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+    <td align="center"><%= h(cm_qr_type.id) %></td>
+    <td><%= h(cm_qr_type.name) %></td>
+    <td><%= h(cm_qr_type.description) %></td>
+    <td><%= h(cm_qr_type.template) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_qr_types', 
+      :action => 'edit', :id => cm_qr_type, :project_id => @project.id}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_qr_types', 
+      :action => 'destroy', :id => cm_qr_type, :project_id => @project.id},
+      :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<% end %>

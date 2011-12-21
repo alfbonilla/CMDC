@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class=<%= @cmdc_object %> >Import <%= @cmdc_object %> from input file LOG</h2>
+
+<% labelled_tabular_form_for :cm_import_confirm, @cm_import_confirm,
+                             :html => {:id => 'cm_import_confirm-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_import_confirm' %>
+
+  <p>Actions executed:</p>
+  <small>
+    <%= @log_results %>
+  </small>
+
+  <p>It is recommended to save a copy of this log detail... Just in case :)</p>
+
+  <%= link_to("Back to Index", {:controller => @caller_cont, :action => 'index', :id => @project },
+    :class => 'icon icon-multiple', :method => :post) %>
+
+<% end %>
+
+<% html_title "CM - Import " + @cmdc_object + " LOG Information " %>

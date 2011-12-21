@@ -1,0 +1,16 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="mlogs">Maintenance Log Statuses Index</h2>
+
+<title>Index of Maintenance Log Statuses</title>
+
+<% if @cm_mnt_log_statuses.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'cm_mnt_log_statuses/list' %>
+<% end %>
+
+<%= link_to "Add new maintenance log status", {:controller => "cm_mnt_log_statuses",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - M.Logs List" %>

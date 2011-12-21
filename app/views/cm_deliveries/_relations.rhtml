@@ -1,0 +1,217 @@
+<br /><hr />
+<h3>Delivered Documents<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("del_docs", "appear", {duration:0.3}); return false;' %></small></h3>
+<% if @cm_delivered_docs.any? %>
+<div id="del_docs">
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Document Code</b></td>
+    <td align="center"><b>Document Title</b></td>
+    <td align="center"><b>Version in Delivery</b></td>
+    <td align="center"><b>Relation created on</b></td>
+    <td align="center"><b>Edit Relationship</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_docs.each do |cmDitems| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td><%= link_to cmDitems.code, :controller => "cm_docs", :action => "show", :id => cmDitems.x_id %></td>
+  <td><%= h(cmDitems.name) %></td>
+  <td align="center"><%= h(cmDitems.rel_string) %></td>
+  <td align="center"><%= h(cmDitems.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_deliveries_objects', :action => 'edit',
+    :id => cmDitems.id, :cm_code => cmDitems.code}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_deliveries_objects', :action => 'destroy',
+    :id => @project, :relation_id => cmDitems.id, :cm_delivery_id => cmDitems.cm_delivery_id, :cm_code => cmDitems.code },
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<p style="text-align:right;"><small><%=@cm_delivered_docs.size %> Documents included</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Documents included</small></p>
+<% end %>
+<% unless @cm_delivery.closed? %>
+<%= link_to "Include new document(s)", {:controller => "cm_deliveries_objects", :action => 'new_docs',
+     :id => @project, :cm_delivery_id => @cm_delivery.id, :x_type => "CmDoc"}, :class => 'icon icon-add' %>
+<% end %>
+
+<br /><hr />
+
+<h3>Delivered Items<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("del_items", "appear", {duration:0.3}); return false;' %></small></h3>
+<% if @cm_delivered_items.any? %>
+<div id="del_items">
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Item Code</b></td>
+    <td align="center"><b>Item Name</b></td>
+    <td align="center"><b>Version in Delivery</b></td>
+    <td align="center"><b>Relation created on</b></td>
+    <td align="center"><b>Edit Relationship</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_items.each do |cmDitems| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td><%= link_to cmDitems.code, :controller => "cm_items", :action => "show", :id => cmDitems.x_id %></td>
+  <td><%= h(cmDitems.name) %></td>
+  <td align="center"><%= h(cmDitems.rel_string) %></td>
+  <td align="center"><%= h(cmDitems.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_deliveries_objects', :action => 'edit',
+    :id => cmDitems.id, :cm_code => cmDitems.code}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_deliveries_objects', :action => 'destroy',
+    :id => @project, :relation_id => cmDitems.id, :cm_delivery_id => cmDitems.cm_delivery_id, :cm_code => cmDitems.code },
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<p style="text-align:right;"><small><%=@cm_delivered_items.size %> Items included</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Items included</small></p>
+<% end %>
+<% unless @cm_delivery.closed? %>
+<%= link_to "Include new item(s)", {:controller => "cm_deliveries_objects", :action => 'new_items',
+     :id => @project, :cm_delivery_id => @cm_delivery.id, :x_type => "CmItem"}, :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />
+
+<h3>Closed Non-Conformances<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("del_nc_cl", "appear", {duration:0.3}); return false;' %></small></h3>
+<% if @cm_closed_ncs.any? %>
+<div id="del_nc_cl">
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>NC Name</b></td>
+    <td align="center"><b>Closing Date</b></td>
+    <td align="center"><b>Relation created on</b></td>
+    <td align="center"><b>Edit Relationship</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_closed_ncs.each do |cmDncs| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td><%= link_to cmDncs.code, :controller => "cm_ncs", :action => "show", :id => cmDncs.x_id %></td>
+  <td><%= h(cmDncs.name) %></td>
+  <td align="center"><%= h(cmDncs.rel_string) %></td>
+  <td align="center"><%= h(cmDncs.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_deliveries_objects', :action => 'edit',
+    :id => cmDncs.id, :cm_code => cmDncs.code}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_deliveries_objects', :action => 'destroy',
+    :id => @project, :relation_id => cmDncs.id, :cm_delivery_id => cmDncs.cm_delivery_id, :cm_code => cmDncs.code },
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+  <p style="text-align:right;"><small><%=@cm_closed_ncs.size %> Closed Non-Conformances included</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Non-Conformances closed included</small></p>
+<% end %>
+<% unless @cm_delivery.closed? %>
+<%= link_to "Include new NC(s) Closed", {:controller => "cm_deliveries_objects", :action => 'new_ncs',
+     :id => @project, :cm_delivery_id => @cm_delivery.id, :x_type => "CmNcClosed", :rlse_id => @cm_delivery.release.id},
+     :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />
+
+<h3>Delivered Alive Non-Conformances<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("del_nc_a", "appear", {duration:0.3}); return false;' %></small></h3>
+<% if @cm_delivered_ncs.any? %>
+<div id="del_nc_a">
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>NC Code</b></td>
+    <td align="center"><b>NC Name</b></td>
+    <td align="center"><b>Status</b><small><i>(when this relation was created)</i></small></td>
+    <td align="center"><b>Relation created on</b></td>
+    <td align="center"><b>Edit Relationship</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_ncs.each do |cmDopenncs| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td><%= link_to cmDopenncs.code, :controller => "cm_ncs", :action => "show", :id => cmDopenncs.x_id %></td>
+  <td><%= h(cmDopenncs.name) %></td>
+  <td align="center"><%= h(cmDopenncs.rel_string) %></td>
+  <td align="center"><%= h(cmDopenncs.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_deliveries_objects', :action => 'edit',
+    :id => cmDopenncs.id, :cm_code => cmDopenncs.code}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_deliveries_objects', :action => 'destroy',
+    :id => @project, :relation_id => cmDopenncs.id, :cm_delivery_id => cmDopenncs.cm_delivery_id, :cm_code => cmDopenncs.code },
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+  <p style="text-align:right;"><small><%=@cm_delivered_ncs.size %> Alive Non-Conformances included</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Alive Non-Conformances included</small></p>
+<% end %>
+<% unless @cm_delivery.closed? %>
+<%= link_to "Include new NC(s) Open (known issues)", {:controller => "cm_deliveries_objects", :action => 'new_ncs',
+     :id => @project, :cm_delivery_id => @cm_delivery.id, :x_type => "CmNc", :rlse_id => @cm_delivery.release.id }, :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />
+
+<h3>Delivered Changes<small><%= link_to "(hide/show)", {},
+  :onclick => 'Effect.toggle("del_changes", "appear", {duration:0.3}); return false;' %></small></h3>
+<% if @cm_delivered_changes.any? %>
+<div id="del_changes">
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Change Code</b></td>
+    <td align="center"><b>Change Name</b></td>
+    <td align="center"><b>Version in Delivery</b></td>
+    <td align="center"><b>Relation created on</b></td>
+    <td align="center"><b>Edit Relationship</b></td>
+    <td align="center"><b>Delete Relationship</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_delivered_changes.each do |cmDchanges| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <td><%= link_to cmDchanges.code, :controller => "cm_changes", :action => "show", :id => cmDchanges.x_id %></td>
+  <td><%= h(cmDchanges.name) %></td>
+  <td align="center"><%= h(cmDchanges.rel_string) %></td>
+  <td align="center"><%= h(cmDchanges.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_deliveries_objects', :action => 'edit',
+    :id => cmDchanges.id, :cm_code => cmDchanges.code}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_deliveries_objects', :action => 'destroy',
+    :id => @project, :relation_id => cmDchanges.id, :cm_delivery_id => cmDchanges.cm_delivery_id, :cm_code => cmDchanges.code },
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+  <p style="text-align:right;"><small><%=@cm_delivered_changes.size %> Request for Changes included</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Request for Changes included</small></p>
+<% end %>
+<% unless @cm_delivery.closed? %>
+<%= link_to "Include new change(s)", {:controller => "cm_deliveries_objects", :action => 'new_changes',
+     :id => @project, :cm_delivery_id => @cm_delivery.id, :x_type => "CmChange"}, :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />
+
+<h3>Related Quality Records</h3>
+<%= render :partial => 'cm_qrs/qrs_in_object.rhtml', :locals => {:cm_qrs => @cm_qrs} %>
+
+<br /><hr />

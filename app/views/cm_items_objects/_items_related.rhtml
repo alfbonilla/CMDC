@@ -1,0 +1,56 @@
+<h3>Related Items</h3>
+<% if cm_object.cm_items_objects.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Item Code</b></td>
+    <td align="center"><b>Owner</b></td>
+    <td align="center"><b>Status</b></td>
+    <td align="center"><b>Rel Info</b></td>
+    <td align="center"><b>Rel. creation date</b></td>
+    <td align="center"><b>Rel. created by</b></td>
+    <% if export == "N" %>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Delete</b></td>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+<% cm_object.cm_items_objects.each do |iObj| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% if iObj.cm_item.nil? %>
+    <% item_ref = "Unknown. Id:" + iObj.cm_item_id.to_s %>
+    <% item_author = "Unknown" %>
+    <% item_status = "Unknown" %>
+  <% else %>
+    <% item_ref = iObj.cm_item.code %>
+    <% item_author = iObj.cm_item.item_owner %>
+    <% item_status = iObj.cm_item.status.name %>
+  <% end %>
+  <td align="center"><%= link_to h(item_ref), :controller => 'cm_items',
+              :action => 'show', :id => iObj.cm_item_id %></td>
+  <td align="center"><%= h(item_author) %></td>
+  <td align="center"><%= h(item_status) %></td>
+  <td align="center"><%= h(iObj.rel_string) %></td>
+  <td align="center"><%= h(iObj.created_on.strftime("%Y/%m/%d")) %></td>
+  <td align="center"><%= h(iObj.author.login) %></td>
+  <% if export == "N" %>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_items_objects', :action => 'edit',
+    :id => iObj.id, :caller_cont => caller_cont, :rid_code => item_ref}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_items_objects', 
+      :action => 'destroy', :relation_id => iObj.id, :code => item_ref, :caller_cont => caller_cont},
+      :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p style="text-align:right;"><small><%=cm_object.cm_items_objects.size %> Items related</small></p>
+<% else %>
+<p style="text-align:right;"><small>No Items related</small></p>
+<% end %>
+<% if export == "N" %>
+<%= link_to "Add Existing Item", {:controller => "cm_items_objects", :action => 'new',
+    :x_id => cm_object.id, :x_type => cm_object_type, :caller_cont => caller_cont}, :class => 'icon icon-add' %>
+<% end %>
+<br /><hr />

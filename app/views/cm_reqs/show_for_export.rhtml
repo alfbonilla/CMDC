@@ -1,0 +1,98 @@
+<h2 class="reqs"><%= @cm_req.code %> #<%= @cm_req.id %> <b>-</b> <%= @cm_req.type.name %></h2>
+
+<table class="attributes">
+<tr>
+  <th><b>Classification:</b></th><td><%= @cm_req.classification.name %></td>
+  <th><b>Status:</b></th><td><%= change_t_status_to_s(@cm_req.status) %></td>
+</tr>
+<tr>
+  <th><b>Assigned To:</b></th><td><%= @cm_req.assignee.name unless @cm_req.assignee.nil? %></td>
+  <th><b>Subsystem:</b></th><td><%= @cm_req.subsystem.name unless @cm_req.subsystem.nil? %></td>
+</tr>
+<tr>
+  <th><b>Version:</b></th><td><%= @cm_req.version %></td>
+  <th><b>Optional:</b></th><td><%= @cm_req.optional %></td>
+</tr>
+<tr>
+  <th><b>Verification Method:</b></th><td><%= @cm_req.verification_method.name unless @cm_req.verification_method.nil? %></td>
+</tr>
+<tr>
+  <th><b>No Ancestors:</b></th><td><%= @cm_req.no_ascendants %></td>
+  <th><b>No Descendants:</b></th><td><%= @cm_req.no_descendants %></td>
+</tr><tr>
+  <th><b>Order:</b></th><td><%= @cm_req.display_order %></td>
+  <th><b>Place in Doc:</b></th><td><%= @cm_req.place_in_doc %></td>
+</tr>
+<tr>
+  <th><b>Description:</b></th><td><%= textilizable @cm_req, :description %></td>
+</tr>
+<tr>
+  <th><b>Comments:</b></th><td><%= textilizable @cm_req, :comments %></td>
+</tr>
+</table>
+
+<div id="relations">
+<h3>Related Traceability Elements</h3>
+
+<% if @cm_req.cm_reqs_reqs.any? or @parent_reqs.any? %>
+<table class="list" style="width:100%">
+<thead>
+  <tr>
+    <td align="center"><b>Relation Type</b></td>
+    <td align="center"><b>Code</b></td>
+    <td align="center"><b>Relation Details</b></td>
+    <td align="center"><b>Creation Date</b></td>
+    <td align="center"><b>Created By</b></td>
+  </tr>
+</thead>
+<tbody>
+<% @cm_req.cm_reqs_reqs.each do |reqReq| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% reqReq.child_req.nil? ? req_ref = "Unknown. Id:" + reqReq.child_req.id.to_s : req_ref = reqReq.child_req.code %>
+<td><%= h(change_relation_type_to_s(reqReq.relation_type)) %></td>
+<td><%= h(req_ref) %></td>
+<td><%= h(reqReq.description) %></td>
+<td><%= h(reqReq.created_on.strftime("%Y/%m/%d")) %></td>
+<td><%= h(reqReq.author.login) %></td>
+</tr>
+<% end %>
+<% @parent_reqs.each do |reqReq| %>
+<tr valign="top" class="<%= cycle('odd', 'even') %>">
+<% reqReq.parent_req.nil? ? req_ref = "Unknown. Id:" + reqReq.parent_req.id.to_s : req_ref = reqReq.parent_req.code %>
+<% case reqReq.relation_type
+  when 1 %>
+  <td><%= h(change_relation_type_to_s(2)) %></td>
+<% when 2 %>
+  <td><%= h(change_relation_type_to_s(1)) %></td>
+<% else %>
+  <td><%= h(change_relation_type_to_s(3)) %></td>
+<% end %>
+<td><%= h(req_ref) %></td>
+<td><%= h(reqReq.description) %></td>
+<td><%= h(reqReq.created_on.strftime("%Y/%m/%d")) %></td>
+<td><%= h(reqReq.author.login) %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<% else %>
+  <p><small>No Traceability Elements related</small></p>
+<% end %>
+<br />
+</div>
+<hr />
+
+<%= render :partial => 'cm_ncs_objects/ncs_related',
+  :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq", 
+        :caller_cont => "cm_reqs", :export => "Y", :add_new => "N"} %>
+
+<%= render :partial => 'cm_changes_objects/changes_related',
+  :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq", :caller_cont => "cm_reqs", :export => "Y"} %>
+
+<%= render :partial => 'cm_rids_objects/rids_related',
+  :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq", :caller_cont => "cm_reqs", :export => "Y"} %>} %>
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_req, :cm_object_type => "CmReq", :cm_object_cont => "cm_reqs", :export => "Y"} %>
+

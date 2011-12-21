@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="changes">New Change Status</h2>
+
+<% labelled_tabular_form_for :cm_change_status, @cm_change_status,
+                             :html => {:id => 'cm_change_status-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_change_status' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Changes Status Properties</legend>
+      <div id="attributes" class="attributes">
+       <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+  <%= submit_tag l(:button_create) %>
+
+<% end %>
+
+<% html_title "CM - New Change Status" %>

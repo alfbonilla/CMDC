@@ -1,0 +1,35 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">Test Campaigns Index</h2>
+<p>
+  <fieldset><legend>Filter</legend>
+  <form id="filter_form" action="" style="display:inline;">
+    <label for="code">Test Campaign Code: </label>
+    <%= text_field_tag("query", params['query'], :size => 20 ) %>
+    <label for="name">Name: </label>
+    <%= text_field_tag("query1", params['query1'], :size => 40 ) %>
+    <%#*<label for="name">Serial Number: </label>%>
+    <%#= text_field_tag("query3", params['query3'], :size => 40 ) %>
+    <input type="submit" value="Apply" />
+  </form>
+  </fieldset>
+</p>
+
+<div id="table" class="autoscroll">
+  <% if @cm_test_campaigns.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render :partial => 'cm_test_campaigns/list' %>
+  <% end %>
+</div>
+
+<%= link_to_if_authorized "Add new Test Campaign", {:controller => "cm_test_campaigns",
+  :action => 'new', :id => @project}, :class => 'icon icon-add' %>
+
+<% html_title "CM - Test Campaigns List" %>
+
+<p class="other-formats">
+  Also available
+  <%= link_to('Export Data', {:controller => "cm_exports", :action => 'export_data',
+      :object_to_export => 'CmTestCampaign', :id => @project, :format => 'csv'}) %>
+</p>

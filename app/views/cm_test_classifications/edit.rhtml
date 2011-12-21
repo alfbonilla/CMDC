@@ -1,0 +1,23 @@
+<%= stylesheet_link_tag 'cmStyle', :plugin => 'redmine_cm' %>
+
+<h2 class="tests">Edit Test Classification</h2>
+
+<% labelled_tabular_form_for :cm_test_classification, @cm_test_classification,
+                             :html => {:id => 'cm_test_classification-form',
+                             :class => nil,
+                             :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_test_classification' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Test Classification Properties</legend>
+      <div id="attributes" class="attributes">
+        <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+  <br />
+  <%= submit_tag l(:button_submit) %>
+<% end %>
+
+<% html_title "CM - Edit Test Classification #{@cm_test_classification.name}" %>

@@ -1,0 +1,256 @@
+# English strings go here for Rails i18n
+en:
+  # Field translation for redmine_cm plugin
+  field_include_history: Include History Data
+  field_code: Code
+  field_relation_type: Relation Type
+  field_product_tree_code: Product Tree Code
+  field_quantity: Quantity
+  field_available_qty: Available Quantity
+  field_cost_per_unit: Cost per Unit
+  field_cm_item: Item Name
+  field_category: Category
+  field_cm_item_group: Group
+  field_type: Type
+  field_classification: Classification
+  field_version: Version
+  field_serial_number: Serial Number
+  field_model_number: Model Number
+  field_physical_location: Physical Location
+  field_l_physical_location: Physical Location
+  field_installed_on_host: Installed/Integrated on
+  field_reception_date: Reception Date
+  field_expiration_date: Expiration Date
+  field_environmental_needs: Environmental Needs
+  field_comments: Comments
+  field_comments_on_license: Comments on License/Warranty
+  field_external_info: External Info(company, model...)
+  field_markings: Label
+  field_cm_purchase_order: Purchase Order
+  field_cost: Cost
+  field_budget: Budget
+  field_unit: Units
+  field_payment_method: Payment Method
+  field_procurement_level: Procurement Level
+  field_frame_contract: Frame Contract
+  field_actual_estimated: Estimated
+  field_item_owner: Owner
+  field_disposal_method: Disposal Method
+  field_requested_by : Requested By
+  field_requested_date : Requested Date
+  field_authorized_by : Authorized By
+  field_authorized_date : Authorized Date
+  field_purchase_date : Purchase Date
+  field_supplier : Supplier
+  field_vendor : Vendor
+  field_payment_period : Payment Period
+  field_total_payment : Total Payment
+  field_delivery_note : Delivery Note
+  field_item : Item
+  field_nc_ref : Non-Conformance Reference
+  field_process_used : Process Used
+  field_maintained_by : Maintained By
+  field_maintenance_start_date : Maintenance Start Date
+  field_maintenance_time : Spent Maintenance Time
+  field_installation_log : Installation Log
+  field_configuration_comments : Configuration Notes
+  field_format : Pattern
+  field_counter : Counter
+  field_rlse_detected: "Release Detected"
+  field_rlse_solved: "Release Solved"
+  field_rlse_verified: "Release Verified"
+  field_detected_on : "Detected on Location/Revision"
+  field_phase : "Phase"
+  field_company : "Company"
+  field_history_notes : "History Notes"
+  field_rlse_detected_info: "Detection Additional Info"
+  field_rlse_solved_info: "Solution Additional Info"
+  field_rlse_verified_info: "Verification Additional Info"
+  field_open_date : "Opening Date"
+  field_closing_date : "Closing Date"
+  field_affected_items : "Affected Items"
+  field_violated_reqs : "Traceability Elements Violated"
+  field_impact_notes : "Impact Notes"
+  field_related_docs : "Documents Related"
+  field_documentation_problem : "Documentation Problem"
+  field_critical_item : "Critical Item"
+  field_safety_item : "Safety Item"
+  field_design_changes_done : "Changes done in Design"
+  field_analysis : "Analysis"
+  field_analyzed_on : "Analysis Date"
+  field_rfw_reference : "RFW Reference"
+  field_cm_nc : "Object to relate"
+  field_child_nc : "NC child"
+  field_child_item : "Inventory Item Child"
+  field_smr_code : "Software Modification Report"
+  field_specific_tests : "Specific Tests"
+  field_cm_smr : "Software Modification Report"
+  field_source_revision : "Source Revision"
+  field_final_revision : "Final Revision"
+  field_comments_on_smr : "Comments on Implementation"
+  field_approved : "Approved"
+  field_file_name : "File Name"
+  field_cm_board_code : "Meeting Code"
+  field_meeting_date : "Meeting Date"
+  field_decision : "Decision Taken"
+  field_due_date : "Due Date"
+  field_raise_alert : "Alert Raised"
+  field_board_type : "Meeting Type"
+  field_cm_board : "Meeting Id"
+  field_participants : "Participants"
+  field_cm_wa_code : "Work Around Code"
+  field_wa_type : "Work Around Type"
+  field_constraints : "Constraints"
+  field_rlse_removed: "Release to Remove/Removed"
+  field_level: "Level"
+  field_relate_smrs: "Can Relate SMRs"
+  field_address: "Address"
+  field_technical_contact: "Technical Contact"
+  field_company_type: "Company Type"
+  field_distributor_name: "Distributor Name"
+  field_phone: "Phone"
+  field_fax: "Fax"
+  field_mail: "Mail"
+  field_web_site: "Website"
+  field_pattern: "Pattern"
+  field_doc_type: "Document Type"
+  field_applicable: "Applicable"
+  field_approved_date: "Approved Date"
+  field_VAT_included: "VAT Included"
+  field_leadtime: "Leadtime"
+  field_review_leadtime: "Review Leadtime"
+  field_template: "Template"
+  field_x_name: "Object Name"
+  field_x: "Object Id"
+  field_x_type: "Object Type"
+  field_ref_docs: "Referenced Documents"
+  field_check_used: "Checklist Used"
+  field_rel_string: "Relation info"
+  field_rel_string_2: "Extra info"
+  field_rel_date: "Date info"
+  field_rel_bool: "Check info"
+  field_configuration_item: "Configuration Item"
+  field_create_issue: "Create Issue Related"
+  field_issue_type: "Issue Type (tracker)"
+  field_issue_subject: "Issue Subject"
+  field_approved_by: "Approved By"
+  field_baseline: "Baseline"
+  field_cm_delivery: "Delivery"
+  field_delivery_date: "Delivery Date"
+  field_from_company: "From Company"
+  field_to_company: "To Company"
+  field_revision_at_load: "Revision of the file when it was loaded"
+  field_remove_data: "Delete existing data"
+  field_reproducibility: "Reproducibility"
+  field_steps_to_reproduce: "Steps to Reproduce"
+  field_recep_deliv_date: "Reception / Delivery Date"
+  field_cm_doc: "Associated Document"
+  field_release: "Release"
+  field_implementation: "Implementation"
+  field_compliance: "Compliance"
+  field_assumption: "Assumption"
+  field_soc_control: "SoC Control"
+  field_affected_doc: "Affected Document"
+  field_affected_item: "Affected Item"
+  field_affected_integrated_version: "Integrated in Version"
+  field_child_change: "Child Change"
+  field_reason: "Reason for Change"
+  field_internal_status: "Status"
+  field_external_status: "External Status"
+  field_discrepancy: "Discrepancy"
+  field_close_out: "Close Out"
+  field_generation_date: "Generation Date"
+  field_doc_due_date: "Due Date"
+  field_open_release: "Open on Release"
+  field_originator: "Originator"
+  field_originator_company: "Originator Company"
+  field_recommendation: "Recommendation"
+  field_affected_doc_version: "Affected Doc Version"
+  field_problem_location: "Problem Location"
+  field_author_response: "Author Response"
+  field_disposition: "Disposition"
+  field_implementation_release: "Implemented on Release"
+  field_cm_change: "Change"
+  field_distribution_list: "Distribution List"
+  field_board_body: "Meeting Body"
+  field_conclusions: "Conclusions"
+  field_action_counter: "Action Counter"
+  field_impact: "Impact"
+  field_probability: "Probability"
+  field_detection_date: "Detection Date"
+  field_closing_date: "Closing Date"
+  field_mitigation: "Mitigation"
+  field_impact_ini_date: "Impact Initial Date"
+  field_impact_end_date: "Impact Final Date"
+  field_risk_exposure: "Risk Exposure"
+  field_priority_ranking: "Priority"
+  field_increment_by: "Increment by"
+  field_nc_issue: "NC Issue"
+  field_preventive_action: "Preventive Action"
+  field_target_version: "Target Version"
+  field_affected_version: "Affected Version"
+  field_subsystem: "Subsystem"
+  field_actions_completed: "Actions Completed"
+  field_minutes_closed: "Minutes Closed"
+  field_cm_rid: "Rid"
+  field_verification_method: "Verification Method"
+  field_display_order: "Order"
+  field_place_in_doc: "Place in Document"
+  field_child_req : "Req to relate"
+  field_cm_req : "Req to relate"
+  field_rel_type: "Relation Type"
+  field_issue_project: "Issue Project"
+  field_optional: "Optional"
+  field_no_ascendants: "No Ancestors"
+  field_no_descendants: "No Descendants"
+  field_review_version: "Review Version"
+  field_input_mask: "Input Mask"
+  field_separator: "Separator"
+  field_applicable_version: "Applicable Version"
+  field_external_doc: "External Identification"
+  field_te_1: "Traceability Element 1"
+  field_te_2: "Traceability Element 2"
+  field_test_design: "Test Design"
+  field_test_case: "Test Case"
+  field_test_procedure: "Test Procedure"
+  field_deliverable: "Deliverable"
+  field_is_received: "Received"
+  field_starting_conditions: Starting Conditions
+  field_result: Result
+  field_execution_date: Execution Date
+  field_long_lead_item: "Long Lead Item"
+  field_objective: Objective
+  field_board_to_relate: "Open Meetings"
+  field_implementation_location: "Implementation Location"
+  field_reviewed: "Reviewed"
+  field_steps: Steps
+  field_checkpoints: Checkpoints
+  field_input_data: Input Data
+  field_output_data: Output Data
+  field_pass_fail_criteria: Pass/Fail Criteria
+  field_execution_order: Execution Order
+  field_cm_test: Test
+  field_cm_test_campaigns_object: Relation Id
+  field_execution_log: Execution Log
+  field_execution_evidences: Execution Evidences
+  field_restrict_or_observe: Restrict/Observe
+  field_witnessed_by: Witnessed by
+  field_child_test: Test
+  field_cm_test_scenario: Scenario
+  field_acronym: Acronym (for codes)
+  field_cmdc_object: CMDC Object
+  field_approval_level: Approval Level
+  field_referable: Referable
+  field_l_version: Version
+  field_l_applicable: Applicable
+  field_l_assigned_to: Assigned To
+  field_l_status: Status
+  field_is_ready_to_verify: Is Ready To Verify
+  field_rel: Relation Info
+  field_environment: Environment
+  field_finish_date: Finish Date
+  field_rlse_expected: Expected Resolution Version
+  field_impacted_items: Impacted Items
+  field_failed_tests: Failed Tests
+  field_reference_docs: Reference Documents
+  # END Field translation for redmine_cm plugin

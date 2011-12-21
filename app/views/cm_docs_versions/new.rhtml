@@ -1,0 +1,22 @@
+<h2>New Document Version Relation</h2>
+
+<% labelled_tabular_form_for :cm_docs_version, @cm_docs_version,
+                     :html => {:id => 'cm_docs_version-form',
+                     :class => nil,
+                     :multipart => true} do |f| %>
+
+  <%= error_messages_for 'cm_docs_version' %>
+
+  <div class="box">
+    <fieldset class="tabular"><legend>Received Document Relation Properties</legend>
+      <div id="attributes" class="attributes">
+       <%= render :partial => 'attributes', :locals => {:f => f} %>
+      </div>
+    </fieldset>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+	
+<% end %>
+
+<% html_title "CM - New Document Version Relation" %>

@@ -1,0 +1,124 @@
+<br /><hr />
+
+<%# Issues Form %>
+<%= render :partial => 'cm_objects_issues/new_issue',
+    :locals => { :cm_object => @cm_test, :cm_object_type => "CmTest",
+    :cm_object_cont => "cm_tests", :export => "N" } %>
+
+<br /><hr />
+
+<div class="splitcontentleft">
+  <h3>Related Tests</h3>
+
+  <% if @cm_test.cm_tests_tests.any? or @parent_tests.any? %>
+  <table class="list" style="width:100%">
+  <thead>
+    <tr>
+      <td align="center"><b>Order</b></td>
+      <td align="center"><b>Relation Type</b></td>
+      <td align="center"><b>Code</b></td>
+      <td align="center"><b>Name</b></td>
+      <td align="center"><b>Relation Details</b></td>
+      <td align="center"><b>Edit</b></td>
+      <td align="center"><b>Delete</b></td>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cm_test.cm_tests_tests.each do |testTest| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% testTest.child_test.nil? ? test_ref = "Unknown. Id:" + testTest.child_test.id.to_s : test_ref = testTest.child_test.code %>
+  <td><%= h(testTest.execution_order) %></td>
+  <td align="center"><%= h(change_relation_type_to_s(testTest.relation_type)) %></td>
+  <% creation_text = "Created by " + testTest.author.login + " on " + testTest.created_on.strftime("%Y/%m/%d") %>
+  <td align="center"><%= link_to h(test_ref), {:controller => 'cm_tests', :action => 'show',
+      :id => testTest.child_test.id}, :title => creation_text  %></td>
+  <td><%= h(testTest.child_test.name) %></td>
+  <td><%= h(testTest.description) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_tests_tests',
+    :action => 'edit', :id => testTest.id, :back_id => @cm_test.id}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_tests_tests', :action => 'destroy',
+    :id => testTest.id, :test_id => @cm_test.id, :child_id => test_ref, :new_type => 'no-father'},
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+  <% end %>
+
+  <% @parent_tests.each do |testTest| %>
+  <tr valign="top" class="<%= cycle('odd', 'even') %>">
+  <% testTest.parent_test.nil? ? test_ref = "Unknown. Id:" + testTest.parent_test.id.to_s : test_ref = testTest.parent_test.code %>
+  <td>-</td>
+  <% case testTest.relation_type
+    when 1 %>
+    <td align="center"><%= h(change_relation_type_to_s(2)) %></td>
+  <% when 2 %>
+    <td align="center"><%= h(change_relation_type_to_s(1)) %></td>
+  <% end %>
+  <td align="center"><%= link_to h(test_ref), :controller => 'cm_tests', :action => 'show', :id => testTest.parent_test.id %></td>
+  <td><%= h(testTest.parent_test.name) %></td>
+  <td><%= h(testTest.description) %></td>
+  <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_tests_tests',
+    :action => 'edit', :id => testTest.id, :back_id => @cm_test.id}) %></td>
+  <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_tests_tests', :action => 'destroy',
+    :id => testTest.id, :test_id => @cm_test.id, :child_id => test_ref, :new_type => 'father'},
+    :confirm => l(:text_are_you_sure), :method => :post) %></td>
+  </tr>
+  <% end %>
+  </tbody>
+  </table>
+  <p style="text-align:right;"><small><%=@cm_test.cm_tests_tests.size+@parent_tests.size %> Tests related</small></p>
+  <% else %>
+  <p style="text-align:right;"><small>No Tests related</small></p>
+  <% end %>
+  <br />
+  <% if @allow_relate_parent %>
+  <p>
+    <%= link_to "Add Existing Prev level Test", {:controller => "cm_tests_tests", :action => 'new',
+      :id => @cm_test.id, :test_level => @cm_test.type.level - 1,
+      :new_type => 'father'}, :class => 'icon icon-add' %>
+  <% else %>
+  <p style="text-align:right;"><small>(There are no Test of previous hierachical level type)</small></p>
+  </p>
+  <% end %>
+  <p>
+  <% if @allow_relate_children %>
+    <%= link_to "Add Existing Next level Test", {:controller => "cm_tests_tests", :action => 'new',
+      :id => @cm_test.id, :test_level => @cm_test.type.level + 1,
+      :new_type => 'child', :number_of_tests => @cm_test.cm_tests_tests.size}, :class => 'icon icon-add' %>
+    <%= link_to "Add New Next level Test", {:controller => "cm_tests", :action => 'new',
+      :id => @project, :test_id => @cm_test.id, :test_level => @cm_test.type.level + 1,
+      :number_of_tests => @cm_test.cm_tests_tests.size}, :class => 'icon icon-add' %>
+  <% else %>
+  <p style="text-align:right;"><small>(There are no Tests of next hierachical level type)</small></p>
+  </p>
+  <% end %>
+
+  <br /><hr />
+
+  <div id="Scenarios_related_id">
+  <%= render :partial => 'scenarios_related' %>
+  </div>
+</div>
+
+<div class="splitcontentright">
+  <div id="TKs_related_id">
+  <%= render :partial => 'campaigns_related' %>
+  </div>
+</div>
+
+<div style="clear:both;"> </div>
+
+<br /><hr />
+
+<div class="splitcontentleft">
+  <div id="TEs_related_id">
+  <%= render :partial => 'tes_related' %>
+  </div>
+</div>
+<div class="splitcontentright">
+  <div id="Docs_related_id">
+  <%= render :partial => 'docs_related' %>
+  </div>
+</div>
+
+<div style="clear:both;"> </div>
+
+<br /><hr />
