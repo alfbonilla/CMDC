@@ -51,7 +51,7 @@ class CmDocsController < ApplicationController
     end
 
     if @cm_companies.nil?
-      @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+      @cm_companies = CmCompany.find(:all)
       @cm_companies.insert(0, CmCompany.new(:name => "All", :id => 0))
     end
 
@@ -266,7 +266,7 @@ class CmDocsController < ApplicationController
     @cm_doc_statuses = CmDocStatus.find(:all, 
       :conditions => ['project_id in (?,?)', 0, @project.id])
     @cm_doc_categories = DocumentCategory.all
-    @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+    @cm_companies = CmCompany.find(:all)
     @cm_subsystems = CmSubsystem.find(:all, :conditions => ['project_id=?', @project.id])
     @cm_doc_assignees = @project.assignable_users
     unless @cm_doc_assignees

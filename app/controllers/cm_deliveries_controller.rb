@@ -32,7 +32,7 @@ class CmDeliveriesController < ApplicationController
 
     #define filter capabilities
     if @cm_companies.nil?
-      @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+      @cm_companies = CmCompany.find(:all)
       @cm_companies.insert(0, CmCompany.new(:name => "All", :id => 0))
     end
 
@@ -316,7 +316,7 @@ class CmDeliveriesController < ApplicationController
   end
 
   def prepare_combos
-    @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+    @cm_companies = CmCompany.find(:all)
     @cm_delivery_approvers = @project.assignable_users
     @cm_delivery_statuses = CmDeliveryStatus.all(:all,
       :conditions => ['project_id in (?,?)', 0, @project.id])

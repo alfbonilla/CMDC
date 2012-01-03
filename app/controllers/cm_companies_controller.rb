@@ -6,7 +6,7 @@ class CmCompaniesController < ApplicationController
   accept_key_auth :index, :new, :edit, :destroy
       
   def index
-    @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+    @cm_companies = CmCompany.find(:all)
   end
 
   def new
@@ -16,7 +16,8 @@ class CmCompaniesController < ApplicationController
     
     if request.post?
       @cm_company = CmCompany.new(params[:cm_company])
-      @cm_company.project = @project
+      # Companies are shared through the whole CMDC
+      @cm_company.project_id = 0
       
       if @cm_company.save
         flash[:notice] = l(:notice_successful_create)
@@ -27,8 +28,8 @@ class CmCompaniesController < ApplicationController
     end
   end
 
-  def edit
-    if request.post?
+  def edit   
+    if request.post?    
       if @cm_company.update_attributes(params[:cm_company])
         flash[:notice] = l(:notice_successful_update)
         redirect_back_or_default({:action => 'index', :id => @project})
@@ -52,8 +53,14 @@ class CmCompaniesController < ApplicationController
   private
 
   def find_cm_company
-    @cm_company = CmCompany.find(params[:id], :include => [:project])
-    @project = @cm_company.project
+    @cm_company = CmCompany.find(params[:id])
+       
+    if params[:working_data]
+      @project = Project.find(params[:working_data][:project_id])
+    else
+      @project = Project.find(params[:project_id])          
+    end    
+    
   rescue ActiveRecord::RecordNotFound
     render_404
   end

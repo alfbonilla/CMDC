@@ -1,14 +1,23 @@
 <% fields_for :cm_company, @cm_company, :builder => TabularFormBuilder do |f| %>
+  <div class="splitcontentleft">
+	<p><%= f.text_field :code, :size => 10 %><small><i>Acronym</i></small></p>
+	<p><%= f.text_field :name, :size => 30, :required => true %></p>
+	<p><%= f.select :company_type, CmCompany::COMPANY_TYPES.collect %></p>
+	<p><%= f.text_area :address, :cols => 60, :rows => 3 %></p>
+	<p><%= f.text_field :technical_contact, :size => 50 %></p>
+  </div>
+  <div class="splitcontentright">
+	<p><%= f.text_field :distributor_name, :size => 50 %></p>
+	<p><%= f.text_field :phone, :size => 30 %></p>
+	<p><%= f.text_field :fax, :size => 30 %></p>
+	<p><%= f.text_field :mail, :size => 60 %></p>
+	<p><%= f.text_field :web_site, :size => 100 %></p>
+  </div>
 
-<p><%= f.text_field :code, :size => 10 %><small><i>Acronym</i></small></p>
-<p><%= f.text_field :name, :size => 30, :required => true %></p>
-<p><%= f.select :company_type, CmCompany::COMPANY_TYPES.collect %></p>
-<p><%= f.text_area :address, :cols => 60, :rows => 3 %></p>
-<p><%= f.text_field :technical_contact, :size => 50 %></p>
-<p><%= f.text_field :distributor_name, :size => 50 %></p>
-<p><%= f.text_field :phone, :size => 30 %></p>
-<p><%= f.text_field :fax, :size => 30 %></p>
-<p><%= f.text_field :mail, :size => 60 %></p>
-<p><%= f.text_field :web_site, :size => 100 %></p>
-<p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+  <div style="clear:both;"> </div>
+  <p><%= f.text_area :description, :cols => 60, :rows => 5, :class => 'wiki-edit' %></p>
+<% end %>
+
+<% fields_for :working_data, @working_data, :builder => TabularFormBuilder do |g| %>
+  <p><%= g.hidden_field :project_id, :value => @project.id %></p>
 <% end %>

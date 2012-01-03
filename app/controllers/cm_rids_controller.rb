@@ -292,7 +292,7 @@ class CmRidsController < ApplicationController
   def prepare_combos
     @cm_rid_close_outs = CmRidCloseOut.find(:all, 
       :conditions => ['project_id in (?,?)',0 , @project.id])
-    @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+    @cm_companies = CmCompany.find(:all)
     @releases = Version.find(:all, :conditions => ['status = ? and project_id = ?', "open", @project.id])
     @cm_rid_assignees = @project.assignable_users
       unless @cm_rid_assignees

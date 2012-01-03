@@ -22,8 +22,11 @@
     <td><%= h(cm_company.phone) %></td>
     <td><%= h(cm_company.mail) %></td>
     <td><%= h(cm_company.web_site) %></td>
-    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_companies', :action => 'edit', :id => cm_company}) %></td>
-    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_companies', :action => 'destroy', :id => cm_company},:confirm => l(:text_are_you_sure), :method => :post) %></td>
+    <td align="center"><%= link_to(image_tag('edit.png'), {:controller => 'cm_companies', 
+    	:action => 'edit', :id => cm_company, :project_id => @project.id}) %></td>
+    <td align="center"><%= link_to(image_tag('delete.png'), {:controller => 'cm_companies', 
+    	:action => 'destroy', :id => cm_company, :project_id => @project.id},
+    	:confirm => l(:text_are_you_sure), :method => :post) %></td>
   </tr>
 <% end %>
 </tbody>

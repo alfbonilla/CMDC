@@ -262,8 +262,8 @@ class CmChangesController < ApplicationController
       :conditions => ['project_id in (?,?)', 0, @project.id])
     @cm_change_types = CmChangeType.find(:all, 
       :conditions => ['project_id in (?,?)', 0, @project.id])
-    @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
-    @releases = Version.find(:all, :conditions => ['status = ? and project_id = ?', "open", @project.id])
+    @cm_companies = CmCompany.find(:all)
+    @releases = Version.find(:all, :con520ditions => ['status = ? and project_id = ?', "open", @project.id])
     @cm_docs = CmDoc.find(:all, :conditions => ['project_id=?', @project.id])
     @cm_items = CmItem.find(:all, :conditions => ['project_id=?', @project.id])
     @counter_types = CmDocCounter.my_project(@project.id).object_counters(change_cmdc_object_to_i('Change'))

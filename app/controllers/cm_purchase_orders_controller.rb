@@ -156,11 +156,9 @@ class CmPurchaseOrdersController < ApplicationController
   end
 
   def prepare_combos
-    @suppliers = CmCompany.find(:all, :conditions => [ 'company_type = ? and project_id = ?',
-                                                      "Supplier", @project.id ])
+    @suppliers = CmCompany.find(:all, :conditions => [ 'company_type = ?', "Supplier"])
     @suppliers.insert(0, CmCompany.new(:name => "None", :id => 0))
-    @vendors = CmCompany.find(:all, :conditions => [ 'company_type = ? and project_id = ?',
-                                                      "Vendor", @project.id ])
+    @vendors = CmCompany.find(:all, :conditions => [ 'company_type = ?', "Vendor"])
     @vendors.insert(0, CmCompany.new(:name => "None", :id => 0))
   end
 

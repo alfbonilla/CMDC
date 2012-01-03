@@ -289,7 +289,7 @@ class CmBoardsController < ApplicationController
 
   def prepare_combos
     @cm_board_types = CmBoardType.find(:all, :conditions => ['project_id in (?, ?)', 0, @project.id])
-    @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
+    @cm_companies = CmCompany.find(:all)
     @counter_types = CmDocCounter.my_project(@project.id).object_counters(change_cmdc_object_to_i('Meeting'))
     @counter_types.insert(0, CmDocCounter.new(:name => "<Use type acronym as counter type>"))
   end

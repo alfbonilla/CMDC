@@ -435,8 +435,8 @@ class CmNcsController < ApplicationController
         :conditions => ['project_id in (?,?)', 0, @project.id])
       @cm_nc_phases = CmNcsPhase.find(:all, 
         :conditions => ['project_id in (?,?)', 0, @project.id])
-      @cm_companies = CmCompany.find(:all, :conditions => ['project_id=?', @project.id])
-      @suppliers = CmCompany.find(:all, :conditions => ['company_type=? and project_id=?', "Supplier", @project.id])
+      @cm_companies = CmCompany.find(:all)
+      @suppliers = CmCompany.find(:all, :conditions => ['company_type=?', "Supplier"])
       @releases = Version.find(:all, :conditions => ["project_id=?", @project.id])
       unless @releases
         render_error "There are no Releases created for the Project!"

@@ -66,7 +66,7 @@ if delete == "Yes"
   CmItemClassification.delete_all(:project_id => proj)
   CmItemGroup.delete_all(:project_id => proj)
   CmItemCategory.delete_all(:project_id => proj)
-  CmCompany.delete_all(:project_id => proj)
+  # CmCompany.delete_all(:project_id => proj)
   CmMntLogType.delete_all(:project_id => proj)
   CmMntLogStatus.delete_all(:project_id => proj)
   CmDocType.delete_all(:project_id => proj)
@@ -128,9 +128,9 @@ CmItemCategory.create(:name => "HW COTS", :description => "Operational HW COTS",
 CmItemCategory.create(:name => "SW CFI", :description => "Software received from the customer", :project_id => proj)
 CmItemCategory.create(:name => "HW CFI", :description => "Hardware received from the customer", :project_id => proj)
 
-puts "- Creating DMS company..."
+puts "- Creating NESSA company..."
 
-CmCompany.create(:name => "Deimos Space", :code => "DMS", :company_type => "home", :description => "", :project_id => proj)
+CmCompany.create(:name => "Nessa GBS", :code => "NES", :company_type => "home", :description => "", :project_id => 0)
 
 puts "- Creating maintenance types..."
 
