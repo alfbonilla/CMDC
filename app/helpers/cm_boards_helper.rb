@@ -34,8 +34,8 @@ module CmBoardsHelper
 
     pdf.Cell(50,5, " ", "LB")
     pdf.Cell(80,5, " ", "LB")
-    pdf.Cell(10,5, "Page: ", "LTB")
-    pdf.Cell(50,5, pdf.PageNo.to_s + "/{nb}", "TBR")
+    pdf.Cell(10,5, "Pages: ", "LTB")
+    pdf.Cell(50,5, "{nb}", "TBR")
     pdf.Ln
     
     pdf.SetFontStyle('B',10)

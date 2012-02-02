@@ -30,7 +30,7 @@
         <td><%= link_to doc.name, :controller => "cm_docs", :action => "show", :id => doc %></td>
         <td align="center"><%= h(doc.type.name) %></td>
         <td align="center"><%= doc.last_version.version %></td>
-        <td align="center"><%= doc.last_version.status.name %></td>
+        <td align="center"><%= doc.last_version.status.name unless doc.last_version.status.nil? %></td>
         <td align="center"><%= h(doc.category.name) %></td>
         <td align="center"><%= image_tag 'true.png' if doc.applicable? %></td>
         <td align="center"><%= image_tag 'true.png' if doc.deliverable? %></td>

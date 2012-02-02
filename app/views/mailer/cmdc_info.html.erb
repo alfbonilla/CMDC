@@ -1,0 +1,62 @@
+<p>Information changed in <%= @project.name %> project</p>
+
+<% case @caller_cont
+  when "cm_qrs", "cm_purchase_orders" %>
+  <h1><%= link_to(h("#{@cmdc_object.code} ##{@cmdc_object.id}"), @cmdc_object_url) %></h1>
+
+  <p>Comments:</p>
+  <%= textilizable(@cmdc_object, :comments, :only_path => false) %>
+
+ <% when "cm_boards" %>
+  <h1><%= link_to(h("#{@cmdc_object.cm_board_code} ##{@cmdc_object.id}"), @cmdc_object_url) %></h1>
+
+<% when "cm_docs_versions" %>
+  <h1><%= link_to(h("#{@cmdc_object.cm_doc.code} ##{@cmdc_object.cm_doc.id}"), @cmdc_object_url) %></h1>
+  
+  <p>Version: <%= @cmdc_object.version %></p>
+  <p>Physical Location: <%= textilizable @cmdc_object.physical_location %></p>
+
+<% when "cm_rids" %>
+  <h1><%= link_to(h("#{@cmdc_object.code} ##{@cmdc_object.id}"), @cmdc_object_url) %></h1>
+
+  <p>Discrepancy:</p>
+  <%= textilizable(@cmdc_object, :discrepancy, :only_path => false) %>
+
+ <% when "cm_tests" %>
+  <h1><%= link_to(h("#{@cmdc_object.code} ##{@cmdc_object.id}"), @cmdc_object_url) %></h1>
+
+  <p>Objective:</p>
+  <%= textilizable(@cmdc_object, :objective, :only_path => false) %>
+
+<% else %>
+  <h1><%= link_to(h("#{@cmdc_object.code} ##{@cmdc_object.id}: #{@cmdc_object.name}"), @cmdc_object_url) %></h1>
+
+  <p>Description:</p>
+  <%= textilizable(@cmdc_object, :description, :only_path => false) %>
+  
+<% end %>
+
+  <% if @caller_cont == "cm_docs_versions" %>
+    <% journal = @cmdc_object.cm_doc.current_journal %>
+  <% else %>
+    <% journal = @cmdc_object.current_journal %>
+  <% end %>
+
+<% unless journal.nil? %>
+  <ul>
+  <% for detail in journal.details %>
+        <li>
+        <p><b>Field:</b> <%=detail.prop_key %> <b>From:</b> <%=detail.old_value %> <b>To:</b> <%=detail.value %> </p>
+       </li>
+  <% end %>
+  </ul>
+  <%= textilizable(journal, :notes, :only_path => false) %>
+<% else %>
+  <% if @caller_cont == "cm_boards" %>
+    <p>You have been convened to the meeting about <%=@cmdc_object.subject %>
+    that will be hold at <%=@cmdc_object.meeting_date.strftime("%Y-%m-%d") %>.</p>
+    <p>Meeting convened by <%=@cmdc_object.author.name %>.</p>
+  <% else %>
+    <strong> New Record </strong>
+  <% end %>
+<% end %>

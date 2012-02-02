@@ -87,8 +87,8 @@ class CmCommonsController < ApplicationController
             txt, txt, @project.id])
         when "4"
           @caller_cont="cm_docs"
-          @list=CmDoc.find(:all, :conditions => ["(physical_location LIKE ? or description LIKE ?) and project_id=?",
-            txt, txt, @project.id])
+          @list=CmDoc.find(:all, :conditions => ["(cm_docs_versions.physical_location LIKE ? or cm_docs.description LIKE ?) and cm_docs.project_id=?",
+            txt, txt, @project.id], :joins => 'LEFT JOIN cm_docs_versions ON cm_docs.id = cm_docs_versions.cm_doc_id')
         when "5"
           @caller_cont="cm_boards"
           @list=CmBoard.find(:all, :conditions => ["(board_body LIKE ? or conclusions LIKE ?) and project_id=?",
@@ -115,7 +115,7 @@ class CmCommonsController < ApplicationController
             txt, @project.id])
         when "11"
           @caller_cont="cm_tests"
-          @list=CmTest.find(:all, :conditions => ["(objective LIKE ? or steps_and_checkpoints LIKE ? \
+          @list=CmTest.find(:all, :conditions => ["(objective LIKE ? or checkpoints LIKE ? \
                 or pass_fail_criteria LIKE ?) and project_id=?",
             txt, txt, txt, @project.id])
         when "12"
