@@ -2,7 +2,7 @@ class CmObjectsIssuesController < ApplicationController
 
   before_filter :find_cm_object, :only => [:new, :new_relation, :destroy, :show_existing_issues]
 
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
 
   # This method is called always as a POST, and does not require any VIEW
   # The issue is created and related to the object

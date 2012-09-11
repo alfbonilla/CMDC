@@ -2,7 +2,7 @@ class CmPoDetailsController < ApplicationController
 
   before_filter :find_cm_po_detail, :only => [:edit]
 
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
 
   def new
     if request.get?

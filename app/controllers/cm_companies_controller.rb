@@ -3,7 +3,7 @@ class CmCompaniesController < ApplicationController
   before_filter :find_cm_company, :only => [:edit, :destroy]
   before_filter :authorize, :except => :index
 
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_companies = CmCompany.find(:all)

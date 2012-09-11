@@ -5,7 +5,7 @@ class CmWasController < ApplicationController
   before_filter :find_project, :only => [:new, :index]
   before_filter :authorize
 
-  accept_key_auth :show, :new, :edit, :destroy
+  accept_rss_auth :show, :new, :edit, :destroy
 
   helper :journals
   include JournalsHelper

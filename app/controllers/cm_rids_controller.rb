@@ -5,7 +5,7 @@ class CmRidsController < ApplicationController
   before_filter :find_project, :only => [:index, :new, :get_statistics]
   before_filter :authorize, :except => [:remove_relation, :get_statistics]
 
-  accept_key_auth :index, :show, :edit, :new, :destroy, :remove_relation
+  accept_rss_auth :index, :show, :edit, :new, :destroy, :remove_relation
   
   helper :journals
   include JournalsHelper

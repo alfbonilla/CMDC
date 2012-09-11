@@ -5,7 +5,7 @@ class CmBoardsController < ApplicationController
   before_filter :find_project, :only => [:new, :index, :pending_actions]
   before_filter :authorize, :except => [:pending_actions, :remove_relation]
 
-  accept_key_auth :show, :index, :new, :edit, :destroy
+  accept_rss_auth :show, :index, :new, :edit, :destroy
   
   helper :journals
   include JournalsHelper

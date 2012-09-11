@@ -1,6 +1,6 @@
 class CmChangesVersionsController < ApplicationController
 
-  accept_key_auth :new, :edit, :destroy
+  accept_rss_auth :new, :edit, :destroy
       
   def index
     @cm_changes_versions = CmChangesVersion.find(:all, :conditions => ['project_id=?', @project.id])

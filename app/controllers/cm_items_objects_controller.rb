@@ -3,7 +3,7 @@ class CmItemsObjectsController < ApplicationController
 
   before_filter :find_project, :only => [:relate_items]
 
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
 
   def new
     if request.get?

@@ -4,7 +4,7 @@ class CmDocStatusesController < ApplicationController
   before_filter :find_cm_doc_status, :only => [:edit, :destroy]
   before_filter :authorize, :except => :index
 
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_doc_statuses = CmDocStatus.find(:all, 

@@ -4,7 +4,7 @@ class CmDeliveriesObjectsController < ApplicationController
   before_filter :find_project, :only => [:new_docs, :new_items, :new_ncs, :new_changes]
   before_filter :find_cm_deliveries_object, :only => [:edit]
 
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
 
   def new_docs
     if request.get?

@@ -3,7 +3,7 @@ class CmSourceFilesController < ApplicationController
   before_filter :find_project, :only => [:new, :index, :bulk_load]
   before_filter :find_cm_source_file, :only => [:edit, :destroy]
 
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_source_files = CmSourceFile.find(:all, :conditions => ['project_id=?', @project.id])

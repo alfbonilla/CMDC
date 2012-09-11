@@ -1,6 +1,6 @@
 class CmTestCampaignsObjectsController < ApplicationController
   before_filter :find_cm_test_campaigns_object, :only => [:edit, :destroy]
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
 
   include CmCommonHelper
   helper :sort

@@ -5,7 +5,7 @@ class CmItemsController < ApplicationController
   before_filter :find_project, :only => [:index, :new, :copy_item, :index_tree]
   before_filter :authorize, :except => [:remove_relation, :cidl]
 
-  accept_key_auth :index, :show, :edit, :new, :destroy, :remove_relation
+  accept_rss_auth :index, :show, :edit, :new, :destroy, :remove_relation
   
   helper :journals
   include JournalsHelper

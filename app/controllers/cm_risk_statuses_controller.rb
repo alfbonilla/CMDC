@@ -4,7 +4,7 @@ class CmRiskStatusesController < ApplicationController
   before_filter :find_cm_risk_status, :only => [:edit, :destroy]
   before_filter :authorize, :except => :index
   
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_risk_statuses = CmRiskStatus.find(:all, 

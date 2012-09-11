@@ -5,7 +5,7 @@ class CmPurchaseOrdersController < ApplicationController
   before_filter :find_project, :only => [:new, :index]
   before_filter :authorize
 
-  accept_key_auth :show, :edit, :destroy  
+  accept_rss_auth :show, :edit, :destroy  
   
   helper :journals
   include JournalsHelper

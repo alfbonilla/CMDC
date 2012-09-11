@@ -1,7 +1,7 @@
 class CmNcsNcsController < ApplicationController
   include CmCommonHelper
   
-   accept_key_auth :edit, :destroy
+   accept_rss_auth :edit, :destroy
       
   def new
     if request.get?

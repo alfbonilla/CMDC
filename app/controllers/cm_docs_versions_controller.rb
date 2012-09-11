@@ -2,7 +2,7 @@ class CmDocsVersionsController < ApplicationController
   before_filter :find_cm_docs_version, :only => :edit
   before_filter :find_project, :only => :new
 
-  accept_key_auth :new, :edit, :destroy
+  accept_rss_auth :new, :edit, :destroy
       
   def index
     @cm_docs_versions = CmDocsVersion.find(:all, 

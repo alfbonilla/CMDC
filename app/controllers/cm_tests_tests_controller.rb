@@ -3,7 +3,7 @@ class CmTestsTestsController < ApplicationController
 
   before_filter :find_tests_test, :only => [:edit, :destroy]
 
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
   helper :cm_tests
   include CmTestsHelper
 

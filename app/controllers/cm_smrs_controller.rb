@@ -5,7 +5,7 @@ class CmSmrsController < ApplicationController
   before_filter :find_project, :only => [:new, :index]
   before_filter :authorize, :except => [:remove_relation]
 
-  accept_key_auth :show, :new, :edit, :destroy
+  accept_rss_auth :show, :new, :edit, :destroy
   
   helper :journals
   include JournalsHelper

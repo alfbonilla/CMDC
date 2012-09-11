@@ -4,7 +4,7 @@ class CmTestScenariosController < ApplicationController
   before_filter :find_cm_test_scenario, :only => [:show, :edit, :destroy]
   before_filter :authorize, :except => :reload_scenario_box
 
-  accept_key_auth :new, :edit, :destroy 
+  accept_rss_auth :new, :edit, :destroy 
 
   helper :journals
   include JournalsHelper

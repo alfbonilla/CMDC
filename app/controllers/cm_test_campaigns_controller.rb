@@ -5,7 +5,7 @@ class CmTestCampaignsController < ApplicationController
   before_filter :find_project, :only => [:index, :new]
   before_filter :authorize, :except => :execution_list
 
-  accept_key_auth :index, :show, :edit, :new, :destroy
+  accept_rss_auth :index, :show, :edit, :new, :destroy
 
   helper :journals
   include JournalsHelper

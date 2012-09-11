@@ -4,7 +4,7 @@ class CmItemTypesController < ApplicationController
   before_filter :find_cm_item_type, :only => [:edit, :destroy]
   before_filter :authorize, :except => :index
   
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_item_types = CmItemType.find(:all, 

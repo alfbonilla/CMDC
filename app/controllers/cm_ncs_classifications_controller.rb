@@ -4,7 +4,7 @@ class CmNcsClassificationsController < ApplicationController
   before_filter :find_cm_ncs_classification, :only => [:edit, :destroy]
   before_filter :authorize, :except => :index
   
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_ncs_classifications = CmNcsClassification.find(:all, 

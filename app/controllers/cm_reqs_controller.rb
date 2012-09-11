@@ -7,7 +7,7 @@ class CmReqsController < ApplicationController
       :matrix, :import_trace]
   before_filter :authorize, :except => [:change_log, :type_modified]
 
-  accept_key_auth :show, :new, :edit, :destroy
+  accept_rss_auth :show, :new, :edit, :destroy
   
   helper :journals
   include JournalsHelper

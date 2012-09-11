@@ -12,7 +12,7 @@ class CmTestRecordsController < ApplicationController
   before_filter :find_cm_test_record, :only => [:show, :edit, :destroy]
   before_filter :authorize, :except => [:show_new_execution_form, :show_execution_list]
 
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
 
   helper :journals
   include JournalsHelper

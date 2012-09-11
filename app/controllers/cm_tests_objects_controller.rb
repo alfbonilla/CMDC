@@ -1,7 +1,7 @@
 class CmTestsObjectsController < ApplicationController
   include CmCommonHelper
 
-  accept_key_auth :edit, :destroy
+  accept_rss_auth :edit, :destroy
   before_filter :find_test, :only => [:new]
   before_filter :find_tests_object, :only => [:edit, :destroy]
 

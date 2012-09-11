@@ -4,7 +4,7 @@ class CmDocCountersController < ApplicationController
   before_filter :find_project, :only => [:new, :index, :new_doc_by_type]
   before_filter :authorize, :except => :new_doc_by_type
 
-  accept_key_auth :index, :destroy, :new_doc  
+  accept_rss_auth :index, :destroy, :new_doc  
 
   helper :sort
   include SortHelper

@@ -3,7 +3,7 @@ class CmSubsystemsController < ApplicationController
   before_filter :find_cm_subsystem, :only => [:edit, :destroy]
   before_filter :authorize, :except => :index
 
-  accept_key_auth :index, :new, :edit, :destroy
+  accept_rss_auth :index, :new, :edit, :destroy
       
   def index
     @cm_subsystems = CmSubsystem.find(:all, :conditions => ['project_id=?', @project.id])

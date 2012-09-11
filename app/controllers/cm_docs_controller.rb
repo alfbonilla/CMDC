@@ -3,7 +3,7 @@ class CmDocsController < ApplicationController
   before_filter :find_project, :only => [:new, :index, :coming_from_counters]
   before_filter :authorize, :except => [:coming_from_counters, :get_changes_log]
 
-  accept_key_auth :show, :edit, :destroy  
+  accept_rss_auth :show, :edit, :destroy  
   
   helper :attachments
   include AttachmentsHelper

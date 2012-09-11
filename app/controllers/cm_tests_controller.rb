@@ -5,7 +5,7 @@ class CmTestsController < ApplicationController
   before_filter :find_project, :only => [:new, :index, :copy]
   before_filter :authorize, :except => :history
 
-  accept_key_auth :index, :show, :new, :edit, :destroy
+  accept_rss_auth :index, :show, :new, :edit, :destroy
   
   helper :journals
   include JournalsHelper
